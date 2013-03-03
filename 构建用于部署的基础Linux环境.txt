@@ -1,0 +1,30 @@
+1.编译linux内核
+设置arch,交叉编译工具
+找到Linux BSP的config文件 这里是s5pv210
+然后 make s5pv210 得到针对该版的基础.config文件
+接着 make menuconfig进行进一步配置，可以考虑创建1个最小集，一个只包含必要驱动的配置，一个包含常见驱动的配置 通过这一步可以熟悉linux移植里关于驱动的问题。（体力活）
+
+如果有需要修改内核（比如修改framebuffer驱动等） 应该使用补丁的方法修改
+
+完成内核编译
+此时内核
+2.构建root fs
+root fs要至少包含一个init进程 (sbin/init,/etc/init,/bin/init,/bin/sh
+init以后可以估计是要自己编写的，这里可以先用busybox先搞定。
+此外，还有大量的工具都可以用busybox搞定，这些工具只是在参数上做了调整，但还是能保留主要功能，所以非常适合定制系统
+：通过busybox构建root fs。 （不通过busybox就要准备很多基础的二进制文件）
+
+
+
+我们需要的最小环境
+a.基本的sh命令行支持，可以对root fs进行管理(ls,cd,mkdir,rm,cat,grep等)
+b.基本的网络支持，包括网络配置（以太网，wifi,grps,3g等），这块是没那么简单的
+c.基本的进程管理 top,pkill等
+d.基本的网络客户端，wget,等
+e.基本的网络服务，比如sshd
+f.如果可以，可以带上最简单的C/C++编译器及必要的lib (C/C++ runtime lib)
+
+3.根据板卡设计，烧写到机器上,启动
+
+4.开发调试Root Tree API
+
