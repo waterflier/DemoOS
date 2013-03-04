@@ -1,0 +1,36 @@
+<NGOS>
+	<ObjTemplate>
+		<obj id="" class="">
+			<attr>
+				<!-- 位置属性与可见属性 -->
+				<left></left>
+				<top></top>
+				<width></width>
+				<height></height>
+				<!--变换属性，简单的变换是对一个圆点旋转，复杂的变化是类似mac里的魔法最小化效果 -->
+				<trans type="2D" includechild="true">
+					<org>0,0</org>
+					<angle>1.2</angle>
+				</trans>
+				<zorder></zorder>
+				<visible></visible>
+				<childrenvisible></childrenvisible>
+				
+				<!-- content属性 （得到要绘制的contentn内容，这有可能与children有关）-->
+				<!--考虑如何支持毛玻璃效果，倒影效果等content -->
+				
+				<!-- content后处理属性 (得到content内容后对content进行再处理)-->
+				<effectlist includechild="false">
+				
+				</effectlist>
+				<mask>
+				</mask>
+				
+		
+				<!-- 混合属性 content如何画到画布上 -->
+				<blend type="alpha"></blend>
+				<alpha>255</alpha>
+			</attr>
+		</obj>
+	</ObjTemplate>
+</NGOS>
