@@ -1,0 +1,5 @@
+#!/bin/sh
+
+telnetd
+mkdir /var/log/boa
+boa

@@ -1,0 +1,19 @@
+#!/bin/sh
+
+echo "Running /etc/profile..."
+
+echo "Set library search path."
+export LD_LIBRARY_PATH=/lib:/user/lib
+
+echo "Set HOSTNAME."
+HOSTANME='/bin/hostname'
+export HOSTNAME
+
+echo "Set PATH."
+PATH=/bin:/sbin:/usr/bin:/usr/sbin
+export PATH
+
+echo "Set alias."
+alias ll="ls -al"
+
+echo "Welcome to demoOS!"

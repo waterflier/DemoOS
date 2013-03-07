@@ -1,0 +1,15 @@
+#!/bin/sh
+runlevel=S
+export unlevel
+
+/bin/hostname mcuzone
+[ -d "/proc/1" ] || mount /proc
+
+/bin/mount -av
+
+echo "starting mdev."
+/bin/mount -t sysfs sysfs /sys
+/bin/echo /sbin/mdev > /proc/sys/kernel/hotplug
+mdev -s
+
+/etc/init.d/rc.local
