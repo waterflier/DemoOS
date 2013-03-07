@@ -7,7 +7,7 @@ echo "ARCH_LIB_PATH=${ARCH_LIB_PATH}\n"
 
 #create base dir
 cp -r ${BUSYBOX_INSTALL_DIR} ./rootfs
-cp -r ./base_rootfs/etc ./rootfs/
+cp -r ./base_rootfs/etc ./rootfs/etc
 
 mkdir ./rootfs/proc
 mkdir ./rootfs/sys
@@ -24,7 +24,7 @@ chmod +x ./rootfs/etc/profile
 chmod +x ./rootfs/etc/init.d/rcS
 chmod +x ./rootfs/etc/init.d/rc.local
 
-cp ${ARCH_LIB_PATH}/* ./rootfs/lib
+cp ${ARCH_LIB_PATH}/* ./rootfs/lib/
 
 #create device
 cd rootfs
