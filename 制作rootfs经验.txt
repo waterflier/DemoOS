@@ -1,0 +1,4 @@
+1.配置好busybox
+2.配置init进程，busybox有一个默认的System V的init,为了支持从ramdisk启动，需要的linuxrc启动程序，busybox也有提供。据说这两者在本质上没有区别
+
+3.建立好/etc/目录下的各个目录和配置文件
