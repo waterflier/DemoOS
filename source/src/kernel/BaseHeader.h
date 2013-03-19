@@ -13,7 +13,11 @@ extern "C"
 {
 #endif 
 
-
+typedef struct tagCommonObjectHeader
+{
+	int32_t RefCount;
+	RootTreeEnv* Env;
+}CommonObjectHeader;
 
 #ifdef __cplusplus
 }

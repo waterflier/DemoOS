@@ -13,6 +13,7 @@
 #ifndef _NGOS_KERNEL_API_H_
 #define _NGOS_KERNEL_API_H_
 
+#include <NGOS_Errors.h>
 #include <NGOS_Types.h>
 
 #ifdef __cplusplus
@@ -30,7 +31,7 @@ NGOS_API(int) NGOS_UninitRootUIObjTreeEnv(void*);
 
 ////////////////////////////////////////////////Root Tree
 NGOS_API(NGOS_ROOT_OBJTREE_HANDLE) NGOS_CreateRootObjTree();
-NGOS_API(int) NGOS_GetRootObjTree(TYPE_NGOS_PID ownerPID, TYPE_NGOS_OBJTREE_OWNERHOST_INFO* ownerHostInfo);
+NGOS_API(int) NGOS_GetRootObjTree(TYPE_NGOS_PID ownerPID, TYPE_NGOS_OBJTREE_OWNERHOST_INFO* ownerHostInfo,NGOS_ROOT_OBJTREE_HANDLE* pResult);
 //NGOS_API(int) NGOS_AddRefRootObjTree(NGOS_ROOT_OBJTREE_HANDLE hRootTree);
 //NGOS_API(int) NGOS_ReleaseRootObjTree(NGOS_ROOT_OBJTREE_HANDLE hRootTree);
 //强制释放销毁，只有RootObjTree的创建进程才有资格
@@ -72,6 +73,11 @@ NGOS_API(int) NGOS_EndLookupChildren(NGOS_UIOBJECT_LOOKUP_ITERATOR hLookup);
 
 
 //UIObject的通用属性 为了提高性能，有两种设计 1：为单个属性设计set+get 2:针对某类属性集合设置set+get 快照。尽量不提供lock功能。目前先提供功能集合1的api
+//基于快照的设计： 得到NGOS_UIOBJECT_HANDLE->得到一个快照对象->通过API访问属性->通过API修改属性->提交快照上的修改（触发事件）
+//                 使用快照要解决的问题是：不会因为RPC间的进程调度问题，导致改到一半的对象被显示出来了                  
+//                 添加/删除孩子不能用快照完成，其它不能通过快照完成的属性访问修改，API的接口还是HObject
+//				   或者自动支持上述快照机制，在一个msg frame里，第一次访问属性获得快照，msg frame结束的时候提交并销毁该快照
+
 
 //关键位置属性(几乎都是和索引器相关的)
 NGOS_API(uint32_t) NGOS_GetUIObjectVisibleFlags(NGOS_UIOBJECT_HANDLE hUIObject);
@@ -99,7 +105,7 @@ NGOS_API(int) NGOS_SetUIObjectAlpha(NGOS_UIOBJECT_HANDLE hUIObject,uint8_t newAl
 NGOS_API(int) NGOS_GetUIObjectContentEffectList(NGOS_UIOBJECT_HANDLE hUIObject);
 NGOS_API(int) NGOS_GetUIObjectBlendAttribute();
 NGOS_API(int) NGOS_GetUIObjectIsLimitChild(NGOS_UIOBJECT_HANDLE hUIObject);
-NGOS_API(int) NGOS_SetUIObjectIsLimitChild(NGOS_UIOBJECT_HANDLE hUIObject,bool isLimit);
+NGOS_API(int) NGOS_SetUIObjectIsLimitChild(NGOS_UIOBJECT_HANDLE hUIObject,BOOL isLimit);
 NGOS_API(int) NGOS_GetUIObjectCotentMask(NGOS_UIOBJECT_HANDLE hUIObject);
 NGOS_API(int) NGOS_SetUIObjectCotentMask(NGOS_UIOBJECT_HANDLE hUIObject);
 
@@ -123,7 +129,7 @@ NGOS_API(int) NGOS_ReleaseAnimation(NGOS_ANIMATION_HANDLE hAni);
 
 
 //////////////////////////////////////////////// ResManager
-NGOS_API(int)
+
 #ifdef __cplusplus
 }
 #endif 
