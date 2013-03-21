@@ -7,6 +7,8 @@
 
 #ifndef _NGOS_ROOTOBJ_TREE_H_
 #define _NGOS_ROOTOBJ_TREE_H_
+
+#define CONFIG_ROOTTREE_SM_NAME "sm.ngos.roottree"
 /*
 namespace NGOS
 {
@@ -92,10 +94,18 @@ public:
 	{
 
 	}
+
 	
 };
 
 }
 */
 
-#endif
+typedef struct tagRootTreeInfoNodeInSM
+{
+	TYPE_NGOS_PID PID;
+}RootTreeInfoNodeInSM;
+
+
+
+#endif //_NGOS_ROOTOBJ_TREE_H_

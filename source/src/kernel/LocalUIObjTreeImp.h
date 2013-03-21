@@ -15,7 +15,8 @@
 
 typedef struct tagRootUIObjTree
 {
-	RootTreeEnv* RunEnv;
+	NGOS_ROOT_OBJTREE_HANDLE hTree;
+	NGOS_RootTreeEnv* RunEnv;
 	NGOS_ROOT_OBJTREE_HANDLE RootUIObject;
 	uint16_t DPI;
 
@@ -24,15 +25,13 @@ typedef struct tagRootUIObjTree
 }RootUIObjTree;
 
 
+RootUIObjTree* CreateRootUIObjTree(NGOS_RootTreeEnv* pEnv);
+int FreeRootUIObjTree(RootUIObjTree* pTree);
 
-
-RootUIObjTree* CreateRootUIObjTree(RootTreeEnv* pEnv);
-int FreeRootUIObjTree(RootUIObjTree* pNode);
-
-int RootUIObjTreeAddChild(RootUIObjTree* pObjTree,NGOS_ROOT_OBJTREE_HANDLE hParent,NGOS_ROOT_OBJTREE_HANDLE hChild);
 int RootUIObjTreeMoveObject(RootUIObjTree* pObjTree,NGOS_ROOT_OBJTREE_HANDLE hObject,NGOS_ROOT_OBJTREE_HANDLE hNewParent);
-int RootUIObjTreeRemoveObject(RootUIObjTree* pObjTree,NGOS_ROOT_OBJTREE_HANDLE hObject);
 
+
+int RootUIObjTreePushDirtyRect(RootUIObjTree* pObjTree,RECT* pDirtyRect);
 int RootUIObjTreeGetRenderScrpit(RootUIObjTree* pObjTree,RECT* pClipRect);
 
 #endif 

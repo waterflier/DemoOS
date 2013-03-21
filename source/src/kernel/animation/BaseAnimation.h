@@ -1,0 +1,11 @@
+//
+// BaseAnimation.h 
+//
+//////////////////////////////////////////////////////////////////////////
+
+#ifndef _NGOS_BASE_ANIMATION_H_
+#define _NGOS_BASE_ANIMATION_H_
+
+
+
+#endif

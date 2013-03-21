@@ -145,10 +145,16 @@
 	</References>
 	<Files>
 		<Filter
-			Name="Source Files"
-			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
-			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
+			Name="Input"
 			>
+			<File
+				RelativePath=".\input\InputTarget.c"
+				>
+			</File>
+			<File
+				RelativePath=".\input\InputTarget.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="UIObjTree"
@@ -166,6 +172,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\LocalUIObjTreeImp.c"
+				>
+			</File>
+			<File
+				RelativePath=".\LocalUIObjTreeImp.h"
+				>
+			</File>
+			<File
 				RelativePath=".\RootObjTree.c"
 				>
 			</File>
@@ -174,11 +188,83 @@
 				>
 			</File>
 			<File
+				RelativePath=".\RootObjTreeEnv.c"
+				>
+			</File>
+			<File
+				RelativePath=".\RootObjTreeEnv.h"
+				>
+			</File>
+			<File
 				RelativePath=".\UIObject.c"
 				>
 			</File>
 			<File
 				RelativePath=".\UIObject.h"
+				>
+			</File>
+			<File
+				RelativePath=".\UIObjTreeServer.c"
+				>
+			</File>
+			<File
+				RelativePath=".\UIObjTreeServer.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Index"
+			>
+			<File
+				RelativePath=".\objectIndex\DirtyRectIndex.c"
+				>
+			</File>
+			<File
+				RelativePath=".\objectIndex\DirtyRectIndex.h"
+				>
+			</File>
+			<File
+				RelativePath=".\objectIndex\UIObjectRectIndex.c"
+				>
+			</File>
+			<File
+				RelativePath=".\objectIndex\UIObjectRectIndex.h"
+				>
+			</File>
+			<File
+				RelativePath=".\objectIndex\UIObjectVector.c"
+				>
+			</File>
+			<File
+				RelativePath=".\objectIndex\UIObjectVector.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Animation"
+			>
+			<File
+				RelativePath=".\animation\BaseAnimation.h"
+				>
+			</File>
+			<File
+				RelativePath=".\animation\BaseKeyFrameAnimation.c"
+				>
+			</File>
+			<File
+				RelativePath=".\animation\BaseKeyFrameAnimation.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Math"
+			>
+			<File
+				RelativePath=".\math\Curve.c"
+				>
+			</File>
+			<File
+				RelativePath=".\math\Curve.h"
 				>
 			</File>
 		</Filter>

@@ -10,6 +10,13 @@
 
 #include <stdint.h>
 
+#ifndef BOOL
+#define BOOL int
+#define TRUE (1)
+#define FALSE (0)
+#endif
+
+
 typedef struct tagRect
 {
 	int32_t    left;
@@ -31,12 +38,6 @@ typedef struct tagMatrix3X2
 
 }Matrix3X2;
 
-#ifndef BOOL
-#define BOOL int
-#define TRUE (1)
-#define FALSE (0)
-#endif
-
 typedef uint32_t TYPE_NGOS_PID;
 typedef uint32_t TYPE_NGOS_TID;
 
@@ -54,6 +55,18 @@ typedef struct
 	char * szHostname;
 
 }TYPE_NGOS_OBJTREE_OWNERHOST_INFO;
+
+typedef enum 
+{
+	NGOS_ENTITY_TYPE_TREE = 0,
+	NGOS_ENTITY_TYPE_UIOBJ =1
+}NGOS_Enum_EntityObjectType;
+
+typedef struct tagNGOS_RootTreeEnv
+{
+	void* AllocUD;
+	void* (*fnAlloc) (uint8_t type,void* ud,void* ptr,size_t newSize,size_t oldSize);
+}NGOS_RootTreeEnv;
 
 typedef void* NGOS_UIOBJECT_HANDLE;
 typedef void* TYPE_NGOS_ID;
