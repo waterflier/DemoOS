@@ -1,0 +1,11 @@
+1.在source目录下操作makefile可以完成常用操作
+包括
+make sln.name [configname config1=1 config2=2]
+make clean
+
+由于项目可控制的编译选项众多，有mk.config可以保存大量配置
+
+2.为了项目的独立性，在每个项目下可以单独make(just build)
+这些项目能读取到上述的mk.config
+
+3.支持生成depends文件，增量编译

@@ -18,7 +18,8 @@ int AddObjectToUIObjectIndex(UIObjectRectIndex* pIndex,NGOS_UIOBJECT_HANDLE hObj
 int RemoveObjectFromUIObjectIndex(UIObjectRectIndex* pIndex,NGOS_UIOBJECT_HANDLE hObject);
 int UpdateUIObjectToUIObjectIndex(UIObjectRectIndex* pIndex,NGOS_UIOBJECT_HANDLE hObject);
 
-int SelectObjectFromUIObjectIndex(UIObjectRectIndex* pIndex,RECT theRect,UIObjectVector* pResult);
-int HitTestObjectFromUIObjectIndex(UIObjectRectIndex* pIndex,RECT theRect,UIObjectVector* pResult);
+//为了绘制选择对象
+int SelectObjectFromUIObjectIndex(UIObjectRectIndex* pIndex,RECT* theRect,UIObjectVector* pResult);
+int HitTestObjectFromUIObjectIndex(UIObjectRectIndex* pIndex,RECT* theRect,UIObjectVector* pResult);
 
 #endif //_NGOS_UIOBJECT_RECT_INDEX_H_

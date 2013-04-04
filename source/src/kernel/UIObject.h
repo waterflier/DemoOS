@@ -6,6 +6,8 @@
 #ifndef _NGOS_UIOBJECT_H_
 #define _NGOS_UIOBJECT_H_
 
+#include "../render_engine/RenderScript.h"
+
 /*
 关键数据结构
 
@@ -81,7 +83,7 @@ typedef struct tagUIObjectEffectList
 
 typedef struct tagUIObjectProvier
 {
-	(void) (*pfn) (void)
+	(NGOS_RENDER_SCRIPT_BUFFER_HANDLE) (*pfnGetRenderScript) (UIObject* pSelf,RECT* pClipRect);
 }UIObjectProvier;
 
 typedef struct tagUIObject

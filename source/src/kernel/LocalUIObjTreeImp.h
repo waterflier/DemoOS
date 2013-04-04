@@ -32,7 +32,7 @@ int RootUIObjTreeMoveObject(RootUIObjTree* pObjTree,NGOS_ROOT_OBJTREE_HANDLE hOb
 
 
 int RootUIObjTreePushDirtyRect(RootUIObjTree* pObjTree,RECT* pDirtyRect);
-int RootUIObjTreeGetRenderScrpit(RootUIObjTree* pObjTree,RECT* pClipRect);
+NGOS_RENDER_SCRIPT_BUFFER_HANDLE RootUIObjTreeGetRenderScrpit(RootUIObjTree* pObjTree,RECT* pClipRect);
 
 #endif 
 

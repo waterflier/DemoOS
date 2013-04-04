@@ -3,9 +3,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include <sys/types.h>
-#include <unistd.h>
-
+#include "./perheader.h"
 #include "../os_interface.h"
 
 
