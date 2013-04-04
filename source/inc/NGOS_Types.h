@@ -46,6 +46,7 @@ typedef uint32_t TYPE_NGOS_TID;
 typedef pthread_mutex_t TYPE_NGOS_MUTEX;
 typedef int TYPE_NGOS_SEMAPHORE;
 typedef int TYPE_NGOS_SHAREMEMORY;
+typedef uint64_t TYPE_NGOS_MSG_RECIVER;
 #else
 
 
@@ -53,7 +54,6 @@ typedef int TYPE_NGOS_SHAREMEMORY;
 
 
 typedef void* TYPE_NGOS_MSGQUEUE_RUNLOOP;
-typedef void* TYPE_NGOS_MSG_RECIVER;
 typedef void* TYPE_NGOS_MSG_PARAM;
 typedef void* TYPE_NGOS_MSG_DATA;
 
@@ -87,7 +87,7 @@ typedef struct tagUserDataContext
 {
 	void* UserData;
 	int (*fnReleaseUserData) (void* pUserData);
-	int (*fnAddRefReleaseUserData) (void* pUserData);
+	int (*fnAddRefUserData) (void* pUserData);
 }UserDataContext;
 
 #endif //_NGOS_TYPES_H_

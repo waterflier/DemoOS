@@ -17,14 +17,14 @@ union semun{
 int OSI_CreateSemaphore(TYPE_NGOS_SEMAPHORE* pResult,const char* id,int maxValue)
 {
 	//todo:bug 同id的无法互斥创建，下一次创建依旧能成功
-	int semResult = semget(GetStringKey(id),1,0666|IPC_CREAT);
+	int semResult = semget(GetStringKey(id),1,0666|IPC_CREAT|IPC_EXCL);
 	if(semResult < 0)
 	{
 		return -1;
 	}
 
 	union semun sem_union;
-	sem_union.val = maxValue;
+	sem_union.val = 0;
 
 	if(semctl(semResult, 0, SETVAL, sem_union) == -1) 
 	{
@@ -37,7 +37,7 @@ int OSI_CreateSemaphore(TYPE_NGOS_SEMAPHORE* pResult,const char* id,int maxValue
 
 int OSI_OpenSemaphore(TYPE_NGOS_SEMAPHORE* pResult,const char* id)
 {
-	int semResult = semget(GetStringKey(id),0,0666|IPC_EXCL);
+	int semResult = semget(GetStringKey(id),0,0666);
 	if(semResult < 0)
 	{
 		return -1;

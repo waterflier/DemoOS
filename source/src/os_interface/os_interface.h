@@ -65,7 +65,7 @@ typedef int (*pfnMsgFilter) (RecivedMsg* pMsg,UserDataContext* udc,int step);
 typedef int (*pfnMsgProc) (RecivedMsg* pMsg,TYPE_NGOS_MSG_RECIVER hReciver,UserDataContext* udc);
 
 TYPE_NGOS_MSG_RECIVER OSI_CreateMsgReciver(pfnMsgProc fnMsgProc,UserDataContext* udc);
-int OSI_ReleaseMsgReciver(TYPE_NGOS_MSG_RECIVER hReciver);
+int OSI_DestroyMsgReciver(TYPE_NGOS_MSG_RECIVER hReciver);
 
 //msg == 0为退出消息循环消息，唯一的内置消息
 TYPE_NGOS_MSG_DATA OSI_CreateMsgData(TYPE_NGOS_MSG_RECIVER hReciver,uint32_t length);
