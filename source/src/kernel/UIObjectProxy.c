@@ -1,7 +1,7 @@
 //
-// Curve.c 
+// UIObjectProxy.c 
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "../perheader.h"
-#include "./Curve.h"
+#include "./perheader.h"
+#include "./UIObjectProxy.h"

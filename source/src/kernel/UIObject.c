@@ -3,13 +3,25 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include "./perheader.h"
 #include "./UIObject.h"
+#include "./RootObjTree.h"
+#include "./UIObjTree.h"
+
+static void UpdateObjectPosInfo(UIObject* pObject)
+{
+
+}
+static void UpdateBindObjectToIndex(UIObject* pObject,RootUIObjTree* pTree)
+{
+
+}
+static void FireCreateEvent(UIObject* pObject)
+{
+
+}
 
 
-
-static void UpdateObjectPosInfo(UIObject* pObject);
-static void UpdateBindObjectToIndex(UIObject* pObject,RootUIObjTree* pTree);
-static void FireCreateEvent(UIObject* pObject);
 
 UIObject* MallocUIObject(NGOS_RootTreeEnv* pEnv)
 {
@@ -19,7 +31,7 @@ UIObject* MallocUIObject(NGOS_RootTreeEnv* pEnv)
 		pResult = (UIObject*)pEnv->fnAlloc(NGOS_ENTITY_TYPE_UIOBJ,pEnv->AllocUD,NULL,sizeof(UIObject),0);
 		if(pResult)
 		{
-			pResult->Header.Env = pEnv;
+			//pResult->Header.Env = pEnv;
 		}
 	}
 
@@ -28,16 +40,14 @@ UIObject* MallocUIObject(NGOS_RootTreeEnv* pEnv)
 
 int UIObjectInit(UIObject* pObj)
 {
-	if(pObj)
-	{
-		pObj->Header.RefCount = 1;
-		//pObj->OwnerPID = 
-	}
+	pObj->pChildren = NULL;
+	pObj->pLogicControlChildren = NULL;
 }
 
 int UIObjectUninit(UIObject* pObj)
 {
-	
+	//释放孩子
+
 }
 
 int FreeUIObject(UIObject* pObj)
@@ -48,7 +58,7 @@ int FreeUIObject(UIObject* pObj)
 	}
 }
 
-int UIObjectAddChild(UIObject* pObject,NGOS_UIOBJECT_HANDLE hChild)
+int UIObjectAddChild(UIObject* pObject,NGOS_UIOBJECT_HANDLE hChild,BOOL isLogicChild)
 {
 	UIObject* pChild = (UIObject*) HandleMapDecodeUIObject(hChild,NULL);
 	if(pChild)
@@ -68,7 +78,11 @@ int UIObjectAddChild(UIObject* pObject,NGOS_UIOBJECT_HANDLE hChild)
 				return NGOS_RESULT_INVALID_PTR;
 			}
 
-			UIObjectVectorPushBack(&(pObject->Children),hChild);
+			if(pObject->pChildren == NULL)
+			{
+				pObject->pChildren = CreateUIObjectVector(0);
+			}
+			UIObjectVectorAdd(pObject->pChildren,hChild);
 
 			//todo: 从父到子计算位置表达式，并更新abspos
 			//注意这个过程是无事件的
@@ -88,7 +102,7 @@ int UIObjectAddChild(UIObject* pObject,NGOS_UIOBJECT_HANDLE hChild)
 		}
 		else
 		{
-			UIObjectVectorPushBack(&(pObject->Children),hChild);
+			UIObjectVectorAdd(pObject->pChildren,hChild);
 			return NGOS_RESULT_SUCCESS;
 		}
 	}
@@ -109,13 +123,10 @@ int UIObjectRemoveChild(UIObject* pObject,NGOS_UIOBJECT_HANDLE hChild)
 		if(pChild->hOwnerTree)
 		{
 			//fire some event?
-			UIObjectVectorRemove(pObject->Children,hChild);
-		}
-		else
-		{
-			UIObjectVectorRemove(pObject->Children,hChild);
+			//UIObjectVectorRemove(pObject->pChildren,hChild);
 		}	
-
+		
+		UIObjectVectorRemove(pObject->pChildren,hChild);
 		//为了支持OnDestroy事件，合适删除对象比较合适?
 	}
 }
@@ -150,7 +161,7 @@ int UIObjectMoveReal(UIObject* pObject,RealRECT* pNewPos)
 int UIObjectSetVisibleFlags(UIObject* pObject,uint32_t visibleFlags)
 {
 	pObject->VisibleFlags = visibleFlags;
-	if(pObject->hOwner)
+	if(pObject->hOwnerTree)
 	{
 		//fire OnVisibleChange
 	}
@@ -159,5 +170,5 @@ int UIObjectSetVisibleFlags(UIObject* pObject,uint32_t visibleFlags)
 
 int UIObjectSetTrans(UIObject* pObject,Matrix3X2* pTransMartix)
 {
-
+	return -1;
 }

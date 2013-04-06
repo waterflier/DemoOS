@@ -26,8 +26,8 @@ extern "C"
 
 
 
-NGOS_API(int) NGOS_InitRootUIObjTreeEnv(void*);
-NGOS_API(int) NGOS_UninitRootUIObjTreeEnv(void*);
+NGOS_API(int) NGOS_InitRootUIObjTreeEnv(void* param);
+NGOS_API(int) NGOS_UninitRootUIObjTreeEnv(void* param);
 
 ////////////////////////////////////////////////Root Tree
 NGOS_API(NGOS_ROOT_OBJTREE_HANDLE) NGOS_CreateRootObjTree();

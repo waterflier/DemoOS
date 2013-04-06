@@ -172,11 +172,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\LocalUIObjTreeImp.c"
-				>
-			</File>
-			<File
-				RelativePath=".\LocalUIObjTreeImp.h"
+				RelativePath=".\perheader.h"
 				>
 			</File>
 			<File
@@ -196,6 +192,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\RootTreeServer.c"
+				>
+			</File>
+			<File
+				RelativePath=".\RootTreeServer.h"
+				>
+			</File>
+			<File
 				RelativePath=".\UIObject.c"
 				>
 			</File>
@@ -204,11 +208,19 @@
 				>
 			</File>
 			<File
-				RelativePath=".\UIObjTreeServer.c"
+				RelativePath=".\UIObjectProxy.c"
 				>
 			</File>
 			<File
-				RelativePath=".\UIObjTreeServer.h"
+				RelativePath=".\UIObjectProxy.h"
+				>
+			</File>
+			<File
+				RelativePath=".\UIObjTree.c"
+				>
+			</File>
+			<File
+				RelativePath=".\UIObjTree.h"
 				>
 			</File>
 		</Filter>
