@@ -77,7 +77,16 @@ int UIObjectAddChild(UIObject* pObject,NGOS_UIOBJECT_HANDLE hChild,BOOL isLogicC
 			{
 				return NGOS_RESULT_INVALID_PTR;
 			}
-
+			
+			if(isLogicChild)
+			{
+				if(pObject->pLogicControlChildren == NULL)
+				{
+					pObject->pLogicControlChildren = CreateUIObjectVector(0);
+				}
+				UIObjectVectorAdd(pObject->pLogicControlChildren,hChild);
+			}
+	
 			if(pObject->pChildren == NULL)
 			{
 				pObject->pChildren = CreateUIObjectVector(0);

@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="kernel"
-	ProjectGUID="{527F7CE3-347C-43B1-8424-D33A5B2A41EC}"
-	RootNamespace="kernel"
+	Name="uiobjects"
+	ProjectGUID="{BD7BFCE6-C4A6-474E-BC40-22F55DCAC78D}"
+	RootNamespace="uiobjects"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -41,7 +41,6 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../../inc"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -145,30 +144,34 @@
 	</References>
 	<Files>
 		<Filter
-			Name="Input"
+			Name="Source Files"
+			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
+			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\input\InputTarget.c"
+				RelativePath=".\ImageObject.c"
 				>
 			</File>
 			<File
-				RelativePath=".\input\InputTarget.h"
+				RelativePath=".\TextObject.c"
+				>
+			</File>
+			<File
+				RelativePath=".\TextureObject.c"
+				>
+			</File>
+			<File
+				RelativePath=".\UIObjectTypeLoader.c"
 				>
 			</File>
 		</Filter>
 		<Filter
-			Name="UIObjTree"
+			Name="Header Files"
+			Filter="h;hpp;hxx;hm;inl;inc;xsd"
+			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\BaseHeader.h"
-				>
-			</File>
-			<File
-				RelativePath=".\HandleMap.c"
-				>
-			</File>
-			<File
-				RelativePath=".\HandleMap.h"
+				RelativePath=".\ImageObject.h"
 				>
 			</File>
 			<File
@@ -176,113 +179,23 @@
 				>
 			</File>
 			<File
-				RelativePath=".\RootObjTree.c"
+				RelativePath=".\TextObject.h"
 				>
 			</File>
 			<File
-				RelativePath=".\RootObjTree.h"
+				RelativePath=".\TextureObject.h"
 				>
 			</File>
 			<File
-				RelativePath=".\RootObjTreeEnv.c"
-				>
-			</File>
-			<File
-				RelativePath=".\RootObjTreeEnv.h"
-				>
-			</File>
-			<File
-				RelativePath=".\RootTreeServer.c"
-				>
-			</File>
-			<File
-				RelativePath=".\RootTreeServer.h"
-				>
-			</File>
-			<File
-				RelativePath=".\TypeLoader.h"
-				>
-			</File>
-			<File
-				RelativePath=".\UIObject.c"
-				>
-			</File>
-			<File
-				RelativePath=".\UIObject.h"
-				>
-			</File>
-			<File
-				RelativePath=".\UIObjectProxy.c"
-				>
-			</File>
-			<File
-				RelativePath=".\UIObjectProxy.h"
-				>
-			</File>
-			<File
-				RelativePath=".\UIObjTree.c"
-				>
-			</File>
-			<File
-				RelativePath=".\UIObjTree.h"
+				RelativePath=".\UIObjectTypeLoader.h"
 				>
 			</File>
 		</Filter>
 		<Filter
-			Name="Index"
+			Name="Resource Files"
+			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
+			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
-			<File
-				RelativePath=".\objectIndex\DirtyRectIndex.c"
-				>
-			</File>
-			<File
-				RelativePath=".\objectIndex\DirtyRectIndex.h"
-				>
-			</File>
-			<File
-				RelativePath=".\objectIndex\UIObjectRectIndex.c"
-				>
-			</File>
-			<File
-				RelativePath=".\objectIndex\UIObjectRectIndex.h"
-				>
-			</File>
-			<File
-				RelativePath=".\objectIndex\UIObjectVector.c"
-				>
-			</File>
-			<File
-				RelativePath=".\objectIndex\UIObjectVector.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Animation"
-			>
-			<File
-				RelativePath=".\animation\BaseAnimation.h"
-				>
-			</File>
-			<File
-				RelativePath=".\animation\BaseKeyFrameAnimation.c"
-				>
-			</File>
-			<File
-				RelativePath=".\animation\BaseKeyFrameAnimation.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Math"
-			>
-			<File
-				RelativePath=".\math\Curve.c"
-				>
-			</File>
-			<File
-				RelativePath=".\math\Curve.h"
-				>
-			</File>
 		</Filter>
 		<File
 			RelativePath=".\ReadMe.txt"

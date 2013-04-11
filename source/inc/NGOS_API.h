@@ -117,6 +117,9 @@ NGOS_API(int) NGOS_SetUIObjectCotentMask(NGOS_UIOBJECT_HANDLE hUIObject);
 //对于UIObject的RTTI支持
 NGOS_API(int) NGOS_SetUIObjectAttributeByString(const char* attrName,const char* attrValue,uint32_t valueLen);
 NGOS_API(int) NGOS_GetUIObjectAttributeToString(const char* attrName,char* resultBuffer,uint32_t* resultBufferLen);
+///////////////////////////////////////////////UIObject Type Loader
+typedef NGOS_RENDER_SCRIPT_BUFFER_HANDLE (*pfnGetRenderScript) (void* pSelf,RECT* pClipRect);
+
 
 //////////////////////////////////////////////// Animation
 NGOS_API(NGOS_ANIMATION_HANDLE) NGOS_CreateAnimation(const char* id,const char* className,void* classloader);

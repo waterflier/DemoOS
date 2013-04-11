@@ -30,7 +30,7 @@ typedef struct tagMsgQueueHeader
 	TYPE_NGOS_MUTEX       hWriteLock;
 }MsgQueueHeader;
 
-typedef uint32_t NGOS_HANDLE;
+
 
 typedef struct tagMsgReciverObject
 {

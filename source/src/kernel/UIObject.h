@@ -85,10 +85,9 @@ typedef struct tagUIObjectEffectList
 
 
 
-typedef NGOS_RENDER_SCRIPT_BUFFER_HANDLE (*pfnGetRenderScript) (void* pSelf,RECT* pClipRect);
-
 typedef struct tagUIObjectProvier
 {
+
 	pfnGetRenderScript fnGetRenderScript;
 }UIObjectProvier;
 
@@ -143,7 +142,7 @@ typedef struct tagUIObject
 }UIObject;
 
 //两段式构造与销毁
-UIObject* MallocUIObject(NGOS_RootTreeEnv* pEnv);
+UIObject* MallocUIObject(NGOS_RootTreeEnv* pEnv,size_t userDataLen);
 int UIObjectInit(UIObject* pObj);
 int UIObjectUninit(UIObject* pObj);
 int FreeUIObject(UIObject* pObj);
