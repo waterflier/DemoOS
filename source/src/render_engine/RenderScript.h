@@ -7,7 +7,7 @@
 #define _NGOS_RENDER_SCRIPT_H_
 
 
-typedef void* NGOS_RENDER_SCRIPT_BUFFER_HANDLE;
+
 
 
 NGOS_RENDER_SCRIPT_BUFFER_HANDLE CreateRenderScript();

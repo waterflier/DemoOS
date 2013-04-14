@@ -45,7 +45,7 @@ else
 	$(LINKER) -o $(OUTPUT)$(Target) $(ALL_OBJS) $(LFLAGS) 
 endif
 endif
-	@echo Done.
+	@echo [Done.]
 
 builddir:
 	@mkdir -p $(OUTPUT)

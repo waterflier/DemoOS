@@ -3,7 +3,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include <NGOS_API.h>
+#include "./perheader.h"
 #include "./RootObjTree.h"
 #include "../os_interface/os_interface.h"
 
@@ -57,7 +57,7 @@ return result;
 *在user-mode遍历tree（效率很低）
 
 内核模式缺点: fire event一样要用postmsg
-uiobject在内核分配,所有访问都要经过内核，造成的system_call过多（(能不能提高owenr pid访问的速度？）
+uiobject在内核分配,所有访问都要经过内核，造成的system_call过多（(能不能提高owenr pid访问的速度？目前看来由于lock的存在,system_call一样不少）
 一旦出现崩溃，整个玩完
 没有内核模块的实际开发经验，也许会掉坑里
 
@@ -212,21 +212,22 @@ proxy:get_render_script()
 end
 
 */
-static RootTreeNode* s_rootTree;
+
+//static RootTreeNode* s_rootTree;
 
 //static RootTreeClient* createRootTreeClient(TYPE_NGOS_PID serverPID);
 //static NGOS_ROOT_OBJTREE_HANDLE createRootUIObject();
 //static NGOS_ROOT_OBJTREE_HANDLE findUIObjectAtProxyMap(UIObjectProxyMap* self,const char* id);
 //static int insertUIObjectToProxyMap(UIObjectProxyMap* self,NGOS_ROOT_OBJTREE_HANDLE hUIObject);
 
-static NGOS_ROOT_OBJTREE_HANDLE clientRPCGetRootUIObject(RootTreeClient* self);
+//static NGOS_ROOT_OBJTREE_HANDLE clientRPCGetRootUIObject(RootTreeClient* self);
 
-NGOS_API(int) NGOS_InitRootUIObjTreeEnv(void*)
+NGOS_API(int) NGOS_InitRootUIObjTreeEnv(void* param)
 {
 	return 0;
 }
 
-NGOS_API(int) NGOS_UninitRootUIObjTreeEnv(void*)
+NGOS_API(int) NGOS_UninitRootUIObjTreeEnv(void* param)
 {
 	return 0;
 }
@@ -242,10 +243,13 @@ NGOS_API(int) NGOS_GetRootObjTree(TYPE_NGOS_PID ownerPID, TYPE_NGOS_OBJTREE_OWNE
 	int resultCode = 0;
 	if(ownerPID == 0)
 	{
-		TYPE_NGOS_SHAREMEMORY hSM = OSI_OpenSM(CONFIG_ROOTTREE_SM_NAME);
+		TYPE_NGOS_SHAREMEMORY hSM;
+		OSI_OpenSM(CONFIG_ROOTTREE_SM_NAME,&hSM);
 		if(hSM)
 		{
-			RootTreeInfoNodeInSM* pInfo = (RootTreeInfoNodeInSM*) OSI_LockSMBuffer(hSM);
+			unsigned char* pSMData;	
+			OSI_LockSMBuffer(hSM,&pSMData);
+			RootTreeInfoNodeInSM* pInfo = (RootTreeInfoNodeInSM*)pSMData; 
 			ownerPID = pInfo->PID;
 		}
 		else
@@ -258,12 +262,12 @@ NGOS_API(int) NGOS_GetRootObjTree(TYPE_NGOS_PID ownerPID, TYPE_NGOS_OBJTREE_OWNE
 	{
 		if(ownerPID != OSI_GetPID())
 		{
-			RootTreeClient* pClient = createRootTreeClient(ownerPID);
-			*pResult = pClient;
+			//RootTreeClient* pClient = createRootTreeClient(ownerPID);
+			//*pResult = pClient;
 		}
 		else
 		{
-			*pResult = s_rootTree;
+			//*pResult = s_rootTree;
 		}
 	}
 	
@@ -307,16 +311,16 @@ NGOS_API(NGOS_UIOBJECT_HANDLE) NGOS_GetRootObject(NGOS_ROOT_OBJTREE_HANDLE hRoot
 	TYPE_NGOS_PID pid = NGOS_GetRootObjTreeOwnerPID(hRootTree);
 	if(pid == OSI_GetPID())
 	{
-		if(s_rootTree)
-			return s_rootTree->RootUIObject;
+		//if(s_rootTree)
+		//	return s_rootTree->RootUIObject;
 	}
 	else
 	{
-		RootTreeClient* pClient = (RootTreeClient*)HandleMapDecode((void*)hRootTree);
-		if(pClient)
-		{
-			return clientRPCGetRootUIObject(pClient);
-		}
+		//RootTreeClient* pClient = (RootTreeClient*)HandleMapDecode((void*)hRootTree);
+		//if(pClient)
+		//{
+		//	return clientRPCGetRootUIObject(pClient);
+		//}
 	}
 
 	return NULL;

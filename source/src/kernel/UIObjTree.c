@@ -1,9 +1,10 @@
 //
-// LocalUIObjTreeImp.c 
+// UIObjTree.c 
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "./LocalUIObjTreeImp.h"
+#include "./perheader.h"
+#include "./UIObjTree.h"
 #include "./RootObjTreeEnv.h"
 #include "./UIObject.h"
 #include "../render_engine/RenderScript.h"
@@ -13,10 +14,10 @@ static void UpdateAddedObj(UIObject* pObj);
 
 RootUIObjTree* CreateRootUIObjTree(NGOS_RootTreeEnv* pEnv)
 {
-	NGOS_RootTreeEnv* pRealEnv = (NGOS_RootTreeEnv*) malloc(sizeof(RootTreeEnv));
+	NGOS_RootTreeEnv* pRealEnv = (NGOS_RootTreeEnv*) malloc(sizeof(NGOS_RootTreeEnv));
 	if(pEnv)
 	{
-		*pRealEnv = pEnv;
+		*pRealEnv = *pEnv;
 	}
 	else
 	{
@@ -58,7 +59,7 @@ int RootUIObjTreeMoveObject(RootUIObjTree* pObjTree,NGOS_ROOT_OBJTREE_HANDLE hOb
 	{
 		if(pObj->hOwnerTree == pObjTree->hTree && pNewParent->hOwnerTree == pObjTree->hTree)
 		{
-			//TODO
+			//TODO demo‘›≤ª µœ÷
 		}
 	}
 }
@@ -81,7 +82,8 @@ NGOS_RENDER_SCRIPT_BUFFER_HANDLE RootUIObjTreeGetRenderScrpit(RootUIObjTree* pOb
 	
 	NGOS_RENDER_SCRIPT_BUFFER_HANDLE hResult = CreateRenderScript();
 	int vectorCount = UIObjectVectorGetCount(&theVector);
-	for(int i=0;i<vectorCount;++i)
+	int i=0;
+	for(i=0;i<vectorCount;++i)
 	{
 		NGOS_UIOBJECT_HANDLE hObj = UIObjectVectorGet(&theVector,i);
 		UIObject* pObj = HandleMapDecodeUIObject(hObj,NULL);
@@ -91,7 +93,7 @@ NGOS_RENDER_SCRIPT_BUFFER_HANDLE RootUIObjTreeGetRenderScrpit(RootUIObjTree* pOb
 
 			if(pObj->Imp)
 			{
-				NGOS_RENDER_SCRIPT_BUFFER_HANDLE hObjRS = pObj->Imp->pfnGetRenderScript(pObj,pClipRect);
+				NGOS_RENDER_SCRIPT_BUFFER_HANDLE hObjRS = pObj->Imp->fnGetRenderScript(pObj,pClipRect);
 				if(hObjRS)
 				{
 					AppendRenderScript(hResult,hObjRS);

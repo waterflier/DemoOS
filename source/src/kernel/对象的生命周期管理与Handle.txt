@@ -1,0 +1,33 @@
+UIObject 
+HANDLE: 包括UIObject所属的Server PID,UIObject在Serverl里的index
+client看来: handle包含上述信息，同时也能指代一个本地的proxy对象
+HANDLE createUIObject() 这个操作创建未上树的对象（上树前也只有该进程能访问），不通过进程间通信就能完成操作?
+在把创建的对象上树后，如何保证HANDLE值不变
+
+server看来:能通过Handle decode出一个确切的UIObject*，也能反向的把一个UIObject Encode成Handle
+
+上树的对象生命周期属于server,否则属于创建的client，client创建了UIObject但没有及时释放的时候，能否在client进程结束后自动删除？
+这特性必须改内核？在process结构释放的时候释放一些关联数据
+
+
+UIObjecTree
+属于server
+ 
+Animation
+
+
+
+==============================
+client : createUIObject("ImageObject",id)
+pobj = createProxyObject 
+OBJ_HANDLE = encode_proxy(pobj)
+setID(pobj,id)
+return objHandle;
+
+
+client:GetRootObject(hRootTree)
+{
+   
+}
+===========================
+想不清楚　＞　＜　先实现本地的好了

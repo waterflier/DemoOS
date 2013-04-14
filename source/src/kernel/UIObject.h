@@ -7,6 +7,8 @@
 #define _NGOS_UIOBJECT_H_
 
 #include "../render_engine/RenderScript.h"
+#include "./objectIndex/UIObjectVector.h"
+#include "./input/InputTarget.h"
 
 /*
 关键数据结构
@@ -81,25 +83,34 @@ typedef struct tagUIObjectEffectList
 
 }UIObjectEffectList;
 
+
+
 typedef struct tagUIObjectProvier
 {
-	(NGOS_RENDER_SCRIPT_BUFFER_HANDLE) (*pfnGetRenderScript) (UIObject* pSelf,RECT* pClipRect);
+
+	pfnGetRenderScript fnGetRenderScript;
 }UIObjectProvier;
 
 typedef struct tagUIObject
 {
-	CommonObjectHeader Header;
-	TYPE_NGOS_PID      OwnerPID:
-	UIObjectProvier*   Imp;//指向type info,
+	//CommonObjectHeader Header;
+	TYPE_NGOS_PID      OwnerPID;
 
+	//class info
+	UIObjectProvier*   Imp;//指向type info,
+	//idinfo
+	uint16_t IDLength;
+	char     ID;
+
+	//构成树结构的关键属性
 	NGOS_UIOBJECT_HANDLE hSelf;
 	NGOS_UIOBJECT_HANDLE hParent;
 	//必须成为控件的逻辑孩子才会有这个值
 	NGOS_UIOBJECT_HANDLE hOwnerControl;
 	NGOS_ROOT_OBJTREE_HANDLE hOwnerTree;
 	
-	UIObjectVector Children;
-	UIObjectVector LogicControlChildren;
+	UIObjectVector* pChildren;
+	UIObjectVector* pLogicControlChildren;
 
 	//flags 
 	// self-visible parent-visible children-visible logic-children-visible is-limnit-child 
@@ -113,27 +124,25 @@ typedef struct tagUIObject
 	//postion info
 	//uint8_t	CoordinateType; 
 	//uint16_t DPI;
-	RealRECT ObjRealRect;
+	RealRECT ObjRealRect; //demo可以试一下基于浮点数的坐标系
 	RECT ObjRect;
 	RECT ObjAbsRect;
-	//位置表达式,先不管
+	RECT ObjDrawRect;//绘制影响矩形
+
+	//位置表达式,demo应该还是需要支持的
 	
 
 	InputTarget* pInputTarget;
 	UIObjectTransInfo* pTransInfo;
 	UIObjectTransMeshInfo* pMeshInfo;
 	UIObjectMaskInfo* pMaskInfo;
-	UIObjectBlendInfo* pBlendInfo;
+	//UIObjectBlendInfo* pBlendInfo;
 	UIObjectEffectList* pEffectList;
-	//class info
-	
-	//idinfo
-	uint16_t IDLength;
-	char     ID;
+
 }UIObject;
 
 //两段式构造与销毁
-UIObject* MallocUIObject(NGOS_RootTreeEnv* pEnv);
+UIObject* MallocUIObject(NGOS_RootTreeEnv* pEnv,size_t userDataLen);
 int UIObjectInit(UIObject* pObj);
 int UIObjectUninit(UIObject* pObj);
 int FreeUIObject(UIObject* pObj);

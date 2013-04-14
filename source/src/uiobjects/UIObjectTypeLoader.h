@@ -1,7 +1,7 @@
 //
-// Curve.c 
+// UIObjectTypeLoader.h 
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "../perheader.h"
-#include "./Curve.h"
+
+TypeLoader* NGOS_GetDefaultUIObjectTypeLoader();

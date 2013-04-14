@@ -57,7 +57,7 @@ typedef void* TYPE_NGOS_MSGQUEUE_RUNLOOP;
 typedef void* TYPE_NGOS_MSG_PARAM;
 typedef void* TYPE_NGOS_MSG_DATA;
 
-typedef void* NGOS_ROOT_OBJTREE_HANDLE;
+
 typedef struct
 {
 	char * szHostname;
@@ -76,11 +76,13 @@ typedef struct tagNGOS_RootTreeEnv
 	void* (*fnAlloc) (uint8_t type,void* ud,void* ptr,size_t newSize,size_t oldSize);
 }NGOS_RootTreeEnv;
 
-typedef void* NGOS_UIOBJECT_HANDLE;
-typedef void* TYPE_NGOS_ID;
-typedef void* NGOS_UIOBJECT_LOOKUP_ITERATOR;
+typedef uint32_t NGOS_HANDLE;
+typedef uint32_t NGOS_UIOBJECT_HANDLE;
+typedef uint32_t NGOS_ROOT_OBJTREE_HANDLE;
+typedef void*    NGOS_UIOBJECT_LOOKUP_ITERATOR;
 
 typedef void* NGOS_ANIMATION_HANDLE;
+typedef void* NGOS_RENDER_SCRIPT_BUFFER_HANDLE;
 
 //所有的ud都要类似这个结构
 typedef struct tagUserDataContext

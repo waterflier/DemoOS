@@ -12,6 +12,8 @@
 
 
 #include "./RootObjTreeEnv.h"
+#include "./objectIndex/DirtyRectIndex.h"
+#include "./objectIndex/UIObjectRectIndex.h"
 
 typedef struct tagRootUIObjTree
 {

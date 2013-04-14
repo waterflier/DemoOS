@@ -3,6 +3,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include "./perheader.h"
 #include "./RootObjTreeEnv.h"
 
 static void* DefaultAlloc(uint8_t type,void* ud,void* ptr,size_t newSize,size_t oldSize)
