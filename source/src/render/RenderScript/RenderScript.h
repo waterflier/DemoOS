@@ -1,5 +1,6 @@
 #ifndef _NGOS_RENDER_SCRIPT_H_
 #define _NGOS_RENDER_SCRIPT_H_
+#include "RenderDefine.h"
 #include <stdlib.h>
 /*问题：  最基本的问题，一， 为何需要渲染脚本：1. 隔离渲染实现 2. 为ipc提供marshal实现  3.方便定制半主动对象 4....
 						二， 依赖于问题一， 渲染脚本需要多强的语言能力（表达式， 迭代调用， 参数传递， 结构化控制）
@@ -10,18 +11,16 @@
 			本地内存， 远程内存， 本地显卡缓存， 远程显卡缓存， 网络设备)， 定位资源的实现分层到哪里实现
 
 */
-#define NGRE_RESULT			long
 #define NGRE_SCRIPT_HANDLE	void*
 
-#define NGRE_SUCCESS				0
 #define NGRE_SCRIPT_DECODE_FAIL		-1
 #define NGRE_SCRIPT_RUN_FAIL		-100
-typedef struct NGREInitParam{
-}*LPNGREInitParam;
+typedef struct NGREScpritInitParam{
+}*LPNGREScriptInitParam;
 
-NGRE_RESULT NGREInit(LPNGREInitParam pParam);
+NGRE_RESULT NGREScriptInit(LPNGREScriptInitParam pParam);
 NGRE_RESULT	NGRERunScriptCode(NGRE_SCRIPT_HANDLE hScript);
-void		NGREUninit();
+void		NGREScriptUninit();
 
 //drawbitmap
 //drawtext

@@ -5,6 +5,8 @@
 跟resource manager提供的粒度不同， resource manager提供任何id到内存的映射， 这里要不仅要把内存解释为bitmap结构还可能
 创建bitmap 内存到显存的映射
 */
+#include "RenderDefine.h"
+#include "RenderResource.h"
 
 typedef const char* NGREResId;
 
@@ -14,18 +16,8 @@ typedef const char* NGREResId;
 	}restype##R
 
 
-typedef struct NGREBitmap{
-	void* pExtra;
-}NGREBitmap, *LPNGREBitmap;
-
 NGRE_DECLARE_RESOURCE(NGREBitmap);
 
-
-
-
-typedef struct NGREMask{
-	void* pExtra;
-}NGREMask, *LPNGREMask;
 
 NGRE_DECLARE_RESOURCE(NGREMask);
 

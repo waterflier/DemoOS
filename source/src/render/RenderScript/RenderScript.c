@@ -1,7 +1,7 @@
 #include "RenderScript.h"
 #include "ScriptCoder.h"
 
-NGRE_RESULT NGREInit(LPNGREInitParam pParam)
+NGRE_RESULT NGREScriptInit(LPNGREScriptInitParam pParam)
 {
 	NGREInitScriptCoderParam ScriptCoder;
 	NGRE_RESULT lResult = NGREInitScriptCoder(&ScriptCoder);
@@ -20,7 +20,7 @@ NGRE_RESULT	NGRERunScriptCode(NGRE_SCRIPT_HANDLE hScript)
 	return lResult;
 }
 
-void		NGREUninit()
+void		NGREScriptUninit()
 {
 	NGREUninitScriptCoder();
 }

@@ -32,8 +32,4 @@ NGRE_RESULT NGREOpBlendBitmap(NGREBitmapR pBmpSrc, CLPNGREOpIRect pRectSrc, NGRE
 
 
 
-
-
-
-
 #endif

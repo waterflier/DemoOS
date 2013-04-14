@@ -7,7 +7,7 @@ Target=libngre_script.a
 
 
 IncludeDirs = 
-ProjectCFlag= -I.
+ProjectCFlag= -I. -I../RenderEngine
 ProjectCppFlag=
 
 ProjectLinkFlag:= -m32
