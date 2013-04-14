@@ -1,0 +1,31 @@
+CC=gcc
+SKIA_PATH=/root/win_work/skia
+BUILD_CONFIG=Debug
+TEMP_PATH:=../temp/$(BUILD_CONFIG)
+OUT_PATH:=../out/$(BUILD_CONFIG)
+SKIA_OUT:=$(SKIA_PATH)/linux_out/$(BUILD_CONFIG)/obj.target/gyp
+
+.PHONY:Debug
+Debug:$(OUT_PATH)/SpeedTests
+BUILD_CONFIG:=debug
+
+
+.PHONY:Compile
+Compile:$(TEMP_PATH)/main.o
+
+$(OUT_PATH)/SpeedTests:$(TEMP_PATH)/main.o
+	mkdir -p $(OUT_PATH)
+	$(CC) -m32  -o $(OUT_PATH)/SpeedTests $(TEMP_PATH)/main.o -Wl,--start-group $(SKIA_OUT)/libskia_effects.a $(SKIA_OUT)/libskia_images.a $(SKIA_OUT)/libskia_core.a $(SKIA_OUT)/libskia_opts.a $(SKIA_OUT)/libskia_opts_ssse3.a $(SKIA_OUT)/libskia_ports.a $(SKIA_OUT)/libskia_sfnt.a $(SKIA_OUT)/libskia_utils.a $(SKIA_OUT)/libcityhash.a $(SKIA_OUT)/libskia_gr.a $(SKIA_OUT)/libskia_skgr.a $(SKIA_OUT)/libjpeg.a -Wl,--end-group -lpthread -lfreetype -lfontconfig -ldl -lGL -lGLU -lpng
+		
+		
+$(TEMP_PATH)/main.o:main.cpp
+	mkdir -p $(TEMP_PATH)
+	$(CC) '-DSK_GAMMA_SRGB' '-DSK_GAMMA_APPLY_TO_A8' '-DSK_ALLOW_STATIC_GLOBAL_INITIALIZERS=1' \
+		'-DSK_SCALAR_IS_FLOAT' '-DSK_CAN_USE_FLOAT' '-DSK_SUPPORT_GPU=1' '-DSK_SAMPLES_FOR_X' \
+		'-DSK_BUILD_FOR_UNIX' '-DSK_USE_POSIX_THREADS' '-DGR_LINUX_BUILD=1' '-DSK_DEBUG' '-DGR_DEBUG=1' \
+		'-DSK_DEVELOPER=1' -I$(SKIA_PATH)/include/core -I$(SKIA_PATH)/include/config -I$(SKIA_PATH)/include/gpu \
+		-I$(SKIA_PATH)/include/utils -I$(SKIA_PATH)/include/pipe -I$(SKIA_PATH)/include/images \
+		-I$(SKIA_PATH)/include/device -I$(SKIA_PATH)/include/effects -I$(SKIA_PATH)/include/text \
+		-I$(SKIA_PATH)/include/lazy \
+		-Wall -Wextra -Wno-unused -Wno-unused-parameter -Wno-c++11-extensions -m32 -g  -MMD \
+		-c -o $(TEMP_PATH)/main.o main.cpp
