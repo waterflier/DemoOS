@@ -5,6 +5,9 @@
 
 #include "./perheader.h"
 #include "./RootObjTree.h"
+#include "./UIObjTree.h"
+#include "./UIObject.h"
+#include "./HandleMap.h"
 #include "../os_interface/os_interface.h"
 
 //void for_each()
@@ -235,7 +238,9 @@ NGOS_API(int) NGOS_UninitRootUIObjTreeEnv(void* param)
 ////////////////////////////////////////////////Root Tree
 NGOS_API(NGOS_ROOT_OBJTREE_HANDLE) NGOS_CreateRootObjTree()
 {
-	return NULL;
+	RootUIObjTree* pTree = CreateRootUIObjTree(NULL);
+	NGOS_ROOT_OBJTREE_HANDLE hResult = pTree->hTree;
+	return hResult;
 }
 
 NGOS_API(int) NGOS_GetRootObjTree(TYPE_NGOS_PID ownerPID, TYPE_NGOS_OBJTREE_OWNERHOST_INFO* ownerHostInfo,NGOS_ROOT_OBJTREE_HANDLE* pResult)
@@ -308,6 +313,14 @@ NGOS_API(TYPE_NGOS_PID) NGOS_GetRootObjTreeOwnerPID(NGOS_ROOT_OBJTREE_HANDLE hRo
 //得到root ui object,这个object一定是一个无id的layoutobject,在创建objtree的时候由objtree创建
 NGOS_API(NGOS_UIOBJECT_HANDLE) NGOS_GetRootObject(NGOS_ROOT_OBJTREE_HANDLE hRootTree)
 {
+	RootUIObjTree* pTree = (RootUIObjTree*)HandleMapDecodeRootTree(hRootTree,NULL);
+	if(pTree)
+	{
+		return pTree->RootUIObject;
+	}
+
+	return NULL;
+
 	TYPE_NGOS_PID pid = NGOS_GetRootObjTreeOwnerPID(hRootTree);
 	if(pid == OSI_GetPID())
 	{
@@ -326,3 +339,24 @@ NGOS_API(NGOS_UIOBJECT_HANDLE) NGOS_GetRootObject(NGOS_ROOT_OBJTREE_HANDLE hRoot
 	return NULL;
 }
 
+//测试使用
+NGOS_API(int) NGOS_UpdateRootObjTree(NGOS_ROOT_OBJTREE_HANDLE hRootTree)
+{
+	RootUIObjTree* pTree = HandleMapDecodeRootTree(hRootTree,NULL);
+	if(pTree)
+	{
+		printf("update root obj tree\n");
+	}
+}
+
+NGOS_API(int) NGOS_AddChild(NGOS_UIOBJECT_HANDLE hParent,NGOS_UIOBJECT_HANDLE hChild)
+{
+	UIObject* pObj = HandleMapDecodeUIObject(hParent,NULL);
+	//UIObject* pChild = HandleMapDecodeUIObject(hParent);
+	if(pObj)
+	{
+		return UIObjectAddChild(pObj,hChild,FALSE);
+	}
+
+	return -1;
+}

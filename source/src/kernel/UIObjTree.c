@@ -8,6 +8,7 @@
 #include "./RootObjTreeEnv.h"
 #include "./UIObject.h"
 #include "../render_engine/RenderScript.h"
+#include "../uiobjects/UIObjectTypeLoader.h"
 
 static void UpdateObjPos(UIObject* pObj);
 static void UpdateAddedObj(UIObject* pObj);
@@ -28,6 +29,12 @@ RootUIObjTree* CreateRootUIObjTree(NGOS_RootTreeEnv* pEnv)
 	if(pResult)
 	{
 		pResult->RunEnv = pRealEnv;
+		pResult->hTree = HandleMapEncodeRootTree(pResult);
+		pResult->DPI = 72;
+		//pResult->DirtyRectManager =
+		//pResult->UIObjectRectManager = 
+		//创建默认的RootUIObject
+		pResult->RootUIObject = NGOS_CreateUIObject(NGOS_GetDefaultUIObjectTypeLoader(),"LayoutObject",NULL);
 	}
 	else
 	{

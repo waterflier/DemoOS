@@ -1,9 +1,9 @@
 include ../../mk.config
 ###################################################################
 ProjectName=DemoOS
-ModuleName=os_interface
+ModuleName=ngoskernel
 TargetType=Lib
-Target=libosi_interface.a
+Target=libngoskernel.a
 
 IncludeDirs = 
 ProjectCFlag= -I ../../inc

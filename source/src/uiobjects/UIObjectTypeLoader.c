@@ -19,7 +19,9 @@ static const char* GetLayoutObjectClassName(UIObjectTypeInfo* self)
 
 static UIObject* LayoutObjectCreateUIObject(UIObjectTypeInfo* self,const char* className,const char* id)
 {
-
+	UIObject* pResult = MallocUIObject(NULL,0);
+	UIObjectInit(pResult);
+	return pResult;
 }
 
 
@@ -83,4 +85,23 @@ TypeLoader* NGOS_GetDefaultUIObjectTypeLoader()
 	}
 
 	return &s_defaultUIObjectLoader;
+}
+
+NGOS_UIOBJECT_HANDLE NGOS_CreateUIObject(TypeLoader* pLoader,const char* className,const char* id)
+{
+	UIObjectTypeInfo* pType = pLoader->fnGetUIObjectTypeInfoByClassName(pLoader,className);
+	if(pType)
+	{
+		if(pType->fnCraeteUIObject)
+		{
+			UIObject* pResultObj = pType->fnCraeteUIObject(pType,className,id);
+			if(pResultObj)
+			{
+				pResultObj->pTypeInfo = pType;
+				return pResultObj->hSelf;
+			}
+		}
+	}
+
+	return NULL;
 }
