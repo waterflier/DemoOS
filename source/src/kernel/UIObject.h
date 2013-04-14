@@ -6,6 +6,7 @@
 #ifndef _NGOS_UIOBJECT_H_
 #define _NGOS_UIOBJECT_H_
 
+#include "./TypeLoader.h"
 #include "../render_engine/RenderScript.h"
 #include "./objectIndex/UIObjectVector.h"
 #include "./input/InputTarget.h"
@@ -87,7 +88,7 @@ typedef struct tagUIObjectEffectList
 
 typedef struct tagUIObjectProvier
 {
-
+	//是否可以和TypeInfo
 	pfnGetRenderScript fnGetRenderScript;
 }UIObjectProvier;
 
@@ -97,6 +98,7 @@ typedef struct tagUIObject
 	TYPE_NGOS_PID      OwnerPID;
 
 	//class info
+	UIObjectTypeInfo*  pTypeInfo;
 	UIObjectProvier*   Imp;//指向type info,
 	//idinfo
 	uint16_t IDLength;
@@ -127,8 +129,9 @@ typedef struct tagUIObject
 	RealRECT ObjRealRect; //demo可以试一下基于浮点数的坐标系
 	RECT ObjRect;
 	RECT ObjAbsRect;
-	RECT ObjDrawRect;//绘制影响矩形
+	RECT ObjDrawRect;//绘制影响矩形，只对索引器有效。更新DrawRect保证如果绘制的ViewRect与DrawRect不相交,那么Object一定会影响ViewRect
 
+	//加入Content Update事件，为位置表达式提供 content.width,content.height 支持
 	//位置表达式,demo应该还是需要支持的
 	
 
@@ -138,6 +141,8 @@ typedef struct tagUIObject
 	UIObjectMaskInfo* pMaskInfo;
 	//UIObjectBlendInfo* pBlendInfo;
 	UIObjectEffectList* pEffectList;
+	
+	
 
 }UIObject;
 
@@ -146,6 +151,7 @@ UIObject* MallocUIObject(NGOS_RootTreeEnv* pEnv,size_t userDataLen);
 int UIObjectInit(UIObject* pObj);
 int UIObjectUninit(UIObject* pObj);
 int FreeUIObject(UIObject* pObj);
+void* UIObjectGetUserDataStart(UIObject* pObj);
 
 int UIObjectAddChild(UIObject* pObject,NGOS_UIOBJECT_HANDLE hChild,BOOL isLogicChild);
 int UIObjectRemoveChild(UIObject* pObject,NGOS_UIOBJECT_HANDLE hChild);

@@ -23,12 +23,12 @@ static void FireCreateEvent(UIObject* pObject)
 
 
 
-UIObject* MallocUIObject(NGOS_RootTreeEnv* pEnv)
+UIObject* MallocUIObject(NGOS_RootTreeEnv* pEnv,size_t userDataLen)
 {
 	if(pEnv)
 	{
 		UIObject* pResult;
-		pResult = (UIObject*)pEnv->fnAlloc(NGOS_ENTITY_TYPE_UIOBJ,pEnv->AllocUD,NULL,sizeof(UIObject),0);
+		pResult = (UIObject*)pEnv->fnAlloc(NGOS_ENTITY_TYPE_UIOBJ,pEnv->AllocUD,NULL,sizeof(UIObject)+userDataLen,0);
 		if(pResult)
 		{
 			//pResult->Header.Env = pEnv;
@@ -56,6 +56,13 @@ int FreeUIObject(UIObject* pObj)
 	{
 
 	}
+}
+
+void* UIObjectGetUserDataStart(UIObject* pObj)
+{
+	unsigned char* pData = (unsigned char*) pObj;
+	pData += sizeof(UIObject);
+	return (void*) pData;
 }
 
 int UIObjectAddChild(UIObject* pObject,NGOS_UIOBJECT_HANDLE hChild,BOOL isLogicChild)

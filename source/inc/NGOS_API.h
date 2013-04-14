@@ -43,15 +43,15 @@ NGOS_API(NGOS_UIOBJECT_HANDLE) NGOS_GetRootObject(NGOS_ROOT_OBJTREE_HANDLE hRoot
 
 ////////////////////////////////////////////////UIObject
 //建立健全更完善的classloader查找和classfactory，demo先不管了
-NGOS_API(NGOS_UIOBJECT_HANDLE) NGOS_CreateUIObject(const char* id,const char* className,void* classloader);
+//NGOS_API(NGOS_UIOBJECT_HANDLE) NGOS_CreateBaseUIObject(const char* id,const char* className,void* classloader);
 NGOS_API(int) NGOS_DestoryUIObject(NGOS_UIOBJECT_HANDLE hUIObject);
 
 //得到类型标签,通过一些宏可以得到更细节的类型，对象一旦创建，其类型标签就不会变了。
 NGOS_API(uint32_t) NGOS_GetUIObjectTypeFlags(NGOS_UIOBJECT_HANDLE hUIObject);
 //对象一旦创建,其类型名就不会改变了。这里指针指向的内存区域不归该UIObject所有(归classloader),所以不用担心返回值的生命周期
 NGOS_API(const char*) NGOS_GetUIObjectClassName(NGOS_UIOBJECT_HANDLE hUIObject);
-NGOS_API(TYPE_NGOS_ID) NGOS_GetUIObjectID(NGOS_UIOBJECT_HANDLE hUIObject);
-NGOS_API(int) NGOS_UpdateUIObjectID(NGOS_UIOBJECT_HANDLE hUIObject,TYPE_NGOS_ID newID);
+NGOS_API(const char*) NGOS_GetUIObjectID(NGOS_UIOBJECT_HANDLE hUIObject);
+//NGOS_API(int) NGOS_UpdateUIObjectID(NGOS_UIOBJECT_HANDLE hUIObject,TYPE_NGOS_ID newID);
 
 NGOS_API(NGOS_ROOT_OBJTREE_HANDLE) NGOS_GetUIObjectOwnerRootTree(NGOS_UIOBJECT_HANDLE hUIObject);
 NGOS_API(NGOS_UIOBJECT_HANDLE) NGOS_GetUIObjectParent(NGOS_UIOBJECT_HANDLE hUIObject);
@@ -61,8 +61,9 @@ NGOS_API(int) NGOS_AddChild(NGOS_UIOBJECT_HANDLE hParent,NGOS_UIOBJECT_HANDLE hC
 //控件的逻辑孩子,这个是新概念，会有专门的文档描述这个设计
 NGOS_API(int) NGOS_AddControlChild(NGOS_UIOBJECT_HANDLE hParent,NGOS_UIOBJECT_HANDLE hChild);
 NGOS_API(int) NGOS_RemoveChild(NGOS_UIOBJECT_HANDLE hUIObject,uint32_t params);
-//控件的逻辑孩子是不能移动的
+//控件的逻辑孩子是不能移动的?
 NGOS_API(int) NGOS_MoveObject(NGOS_UIOBJECT_HANDLE hUIObject,NGOS_UIOBJECT_HANDLE newParent);
+
 NGOS_API(uint32_t) NGOS_GetUIObjectChildrenCount(NGOS_UIOBJECT_HANDLE hUIObject);
 //根据经验,遍历孩子的操作很少进行，顾这里的优化可以不用那么到位
 NGOS_API(NGOS_UIOBJECT_LOOKUP_ITERATOR) NGOS_StartLoopupChildren(NGOS_UIOBJECT_HANDLE hUIObject);
@@ -86,6 +87,8 @@ NGOS_API(int) NGOS_SetUIObjectVisibleFlags(NGOS_UIOBJECT_HANDLE hUIObject,uint32
 NGOS_API(int) NGOS_GetUIObjectAbsRect(NGOS_UIOBJECT_HANDLE hUIObject,RECT* pRect);
 NGOS_API(int) NGOS_GetUIObjectRect(NGOS_UIOBJECT_HANDLE hUIObject,RECT* pRect);
 NGOS_API(int) NGOS_SetUIObjectRect(NGOS_UIOBJECT_HANDLE hUIObject,RECT* pRect);
+NGOS_API(int) NGOS_ResizeUIObject(NGOS_UIOBJECT_HANDLE hUIObject);
+NGOS_API(int) NGOS_GetUIObjectSize(NGOS_UIOBJECT_HANDLE hUIObject);
 //NGOS_API(int) NGOS_GetUIObjectRectExpString(NGOS_UIOBJECT_HANDLE hUIObject,RECT* pRect);
 NGOS_API(int) NGOS_GetUIObjectPosTransMartix(NGOS_UIOBJECT_HANDLE hUIObject);
 NGOS_API(int) NGOS_SetUIObjectPosTransMartix(NGOS_UIOBJECT_HANDLE hUIObject);
@@ -118,7 +121,10 @@ NGOS_API(int) NGOS_SetUIObjectCotentMask(NGOS_UIOBJECT_HANDLE hUIObject);
 NGOS_API(int) NGOS_SetUIObjectAttributeByString(const char* attrName,const char* attrValue,uint32_t valueLen);
 NGOS_API(int) NGOS_GetUIObjectAttributeToString(const char* attrName,char* resultBuffer,uint32_t* resultBufferLen);
 ///////////////////////////////////////////////UIObject Type Loader
-typedef NGOS_RENDER_SCRIPT_BUFFER_HANDLE (*pfnGetRenderScript) (void* pSelf,RECT* pClipRect);
+
+
+//pViewRect是相对于RootTree的。
+typedef NGOS_RENDER_SCRIPT_BUFFER_HANDLE (*pfnGetRenderScript) (void* pSelf,RECT* pViewRect);
 
 
 //////////////////////////////////////////////// Animation

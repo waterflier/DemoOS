@@ -24,7 +24,7 @@ chmod +x ./rootfs/etc/profile
 chmod +x ./rootfs/etc/init.d/rcS
 chmod +x ./rootfs/etc/init.d/rc.local
 
-cp ${ARCH_LIB_PATH}/* ./rootfs/lib/
+cp -a ${ARCH_LIB_PATH}/* ./rootfs/lib/
 
 #create device
 cd rootfs

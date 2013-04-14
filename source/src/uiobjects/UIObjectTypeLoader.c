@@ -5,11 +5,33 @@
 
 #include "./perheader.h"
 #include "./UIObjectTypeLoader.h"
+#include "../kernel/UIObject.h"
 #include "./ImageObject.h"
 #include "./TextObject.h"
 #include "./TextureObject.h"
 
 static TypeLoader s_defaultUIObjectLoader = {0};
+
+static const char* GetLayoutObjectClassName(UIObjectTypeInfo* self)
+{
+	return "LayoutObject";
+}
+
+static UIObject* LayoutObjectCreateUIObject(UIObjectTypeInfo* self,const char* className,const char* id)
+{
+
+}
+
+
+UIObjectTypeInfo s_LayoutObjecTypeInfo =
+{
+	.fnGetClassName = GetLayoutObjectClassName,
+	.fnCraeteUIObject = LayoutObjectCreateUIObject,
+	.fnGetOwnerTypeLoader = NGOS_GetDefaultUIObjectTypeLoader,
+	.fnAddRef = NULL,
+	.fnRelease = NULL
+};
+
 
 static UIObjectTypeInfo* GetDefaultUIObjectTypeInfo(TypeLoader* self,const char* className)
 {
@@ -20,7 +42,7 @@ static UIObjectTypeInfo* GetDefaultUIObjectTypeInfo(TypeLoader* self,const char*
 		case 'I':
 			if(strcmp(className,"ImageObject") == 0)
 			{
-				//GetImageObjectTypeInfo()->Create
+				return GetImageObjectTypeInfo();
 			}
 			break;
 		case 'T':
@@ -33,6 +55,12 @@ static UIObjectTypeInfo* GetDefaultUIObjectTypeInfo(TypeLoader* self,const char*
 
 			}
 			break;
+		case 'L':
+			if(strcmp(className,"LayoutObject") == 0)
+			{
+				return &s_LayoutObjecTypeInfo;
+			}
+			break;
 		}
 	}
 
@@ -43,11 +71,11 @@ static UIObjectTypeInfo* GetDefaultUIObjectTypeInfo(TypeLoader* self,const char*
 
 TypeLoader* NGOS_GetDefaultUIObjectTypeLoader()
 {
-	if(s_defaultUIObjectLoader.fnCreateUIObject == NULL)
+	if(s_defaultUIObjectLoader.fnGetUIObjectTypeInfo == NULL)
 	{
 		//init it
 		//s_defaultUIObjectLoader.fnCreateUIObject = CreateDefaultUIObject;
-		s_defaultUIObjectLoader.fnGetUIObjectTypeInfo = NULL;
+		s_defaultUIObjectLoader.fnGetUIObjectTypeInfo = GetDefaultUIObjectTypeInfo;
 		s_defaultUIObjectLoader.fnGetUIObjectTypeInfoByClassName = NULL;
 		s_defaultUIObjectLoader.fnAddRef = NULL;
 		s_defaultUIObjectLoader.fnRelease = NULL;
