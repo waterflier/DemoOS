@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SpeedTests", "..\src\render\SpeedTests\SpeedTests.vcxproj", "{C7259906-6BB3-4259-8407-9F36956FA608}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RenderScript", "..\src\render\RenderScript\RenderScript.vcxproj", "{47085F48-06E1-4E81-B47E-139652C8FB2B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RenderEngine", "..\src\render\RenderEngine\RenderEngine.vcxproj", "{38B4D9CD-B39B-40EA-9D0C-1ACB3CD5E523}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "resource_manager", "..\src\resource_manager\resource_manager.vcxproj", "{B75AC47A-7767-444F-8763-13410ED661FC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C7259906-6BB3-4259-8407-9F36956FA608}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C7259906-6BB3-4259-8407-9F36956FA608}.Debug|Win32.Build.0 = Debug|Win32
+		{C7259906-6BB3-4259-8407-9F36956FA608}.Release|Win32.ActiveCfg = Release|Win32
+		{C7259906-6BB3-4259-8407-9F36956FA608}.Release|Win32.Build.0 = Release|Win32
+		{47085F48-06E1-4E81-B47E-139652C8FB2B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{47085F48-06E1-4E81-B47E-139652C8FB2B}.Debug|Win32.Build.0 = Debug|Win32
+		{47085F48-06E1-4E81-B47E-139652C8FB2B}.Release|Win32.ActiveCfg = Release|Win32
+		{47085F48-06E1-4E81-B47E-139652C8FB2B}.Release|Win32.Build.0 = Release|Win32
+		{38B4D9CD-B39B-40EA-9D0C-1ACB3CD5E523}.Debug|Win32.ActiveCfg = Debug|Win32
+		{38B4D9CD-B39B-40EA-9D0C-1ACB3CD5E523}.Debug|Win32.Build.0 = Debug|Win32
+		{38B4D9CD-B39B-40EA-9D0C-1ACB3CD5E523}.Release|Win32.ActiveCfg = Release|Win32
+		{38B4D9CD-B39B-40EA-9D0C-1ACB3CD5E523}.Release|Win32.Build.0 = Release|Win32
+		{B75AC47A-7767-444F-8763-13410ED661FC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B75AC47A-7767-444F-8763-13410ED661FC}.Debug|Win32.Build.0 = Debug|Win32
+		{B75AC47A-7767-444F-8763-13410ED661FC}.Release|Win32.ActiveCfg = Release|Win32
+		{B75AC47A-7767-444F-8763-13410ED661FC}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -6,11 +6,13 @@
 ALL_OBJS:=$(cobjs) $(cppobjs) $(asmobjs)
 ALL_DEPENDS:= $(cobjs:.co=.cd)
 
-LIB_FLAGS := $(foreach name,$(LinkLibs),-l$(name)) 
+LIB_FLAGS := -Wl,--start-group $(foreach name,$(LinkLibs),-l$(name)) -Wl,--end-group
 LIB_FLAGS += $(foreach name,$(LibDirs),-L$(name)) 
 
 CFLAGS := $(GLOBAL_CFLAGS) $(ProjectCFlag)
-LFLAGS := $(LIB_FLAGS) $(GLOBAL_LFLAGS) $(ProjectLFlag) 
+LFLAGS := $(LIB_FLAGS) $(GLOBAL_LFLAGS)  $(ProjectLinkFlag)
+
+CPPFLAGS := $(GLOBAL_CPPFLAGS) $(ProjectCppFlag)
 ###########################################################################	
 $(TEMP_DIR)%.cd : %.c
 	@echo Dpends $<
