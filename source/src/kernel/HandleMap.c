@@ -81,6 +81,8 @@ static NGOS_HANDLE InsertObj(void* pObj,unsigned char objType)
 	hResult =(NGOS_HANDLE) ((objType<<24) | (newFlag<<18) | (unsigned long)(s_pHandleNextInsertAddress - s_pHandleBaseAddress)); 
 	s_pHandleNextInsertAddress->Flag = newFlag | 0x80;
 	s_pHandleNextInsertAddress->pObj = pObj;
+
+	//void* pObj2 = DecodeHandle(hResult);
 	return hResult;
 }
 
@@ -106,7 +108,12 @@ void* HandleMapDecodeUIObject(NGOS_UIOBJECT_HANDLE hObject,TYPE_NGOS_PID* pOwner
 {
 	if(hObject != NULL)
 	{	
-			return DecodeHandle(hObject);
+		unsigned char objType = hObject>>24;
+		if(objType != NGOS_OBJ_TYPE_UIOBJECT)
+		{
+			return NULL;
+		}
+		return DecodeHandle(hObject);
 	}
 
 	return NULL;
@@ -116,6 +123,11 @@ void* HandleMapDecodeRootTree(NGOS_ROOT_OBJTREE_HANDLE hTree,TYPE_NGOS_PID* pOwn
 {
 	if(hTree != NULL)
 	{	
+		unsigned char objType = hTree>>24;
+		if(objType != NGOS_OBJ_TYPE_ROOTTREE)
+		{
+			return NULL;
+		}
 		return DecodeHandle(hTree);
 	}
 
@@ -144,7 +156,7 @@ NGOS_ROOT_OBJTREE_HANDLE HandleMapEncodeRootTree(void* pTree)
 {
 	if(pTree)
 	{
-		RootUIObjTree* pRooTree = (UIObject*) pTree;
+		RootUIObjTree* pRooTree = (RootUIObjTree*) pTree;
 		if(pRooTree->hTree != NULL)
 		{
 			return NULL;

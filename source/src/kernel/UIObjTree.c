@@ -31,15 +31,23 @@ RootUIObjTree* CreateRootUIObjTree(NGOS_RootTreeEnv* pEnv)
 		pResult->RunEnv = pRealEnv;
 		pResult->hTree = HandleMapEncodeRootTree(pResult);
 		pResult->DPI = 72;
-		//pResult->DirtyRectManager =
-		//pResult->UIObjectRectManager = 
+		pResult->DirtyRectManager = CreateDirtyRectIndex(800,600);
+		pResult->UIObjectRectManager = CreateUIObjectRectIndex(); 
 		//创建默认的RootUIObject
 		pResult->RootUIObject = NGOS_CreateUIObject(NGOS_GetDefaultUIObjectTypeLoader(),"LayoutObject",NULL);
+		UIObject* pRootObj = HandleMapDecodeUIObject(pResult->RootUIObject);
+		if(pRootObj)
+		{
+			pRootObj->hOwnerTree = pResult->hTree;
+			pRootObj->ObjAbsRect = pRootObj->ObjRect;
+		}
 	}
 	else
 	{
 		free(pRealEnv);
 	}
+
+	return pResult;
 
 }
 
@@ -81,13 +89,14 @@ int RootUIObjTreePushDirtyRect(RootUIObjTree* pObjTree,RECT* pDirtyRect)
 
 	return NGOS_RESULT_INVALID_PTR;
 }
-
+ 
 NGOS_RENDER_SCRIPT_BUFFER_HANDLE RootUIObjTreeGetRenderScrpit(RootUIObjTree* pObjTree,RECT* pClipRect)
 {
 	UIObjectVector theVector;
+	InitUIObjectVector(&theVector,16);
 	SelectObjectFromUIObjectIndex(pObjTree->UIObjectRectManager,pClipRect,&theVector);
 	
-	NGOS_RENDER_SCRIPT_BUFFER_HANDLE hResult = CreateRenderScript();
+	//NGOS_RENDER_SCRIPT_BUFFER_HANDLE hResult = CreateRenderScript();
 	int vectorCount = UIObjectVectorGetCount(&theVector);
 	int i=0;
 	for(i=0;i<vectorCount;++i)
@@ -103,13 +112,13 @@ NGOS_RENDER_SCRIPT_BUFFER_HANDLE RootUIObjTreeGetRenderScrpit(RootUIObjTree* pOb
 				NGOS_RENDER_SCRIPT_BUFFER_HANDLE hObjRS = pObj->Imp->fnGetRenderScript(pObj,pClipRect);
 				if(hObjRS)
 				{
-					AppendRenderScript(hResult,hObjRS);
-					ReleaseRenderScript(hObjRS);
+					//AppendRenderScript(hResult,hObjRS);
+					//ReleaseRenderScript(hObjRS);
 				}
 			}
 		}
 	}
 
-	return hResult;
+	return NULL;
 }
 

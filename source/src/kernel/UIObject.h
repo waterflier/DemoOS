@@ -101,8 +101,7 @@ typedef struct tagUIObject
 	UIObjectTypeInfo*  pTypeInfo;
 	UIObjectProvier*   Imp;//指向type info,
 	//idinfo
-	uint16_t IDLength;
-	char     ID;
+	char* strID;
 
 	//构成树结构的关键属性
 	NGOS_UIOBJECT_HANDLE hSelf;
@@ -130,7 +129,8 @@ typedef struct tagUIObject
 	RECT ObjRect;
 	RECT ObjAbsRect;
 	RECT ObjDrawRect;//绘制影响矩形，只对索引器有效。更新DrawRect保证如果绘制的ViewRect与DrawRect不相交,那么Object一定会影响ViewRect
-
+	int32_t ObjZorder;
+	int32_t ObjAbsZorder;
 	//加入Content Update事件，为位置表达式提供 content.width,content.height 支持
 	//位置表达式,demo应该还是需要支持的
 	

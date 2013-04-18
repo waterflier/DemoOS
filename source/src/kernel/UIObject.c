@@ -14,6 +14,7 @@ static void UpdateObjectPosInfo(UIObject* pObject,UIObject* pParent)
 	if(pParent == NULL)
 	{
 		pObject->ObjAbsRect = pObject->ObjRect;
+		pObject->ObjAbsZorder = pObject->ObjZorder;
 	}
 	else
 	{
@@ -21,9 +22,19 @@ static void UpdateObjectPosInfo(UIObject* pObject,UIObject* pParent)
 		pObject->ObjAbsRect.right = pObject->ObjRect.right - pObject->ObjRect.left + pParent->ObjAbsRect.left; 
 		pObject->ObjAbsRect.top = pParent->ObjAbsRect.top + pObject->ObjRect.top;
 		pObject->ObjAbsRect.bottom = pObject->ObjRect.bottom - pObject->ObjRect.top + pParent->ObjAbsRect.top; 
+	
+		pObject->ObjAbsZorder = pParent->ObjAbsZorder + 100 + pObject->ObjZorder;
+
+		pObject->hOwnerTree = pParent->hOwnerTree;
 	}
 
 	//update children
+	
+	if(pObject->pChildren == NULL)
+	{
+		return;
+	}
+
 	int i;
 	int count = UIObjectVectorGetCount(pObject->pChildren);
 	for(i=0;i<count;++i)
@@ -39,6 +50,11 @@ static void UpdateObjectPosInfo(UIObject* pObject,UIObject* pParent)
 static void UpdateBindObjectToIndex(UIObject* pObject,RootUIObjTree* pTree)
 {
 	AddObjectToUIObjectIndex(pTree->UIObjectRectManager,pObject->hSelf);
+
+	if(pObject->pChildren == NULL)
+	{
+		return;
+	}
 
 	int i;
 	int count = UIObjectVectorGetCount(pObject->pChildren);
@@ -61,7 +77,7 @@ static void FireCreateEvent(UIObject* pObject)
 
 UIObject* MallocUIObject(NGOS_RootTreeEnv* pEnv,size_t userDataLen)
 {
-	if(pEnv)
+	//if(pEnv)
 	{
 		UIObject* pResult;
 		pResult = malloc(sizeof(UIObject)+userDataLen);
@@ -143,7 +159,7 @@ int UIObjectAddChild(UIObject* pObject,NGOS_UIOBJECT_HANDLE hChild,BOOL isLogicC
 			{
 				return NGOS_RESULT_INVALID_PTR;
 			}
-
+			
 			//todo: 从父到子计算位置表达式，并更新abspos
 			//注意这个过程是无事件的
 			UpdateObjectPosInfo(pChild,pObject);
@@ -163,6 +179,12 @@ int UIObjectAddChild(UIObject* pObject,NGOS_UIOBJECT_HANDLE hChild,BOOL isLogicC
 	}
 
 	return NGOS_RESULT_INVALID_PTR;
+}
+
+int UIObjectGetVisibleRect(UIObject* pObject,RECT* absRect)
+{
+	*absRect = pObject->ObjAbsRect;
+	return 0;
 }
 
 int UIObjectRemoveChild(UIObject* pObject,NGOS_UIOBJECT_HANDLE hChild)

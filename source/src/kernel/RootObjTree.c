@@ -227,6 +227,7 @@ end
 
 NGOS_API(int) NGOS_InitRootUIObjTreeEnv(void* param)
 {
+	InitObjectHandleMap();
 	return 0;
 }
 
@@ -345,7 +346,23 @@ NGOS_API(int) NGOS_UpdateRootObjTree(NGOS_ROOT_OBJTREE_HANDLE hRootTree)
 	RootUIObjTree* pTree = HandleMapDecodeRootTree(hRootTree,NULL);
 	if(pTree)
 	{
-		printf("update root obj tree\n");
+		printf("--update root obj tree\n");
+		//update animation
+		int i;
+		if(pTree->DirtyRectManager)
+		{
+			RectList* pRectList=NULL;
+			GetDirtyRectFromIndex(pTree->DirtyRectManager,&pRectList);
+			int count = GetRectListCount(pRectList);
+			for(i=0;i<count;i++)
+			{
+				RECT* pClipRect = GetRectAtIndex(pRectList,i);
+				printf("SetClipRect(%d,%d,%d,%d)\n",pClipRect->left,pClipRect->top,pClipRect->right,pClipRect->bottom);
+				RootUIObjTreeGetRenderScrpit(pTree,pClipRect);
+			}
+
+			DirtyRectIndexClean(pTree->DirtyRectManager);
+		}
 	}
 }
 
@@ -359,4 +376,22 @@ NGOS_API(int) NGOS_AddChild(NGOS_UIOBJECT_HANDLE hParent,NGOS_UIOBJECT_HANDLE hC
 	}
 
 	return -1;
+}
+
+NGOS_API(int) NGOS_SetUIObjectRect(NGOS_UIOBJECT_HANDLE hUIObject,RECT* pRect)
+{
+	UIObject* pObj = HandleMapDecodeUIObject(hUIObject,NULL);
+	//UIObject* pChild = HandleMapDecodeUIObject(hParent);
+	if(pObj)
+	{
+		return UIObjectMove(pObj,pRect);
+	}
+
+	return -1;
+}
+
+NGOS_API(int) NGOS_DestoryUIObject(NGOS_UIOBJECT_HANDLE hUIObject)
+{
+	//TODO:
+	return 0;
 }

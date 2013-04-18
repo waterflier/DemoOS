@@ -31,11 +31,22 @@ EffectList 某些效果会改变对象的 “绘制影响区域”
 
 */
 
+typedef struct tagUIObjectRectIndexNode
+{
+	NGOS_UIOBJECT_HANDLE hObject;
+	RECT AbsRect;
+	int32_t ZOrder;
+}UIObjectRectIndexNode;
+
 typedef struct tagUIObjectRectIndex
 {
-
+	UIObjectRectIndexNode* pList;
+	size_t Size;
+	size_t Length;
 }UIObjectRectIndex;
 
+UIObjectRectIndex* CreateUIObjectRectIndex();
+void DestroyUIObjectRectIndex(UIObjectRectIndex* pIndex);
 
 int AddObjectToUIObjectIndex(UIObjectRectIndex* pIndex,NGOS_UIOBJECT_HANDLE hObject);
 int RemoveObjectFromUIObjectIndex(UIObjectRectIndex* pIndex,NGOS_UIOBJECT_HANDLE hObject);

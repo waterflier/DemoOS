@@ -21,6 +21,12 @@ static UIObject* LayoutObjectCreateUIObject(UIObjectTypeInfo* self,const char* c
 {
 	UIObject* pResult = MallocUIObject(NULL,0);
 	UIObjectInit(pResult);
+	if(id)
+	{
+		pResult->strID = malloc(strlen(id));
+		strcpy(pResult->strID,id);
+	}
+	
 	return pResult;
 }
 
@@ -73,12 +79,12 @@ static UIObjectTypeInfo* GetDefaultUIObjectTypeInfo(TypeLoader* self,const char*
 
 TypeLoader* NGOS_GetDefaultUIObjectTypeLoader()
 {
-	if(s_defaultUIObjectLoader.fnGetUIObjectTypeInfo == NULL)
+	if(s_defaultUIObjectLoader.fnGetUIObjectTypeInfoByClassName == NULL)
 	{
 		//init it
 		//s_defaultUIObjectLoader.fnCreateUIObject = CreateDefaultUIObject;
-		s_defaultUIObjectLoader.fnGetUIObjectTypeInfo = GetDefaultUIObjectTypeInfo;
-		s_defaultUIObjectLoader.fnGetUIObjectTypeInfoByClassName = NULL;
+		s_defaultUIObjectLoader.fnGetUIObjectTypeInfoByClassName = GetDefaultUIObjectTypeInfo;
+		s_defaultUIObjectLoader.fnGetUIObjectTypeInfo = NULL;
 		s_defaultUIObjectLoader.fnAddRef = NULL;
 		s_defaultUIObjectLoader.fnRelease = NULL;
 		s_defaultUIObjectLoader.fnRegisterTypeInfo = NULL;

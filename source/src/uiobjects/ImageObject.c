@@ -6,9 +6,11 @@
 #include "./perheader.h"
 #include "./ImageObject.h"
 #include "../kernel/UIObject.h"
+#include "../kernel/UIObjTree.h"
 #include "./UIObjectTypeLoader.h"
 
 #include <stdio.h>
+#include <string.h>
 
 static char s_imageRSBuffer[256];
 static NGOS_RENDER_SCRIPT_BUFFER_HANDLE ImageObjectGetRenderScript(void* pSelf,RECT* pViewRect);
@@ -45,26 +47,72 @@ static UIObject* CreateImageObject(UIObjectTypeInfo* self,const char* className,
 {
 	UIObject* pResult = MallocUIObject(NULL,sizeof(ImageObject));
 	ImageObject* pImg = (ImageObject*)UIObjectGetUserDataStart(pResult);
-	UIObjectInit(pResult);
-	
 	pResult->Imp = &s_ImageObjectProvier;
 	pResult->pTypeInfo = GetImageObjectTypeInfo();
+
+	UIObjectInit(pResult);
+	if(id)
+	{
+		pResult->strID = malloc(strlen(id));
+		strcpy(pResult->strID,id);
+	}
+
 	pImg->strImageResID = NULL;
 	pImg->DrawModeAntiAlias = 0;
 	pImg->DrawModeHalign = 0;
 	pImg->DrawModeIsStretch = 0;
 	pImg->DrawModeHalign = 0;
 
-	return pImg;
+	return pResult;
 }
 
+NGOS_API(void) NGOS_ImageObjectSetImageID(NGOS_UIOBJECT_HANDLE hImageObject,const char* imageID)
+{
+	UIObject* pObj = HandleMapDecodeUIObject(hImageObject,NULL);
+	if(pObj)
+	{
+		ImageObject* pImg = (ImageObject*)UIObjectGetUserDataStart(pObj);
+		if(pImg->strImageResID)
+		{
+			pImg->strImageResID = realloc(pImg->strImageResID,strlen(imageID));
+		}
+		else
+		{
+			pImg->strImageResID = malloc(strlen(imageID));
+		}
+
+		strcpy(pImg->strImageResID,imageID);
+		if(pObj->hOwnerTree)
+		{
+			RootUIObjTree* objTree = HandleMapDecodeRootTree(pObj->hOwnerTree,NULL);
+			if(objTree)
+				RootUIObjTreePushDirtyRect(objTree,&(pObj->ObjAbsRect));
+		}
+		
+	}
+
+	return;
+}
+
+NGOS_API(const char*) NGOS_ImageObjectGetImageID(NGOS_UIOBJECT_HANDLE hImageObject)
+{
+	UIObject* pObj = HandleMapDecodeUIObject(hImageObject,NULL);
+	if(pObj)
+	{
+		ImageObject* pImg = (ImageObject*)UIObjectGetUserDataStart(pObj);
+		return pImg->strImageResID;
+	}
+
+	return NULL;
+}
 
 static NGOS_RENDER_SCRIPT_BUFFER_HANDLE ImageObjectGetRenderScript(void* pSelf,RECT* pViewRect)
 {
 	NGOS_RENDER_SCRIPT_BUFFER_HANDLE hResult;
 	UIObject* pObj = (UIObject*) pSelf;
 	ImageObject* pImg= (ImageObject*) UIObjectGetUserDataStart(pSelf); //todo: fix it
-	if(pObj->pTransInfo && pObj->pMeshInfo == NULL && pObj->pEffectList == NULL)
+	//printf("%s:",pObj->strID);
+	if(pObj->pTransInfo == NULL && pObj->pMeshInfo == NULL && pObj->pEffectList == NULL)
 	{
 		//没有变换的正常模式下
 		if(pImg->DrawModeIsStretch)
