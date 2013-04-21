@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <assert.h>
 #include "ResourceManager.h"
 #include "ResourceMap.h"
 #include "RenderResource.h"

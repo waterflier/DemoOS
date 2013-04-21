@@ -1,0 +1,5 @@
+/tmp/all:
+	cd ../RenderScript&&make&&make link&&cd -
+	cd ../RenderEngine&&make&&make link&&cd -
+	cd ../../resource_manager&&make&&make link&&cd -
+	make&&make link

@@ -1,5 +1,7 @@
-#include "ResourceIndentifier.h"
+#include "ResourceIdentifier.h"
 #include "ResourceManager.h"
+#include <stdlib.h>
+#include <assert.h>
 
 NGRE_RESULT NGREInitResIdentifier()
 {
@@ -27,7 +29,7 @@ NGRE_RESULT NGREGetBitmapFromId(NGREResId idRes, LPNGREBitmap* ppBitmap)
 
 void		NGREReleaseBitmapFromId(NGREResId idRes)
 {
-	assert(0);
+	
 }
 
 NGRE_RESULT NGREGetMaskFromId(NGREResId idRes, LPNGREMask* ppMask)

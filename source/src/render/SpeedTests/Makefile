@@ -10,30 +10,22 @@ TargetType=
 Target=SpeedTests
 
 
-IncludeDirs = 
-ProjectCFlag=
-ProjectCppFlag='-DSK_GAMMA_SRGB' '-DSK_GAMMA_APPLY_TO_A8' '-DSK_ALLOW_STATIC_GLOBAL_INITIALIZERS=1' \
-		'-DSK_SCALAR_IS_FLOAT' '-DSK_CAN_USE_FLOAT' '-DSK_SUPPORT_GPU=1' '-DSK_SAMPLES_FOR_X' \
-		'-DSK_BUILD_FOR_UNIX' '-DSK_USE_POSIX_THREADS' '-DGR_LINUX_BUILD=1' '-DSK_DEBUG' '-DGR_DEBUG=1' \
-		'-DSK_DEVELOPER=1' -I$(SKIA_PATH)/include/core -I$(SKIA_PATH)/include/config -I$(SKIA_PATH)/include/gpu \
-		-I$(SKIA_PATH)/include/utils -I$(SKIA_PATH)/include/pipe -I$(SKIA_PATH)/include/images \
-		-I$(SKIA_PATH)/include/device -I$(SKIA_PATH)/include/effects -I$(SKIA_PATH)/include/text \
-		-I$(SKIA_PATH)/include/lazy -Wall -Wextra -Wno-unused -Wno-unused-parameter -Wno-c++11-extensions -m32 -MMD
+IncludeDirs= 
+ProjectCFlag= -I. -I../RenderEngine -I../RenderScript -I../../resource_manager 
+ProjectCppFlag=
 
-ProjectLinkFlag:= -m32
+ProjectLinkFlag:= 
 LinkLibs:= skia_effects skia_images skia_core skia_opts skia_opts_ssse3 skia_ports skia_sfnt skia_utils cityhash skia_gr  \
-		skia_skgr jpeg pthread freetype fontconfig dl GL GLU png
-LibDirs:= $(SKIA_OUT)
+		skia_skgr jpeg pthread freetype fontconfig dl GL GLU png lua ngre_engine ngre_script ngrm
+LibDirs:= $(SKIA_OUT) $(OUTPUT) $(OUTPUT)../../resource_manager/$(CONFIG_NAME)
 
 SubFileDirs = 
 
 ####################################################################
 
-cppfiles := main.cpp
-cppobjs := $(patsubst %.cpp,$(TEMP_DIR)%.cppo,$(notdir $(cppfiles)))
+cfiles := testScript.c
+cobjs := $(patsubst %.c,$(TEMP_DIR)%.co,$(notdir $(cfiles)))
 
-#tests:
-#	@echo $(cppobjs)
 
 ###################################################################
 include ../../../footer.mk

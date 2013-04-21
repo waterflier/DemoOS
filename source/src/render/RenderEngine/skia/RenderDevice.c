@@ -61,15 +61,15 @@ NGRE_RESULT NGREOpenDevice(NGREDevice** ppDevice)
 
 NGRE_RESULT NGREGetBitmapFromDevice(NGREDevice* pDevice, LPNGREBitmap* ppBitmap)
 {
-	assert(pDevice != NULL);
+	//assert(pDevice != NULL);
 	if(pDevice->pCacheBitmap == NULL)
 	{
 		NGREFBDevice* pFBDevice = (NGREFBDevice*)(pDevice->pExtra);
 		NGRE_RESULT lResult = NGRECreateBitmap(pFBDevice->origVarInfo.xres,
 			pFBDevice->origVarInfo.yres, pFBDevice->origVarInfo.bits_per_pixel, &(pDevice->pCacheBitmap));
-		assert(lResult == NGRE_SUCCESS);
+		//assert(lResult == NGRE_SUCCESS);
 		lResult = NGREAllocBitmap(pDevice->pCacheBitmap, NGREAllocType_GpuTexture);
-		assert(lResult == NGRE_SUCCESS);
+		//assert(lResult == NGRE_SUCCESS);
 		*ppBitmap = pDevice->pCacheBitmap;
 		return lResult;
 	}
@@ -83,7 +83,7 @@ NGRE_RESULT NGREFlushDevice(NGREDevice* pDevice)
 	unsigned int uHeight = NGREBitmapHeight(pDevice->pCacheBitmap);
 	void* pCacheBuffer = NULL;
 	NGRE_RESULT lResult = NGREGetBitmapBuffer(pDevice->pCacheBitmap, NGREAllocType_GpuTexture, &pCacheBuffer);
-	assert(pCacheBuffer != NULL);
+	//assert(pCacheBuffer != NULL);
 	memcpy(((NGREFBDevice*)(pDevice->pExtra))->frameBuffer, pCacheBuffer, ulRowBytes * uHeight);	
 	return NGRE_SUCCESS;
 }
