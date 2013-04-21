@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include "ResourceManager.h"
 #include "ResourceMap.h"
+#include "RenderResource.h"
 
 typedef void* (*NGRM_LoadResourceFromPath)(NGRM_ResPath);
 
@@ -17,12 +18,21 @@ typedef struct NGRM_Manager
 
 NGRM_Manager* g_ResourceManager = NULL;
 
+void* NGRM_LoadBitmapFromPath(NGRM_ResPath resPath)
+{
+	NGREBitmap* pBitmap = NULL;
+	NGRELoadBitmapFromFile(resPath, &pBitmap);
+	return pBitmap;
+}
+
 NGRM_RESULT NGRM_Init(NGRM_InitParam* pParam)
 {
 	assert(g_ResourceManager == NULL);
 	g_ResourceManager = (NGRM_Manager*)malloc(sizeof(NGRM_Manager));
 	memset(g_ResourceManager, 0, sizeof(NGRM_Manager));
+
 	g_ResourceManager->resourceMaps[NGRM_ResType_Bitmap].resourceMap = NGRM_NewResourceMap();
+	g_ResourceManager->resourceMaps[NGRM_ResType_Bitmap].fnLoader = NGRM_LoadBitmapFromPath;
 }
 
 void		NGRM_Uninit()

@@ -7,7 +7,7 @@ Target=libngrm.a
 
 
 IncludeDirs = 
-ProjectCFlag= -I. 
+ProjectCFlag= -I. -I../render/RenderEngine
 ProjectCppFlag= -I.
 
 ProjectLinkFlag:= 

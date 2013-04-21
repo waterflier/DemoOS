@@ -3,18 +3,31 @@ extern "C"{
 }
 #include "SkiaDefine.h"
 #include <assert.h>
+#include "SkImageDecoder.h"
+#include "SkStream.h"
+
+
+LPNGREBitmap NewSkBitmapFromSkBitmap(SkBitmap* pSkBitmap)
+{
+	LPNGRESkBitmap pSkBitmapG = (LPNGRESkBitmap)malloc(sizeof(NGRESkBitmap));
+	pSkBitmapG->pSkGpuDevice = NULL;
+	pSkBitmapG->pSkBitmap = pSkBitmap;
+	LPNGREBitmap pNewBitmap = (LPNGREBitmap)malloc(sizeof(NGREBitmap));
+	pNewBitmap->pExtra = pSkBitmapG;
+	return pNewBitmap;
+}
+
 
 LPNGREBitmap NewSkBitmap(unsigned int uWidth, unsigned int uHeight, unsigned char uBytesPerPixel)
 {
-	LPNGRESkBitmap pSkBitmap = (LPNGRESkBitmap)malloc(sizeof(NGRESkBitmap));
-	pSkBitmap->pSkGpuDevice = NULL;
-	pSkBitmap->pSkBitmap = SkNEW(SkBitmap);
+	SkBitmap* pSkBitmap = SkNEW(SkBitmap);
 	assert(uBytesPerPixel == 4);
-	pSkBitmap->pSkBitmap->setConfig(SkBitmap::kARGB_8888_Config, uWidth, uWidth);
-	LPNGREBitmap pNewBitmap = (LPNGREBitmap)malloc(sizeof(NGREBitmap));
-	pNewBitmap->pExtra = pSkBitmap;
-	return pNewBitmap;
+	pSkBitmap->setConfig(SkBitmap::kARGB_8888_Config, uWidth, uWidth);
+
+	return NewSkBitmapFromSkBitmap(pSkBitmap);
 }
+
+
 
 extern "C" NGRE_RESULT NGRECreateBitmap(unsigned int uWidth, unsigned int uHeight, unsigned char uBytesPerPixel, LPNGREBitmap* ppBitmap)
 {
@@ -87,4 +100,22 @@ extern "C" unsigned char NGREBitmapBytesPerPixel(LPNGREBitmap pBitmap)
 extern "C" NGRE_RESULT NGREGetBitmapBuffer(LPNGREBitmap pBitmap, NGREAllocType allocType, void** ppBitmapBuffer)
 {
 	return NGRE_SUCCESS;
+}
+
+NGRE_RESULT NGRELoadBitmapFromFile(const char* szFilePath, LPNGREBitmap* ppBitmap)
+{
+	SkImageDecoder * pngDecoder = CreatePNGImageDecoder();
+	SkFILEStream    stream(szFilePath);
+	SkBitmap* pSkBitmap = SkNEW(SkBitmap);
+	bool bRes = pngDecoder->decode(&stream, pSkBitmap, SkBitmap::kARGB_8888_Config, SkImageDecoder::kDecodePixels_Mode);
+	if(bRes)
+	{
+		*ppBitmap = NewSkBitmapFromSkBitmap(pSkBitmap);
+		return NGRE_SUCCESS;
+	}
+	else
+	{
+		*ppBitmap = NULL;
+		return NGRE_RESOURCE_INVALIDPATH;
+	}
 }
