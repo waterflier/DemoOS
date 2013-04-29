@@ -9,7 +9,7 @@
 #include "./UIObject.h"
 #include "./HandleMap.h"
 #include "../os_interface/os_interface.h"
-
+#include "./animation/BaseAnimation.h"
 //void for_each()
 //{
 	//在root tree的创建进程，分配一块共享内存。使用连续空间存储了 树状的原始uiobject handle 关系
@@ -343,6 +343,8 @@ NGOS_API(NGOS_UIOBJECT_HANDLE) NGOS_GetRootObject(NGOS_ROOT_OBJTREE_HANDLE hRoot
 //测试使用
 NGOS_API(int) NGOS_UpdateRootObjTree(NGOS_ROOT_OBJTREE_HANDLE hRootTree)
 {
+	AnimationManagerUpdateAnimation(GetAnimationManager());
+
 	RootUIObjTree* pTree = HandleMapDecodeRootTree(hRootTree,NULL);
 	if(pTree)
 	{
@@ -394,4 +396,33 @@ NGOS_API(int) NGOS_DestoryUIObject(NGOS_UIOBJECT_HANDLE hUIObject)
 {
 	//TODO:
 	return 0;
+}
+
+NGOS_API(int) NGOS_GetUIObjectAbsRect(NGOS_UIOBJECT_HANDLE hUIObject,RECT* pRect)
+{
+	UIObject* pObj = HandleMapDecodeUIObject(hUIObject,NULL);
+	if(pObj)
+	{
+		*pRect = pObj->ObjAbsRect;
+		return 0;
+	}
+	return -1;
+}
+
+
+NGOS_API(int) NGOS_SetUIObjectAlpha(NGOS_UIOBJECT_HANDLE hUIObject,uint8_t newAlpha)
+{
+	UIObject* pObj = HandleMapDecodeUIObject(hUIObject,NULL);
+	if(pObj)
+	{
+		if(pObj->Alpha != newAlpha)
+		{
+			pObj->Alpha = newAlpha;
+			InvalidUIObject(pObj);
+		}
+
+		return 0;
+
+	}
+	return -1;
 }

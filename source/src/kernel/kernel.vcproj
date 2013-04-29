@@ -232,6 +232,14 @@
 			Name="Index"
 			>
 			<File
+				RelativePath=".\objectIndex\AnimationVector.c"
+				>
+			</File>
+			<File
+				RelativePath=".\objectIndex\AnimationVector.h"
+				>
+			</File>
+			<File
 				RelativePath=".\objectIndex\DirtyRectIndex.c"
 				>
 			</File>
@@ -267,6 +275,10 @@
 		<Filter
 			Name="Animation"
 			>
+			<File
+				RelativePath=".\animation\BaseAnimation.c"
+				>
+			</File>
 			<File
 				RelativePath=".\animation\BaseAnimation.h"
 				>

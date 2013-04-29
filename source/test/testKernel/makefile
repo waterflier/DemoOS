@@ -11,7 +11,7 @@ ProjectCppFlag=
 
 LibDirs=$(OUTPUT)
 ProjectLinkFlag=
-LinkLibs=osi_interface pthread ngoskernel uiobjects
+LinkLibs=osi_interface pthread ngoskernel uiobjects rt
 
 ####################################################################
 cfiles := main.c

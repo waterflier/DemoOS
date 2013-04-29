@@ -163,4 +163,5 @@ int UIObjectSetTrans(UIObject* pObject,Matrix3X2* pTransMartix);
 int UIObjectSetVisibleFlags(UIObject* pObject,uint32_t visibleFlags);
 
 int UIObjectGetVisibleRect(UIObject* pObject,RECT* absRect);
+void InvalidUIObject(UIObject* pObject);
 #endif 

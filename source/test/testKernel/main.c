@@ -19,6 +19,7 @@
 #include "../../src/kernel/UIObject.h"
 #include "../../src/kernel/UIObjTree.h"
 #include "../../src/uiobjects/UIObjectTypeLoader.h"
+#include "../../src/kernel/animation/BaseKeyFrameAnimation.h"
 
 
 int main(int argc,char** argv)
@@ -29,22 +30,22 @@ int main(int argc,char** argv)
 	NGOS_ROOT_OBJTREE_HANDLE hTree = NGOS_CreateRootObjTree(NULL);
 	NGOS_UIOBJECT_HANDLE hRoot = NGOS_GetRootObject(hTree);
 
-	NGOS_UIOBJECT_HANDLE hBkg = NGOS_CreateUIObject(NGOS_GetDefaultUIObjectTypeLoader(),"ImageObject","bkg");
+	NGOS_UIOBJECT_HANDLE hBkg = NGOS_CreateUIObject(NGOS_GetDefaultTypeLoader(),"ImageObject","bkg");
 	NGOS_ImageObjectSetImageID(hBkg,"image.bkg");
 	RECT pos = {.left=0,.top=0,.right=800,.bottom=600};
 	NGOS_SetUIObjectRect(hBkg,&pos);
 
-	NGOS_UIOBJECT_HANDLE hIcon = NGOS_CreateUIObject(NGOS_GetDefaultUIObjectTypeLoader(),"ImageObject","icon1");
+	NGOS_UIOBJECT_HANDLE hIcon = NGOS_CreateUIObject(NGOS_GetDefaultTypeLoader(),"ImageObject","icon1");
 	NGOS_ImageObjectSetImageID(hIcon,"image.icon1");
 	RECT pos2 = {10,10,10+64,10+64};
 	NGOS_SetUIObjectRect(hIcon,&pos2);
 
-	NGOS_UIOBJECT_HANDLE hIcon2 = NGOS_CreateUIObject(NGOS_GetDefaultUIObjectTypeLoader(),"ImageObject","icon2");
+	NGOS_UIOBJECT_HANDLE hIcon2 = NGOS_CreateUIObject(NGOS_GetDefaultTypeLoader(),"ImageObject","icon2");
 	NGOS_ImageObjectSetImageID(hIcon2,"image.icon2");
 	RECT pos3 = {78,10,78+64,10+64};
 	NGOS_SetUIObjectRect(hIcon2,&pos3);
 
-	NGOS_UIOBJECT_HANDLE hIcon3 = NGOS_CreateUIObject(NGOS_GetDefaultUIObjectTypeLoader(),"ImageObject","icon3");
+	NGOS_UIOBJECT_HANDLE hIcon3 = NGOS_CreateUIObject(NGOS_GetDefaultTypeLoader(),"ImageObject","icon3");
 	NGOS_ImageObjectSetImageID(hIcon3,"image.icon3");
 	RECT pos4 = {78+64+4,10,78+64+4+64,64};
 	NGOS_SetUIObjectRect(hIcon3,&pos4);
@@ -55,16 +56,24 @@ int main(int argc,char** argv)
 
 	NGOS_AddChild(hRoot,hBkg);
 
-	NGOS_UIOBJECT_HANDLE hIcon4 = NGOS_CreateUIObject(NGOS_GetDefaultUIObjectTypeLoader(),"ImageObject","icon4");
+	NGOS_UIOBJECT_HANDLE hIcon4 = NGOS_CreateUIObject(NGOS_GetDefaultTypeLoader(),"ImageObject","icon4");
 	NGOS_ImageObjectSetImageID(hIcon4,"image.icon3");
 	RECT pos5 = {78+64+4,300,78+64+4+64,64};
 	NGOS_SetUIObjectRect(hIcon4,&pos5);
 	NGOS_AddChild(hBkg,hIcon4);
 	
-	
+	NGOS_ANIMATION_HANDLE hAni = NGOS_CreateAnimation(NGOS_GetDefaultTypeLoader(),"AlphaChangeAnimation");
+	BaseAnimation* pAni = HandleMapDecodeAnimation(hAni);
+
+	AnimationBindUIObject(pAni,hIcon2);
+	AnimationSetTotalTime(pAni,5000);
+	AlphaChangeAnimationSetAlpha(pAni,0,255);
+	AnimationManagerAddAnimation(GetAnimationManager(),hAni);
+	AnimationStart(pAni);
+
 	int i = 0;
 	char imgID[64];
-	for(i=0;i<10;i++)
+	for(i=0;i<20;i++)
 	{
 		sprintf(imgID,"image.icon%d",i%4);
 		NGOS_ImageObjectSetImageID(hIcon,imgID);

@@ -26,7 +26,7 @@ UIObjectTypeInfo s_ImageObjecTypeInfo =
 {
 	.fnGetClassName = GetImageObjectClassName,
 	.fnCraeteUIObject = CreateImageObject,
-	.fnGetOwnerTypeLoader = NGOS_GetDefaultUIObjectTypeLoader,
+	.fnGetOwnerTypeLoader = NGOS_GetDefaultTypeLoader,
 	.fnAddRef = NULL,
 	.fnRelease = NULL
 };

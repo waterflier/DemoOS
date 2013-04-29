@@ -34,7 +34,7 @@ RootUIObjTree* CreateRootUIObjTree(NGOS_RootTreeEnv* pEnv)
 		pResult->DirtyRectManager = CreateDirtyRectIndex(800,600);
 		pResult->UIObjectRectManager = CreateUIObjectRectIndex(); 
 		//创建默认的RootUIObject
-		pResult->RootUIObject = NGOS_CreateUIObject(NGOS_GetDefaultUIObjectTypeLoader(),"LayoutObject",NULL);
+		pResult->RootUIObject = NGOS_CreateUIObject(NGOS_GetDefaultTypeLoader(),"LayoutObject",NULL);
 		UIObject* pRootObj = HandleMapDecodeUIObject(pResult->RootUIObject);
 		if(pRootObj)
 		{

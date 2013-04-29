@@ -128,7 +128,7 @@ typedef NGOS_RENDER_SCRIPT_BUFFER_HANDLE (*pfnGetRenderScript) (void* pSelf,RECT
 
 
 //////////////////////////////////////////////// Animation
-NGOS_API(NGOS_ANIMATION_HANDLE) NGOS_CreateAnimation(const char* id,const char* className,void* classloader);
+//NGOS_API(NGOS_ANIMATION_HANDLE) NGOS_CreateAnimation(const char* id,const char* className,void* classloader);
 NGOS_API(int) NGOS_AddRefAnimation(NGOS_ANIMATION_HANDLE hAni);
 NGOS_API(int) NGOS_ReleaseAnimation(NGOS_ANIMATION_HANDLE hAni);
 

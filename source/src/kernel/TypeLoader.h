@@ -33,7 +33,11 @@ typedef struct tagUIObjectTypeInfo
 
 typedef struct tagAnimationTypeInfo
 {
-
+	const char* (*fnGetClassName) (struct AnimationTypeInfo* self);
+	struct BaseAnimation* (*fnCraeteAnimation) (struct AnimationTypeInfo* self,const char* className);
+	struct TypeLoader* (*fnGetOwnerTypeLoader) (struct AnimationTypeInfo* self);
+	int (*fnAddRef) (struct AnimationTypeInfo* self);
+	int (*fnRelease) (struct AnimationTypeInfo* self);
 }AnimationTypeInfo;
 
 
@@ -41,8 +45,9 @@ typedef struct tagAnimationTypeInfo
 typedef struct tagTypeLoader
 {
 	
-	struct UIObjectTypeInfo* (*fnGetUIObjectTypeInfoByClassName) (struct TypeLoader* self,const char* className);
-	struct UIObjectTypeInfo* (*fnGetUIObjectTypeInfo) (struct TypeLoader* self, struct UIObject* pObj);
+	UIObjectTypeInfo* (*fnGetUIObjectTypeInfoByClassName) (struct TypeLoader* self,const char* className);
+	UIObjectTypeInfo* (*fnGetUIObjectTypeInfo) (struct TypeLoader* self, struct UIObject* pObj);
+	AnimationTypeInfo* (*fnGetAnimationTypeInfoByClassName) (struct TypeLoader* self,const char* className);
 	int (*fnRegisterTypeInfo) (struct TypeLoader* self,UIObjectTypeInfo* pTypeInfo);
 	int (*fnAddRef) (struct TypeLoader* self);
 	int (*fnRelease) (struct TypeLoader* self);
