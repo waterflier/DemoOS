@@ -5,6 +5,7 @@ NGRE_RESULT NGREScriptInit(LPNGREScriptInitParam pParam)
 {
 	NGREInitScriptCoderParam ScriptCoder;
 	NGRE_RESULT lResult = NGREInitScriptCoder(&ScriptCoder);
+	lResult = NGREInitResIdentifier();
 	return lResult;
 }
 
@@ -22,5 +23,6 @@ NGRE_RESULT	NGRERunScript(NGRE_SCRIPT_HANDLE hScript)
 
 void		NGREScriptUninit()
 {
+	NGREUninitResIdentifier();
 	NGREUninitScriptCoder();
 }

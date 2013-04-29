@@ -25,4 +25,8 @@ typedef long						NGREAllocType;
 #define NGREAllocType_GpuTexture	0x2
 NGRE_RESULT NGREAllocBitmap(LPNGREBitmap pBitmap, NGREAllocType allocType);
 NGRE_RESULT NGREGetBitmapBuffer(LPNGREBitmap pBitmap, NGREAllocType allocType, void** ppBitmapBuffer);
+
+
+///for testScript
+NGRE_RESULT NGREPrintBimtapToFile(LPNGREBitmap pBitmap, const char* szFilePath);
 #endif

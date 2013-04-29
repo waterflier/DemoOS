@@ -72,7 +72,7 @@ NGRM_RESULT NGRM_AddResource(NGRM_ResId idRes, NGRM_ResPath pathRes, NGRM_ResTyp
 	return NGRM_SUCCESS;
 }
 
-NGRM_RESULT NGRM_GetResurce(NGRM_ResType typeRes, NGRM_ResId idRes, void** ppRes)
+NGRM_RESULT NGRM_GetResource(NGRM_ResType typeRes, NGRM_ResId idRes, void** ppRes)
 {
 	assert(typeRes < NGRM_ResType_Count);
 	if(typeRes >= NGRM_ResType_Count)

@@ -13,7 +13,7 @@ NGRE_RESULT NGREGetBitmapFromId(NGREResId idRes, LPNGREBitmap* ppBitmap)
 {
 	////先简单实现为从硬盘加载到显存
 	NGREBitmap* pBitmap = NULL;
-	NGRM_RESULT lResult = NGRM_GetResurce(NGRM_ResType_Bitmap, idRes, &pBitmap);
+	NGRM_RESULT lResult = NGRM_GetResource(NGRM_ResType_Bitmap, idRes, &pBitmap);
 	if(pBitmap == NULL)
 	{
 		return 	NGRE_RESOURCE_INVALIDID;

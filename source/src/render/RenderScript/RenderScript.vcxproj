@@ -69,6 +69,7 @@
     <ClCompile Include="lua\ScriptCoder.c" />
     <ClCompile Include="RenderOperation.c" />
     <ClCompile Include="RenderScript.c" />
+    <ClCompile Include="ResourceIndentifier.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

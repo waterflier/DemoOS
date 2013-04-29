@@ -25,7 +25,7 @@ typedef enum NGRM_ResType{
 }NGRM_ResType;
 
 NGRM_RESULT NGRM_AddResource(NGRM_ResId idRes, NGRM_ResPath pathRes, NGRM_ResType typeRes);
-NGRM_RESULT NGRM_GetResurce(NGRM_ResType typeRes, NGRM_ResId idRes, void** ppRes);
+NGRM_RESULT NGRM_GetResource(NGRM_ResType typeRes, NGRM_ResId idRes, void** ppRes);
 
 
 #endif

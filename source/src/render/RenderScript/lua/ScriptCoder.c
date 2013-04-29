@@ -56,8 +56,8 @@ NGRE_RESULT	NGREInitScriptCoder(LPNGREInitScriptCoderParam param)
 	g_pLuaScriptEnv->pRunStack = luaL_newstate();
 	/*register lua funcs for render object*/
 	luaL_openlibs(g_pLuaScriptEnv->pRunStack);
-	luaL_register(g_pLuaScriptEnv->pRunStack, NULL, g_lScriptFunctions);
-
+	//luaL_register(g_pLuaScriptEnv->pRunStack, NULL, g_lScriptFunctions);
+	lua_register (g_pLuaScriptEnv->pRunStack,"BlendBitmap",NGREOpBlendBitmapL);
 	return NGRE_SUCCESS;
 
 }

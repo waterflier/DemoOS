@@ -66,7 +66,7 @@ NGRE_RESULT NGREGetBitmapFromDevice(NGREDevice* pDevice, LPNGREBitmap* ppBitmap)
 	{
 		NGREFBDevice* pFBDevice = (NGREFBDevice*)(pDevice->pExtra);
 		NGRE_RESULT lResult = NGRECreateBitmap(pFBDevice->origVarInfo.xres,
-			pFBDevice->origVarInfo.yres, pFBDevice->origVarInfo.bits_per_pixel, &(pDevice->pCacheBitmap));
+			pFBDevice->origVarInfo.yres, (pFBDevice->origVarInfo.bits_per_pixel>>3), &(pDevice->pCacheBitmap));
 		//assert(lResult == NGRE_SUCCESS);
 		lResult = NGREAllocBitmap(pDevice->pCacheBitmap, NGREAllocType_GpuTexture);
 		//assert(lResult == NGRE_SUCCESS);

@@ -10,6 +10,19 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="RenderEngine.c" />
+    <ClCompile Include="skia\RenderDevice.c" />
+    <ClCompile Include="skia\RenderOperation.cpp" />
+    <ClCompile Include="skia\RenderResource.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="RenderDefine.h" />
+    <ClInclude Include="RenderDevice.h" />
+    <ClInclude Include="RenderEngine.h" />
+    <ClInclude Include="RenderResource.h" />
+    <ClInclude Include="skia\SkiaDefine.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{38B4D9CD-B39B-40EA-9D0C-1ACB3CD5E523}</ProjectGuid>
     <RootNamespace>RenderEngine</RootNamespace>
@@ -59,9 +72,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="RenderOperation.c" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
