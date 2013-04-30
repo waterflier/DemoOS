@@ -61,9 +61,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="ResourceMap.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ResourceMananger.c" />
+    <ClCompile Include="stl\ResourceMap.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

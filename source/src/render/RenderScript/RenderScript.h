@@ -19,7 +19,7 @@ typedef struct NGREScpritInitParam{
 }*LPNGREScriptInitParam;
 
 NGRE_RESULT NGREScriptInit(LPNGREScriptInitParam pParam);
-NGRE_RESULT	NGRERunScriptCode(NGRE_SCRIPT_HANDLE hScript);
+NGRE_RESULT	NGRERunScript(NGRE_SCRIPT_HANDLE hScript);
 void		NGREScriptUninit();
 
 //drawbitmap

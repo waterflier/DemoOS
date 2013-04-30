@@ -202,7 +202,7 @@ void DoSkiaPaint()
 
 
 
-int main(int argc, char * const argv[]) {
+int testFB(int argc, char * const argv[]) {
     openFBDEV();
     fprintf(stderr, "openFBDEV finish\n");
 	int i=0;

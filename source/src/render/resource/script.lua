@@ -1,0 +1,1 @@
+BlendBitmap("bmp.test",{0,0,300,300},nil,{0,0,300,300})

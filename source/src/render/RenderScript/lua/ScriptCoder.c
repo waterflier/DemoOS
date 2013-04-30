@@ -17,6 +17,8 @@ int NGREOpIRectL(lua_State* pLuaState, int nIndex, NGREOpIRect* pRect)
 	return 1;
 }
 //NGRE_RESULT NGREOpBlendBitmapR(NGREBitmapR pBmpSrc, CLPNGREOpIRect pRectSrc, NGREBitmapR pBmpDest, CLPNGREOpIRect pRectDest, CLPNGREOpParam pParam)
+//忽略dest时候用device上的bitmap
+//NGRE_RESULT NGREOpBlendBitmapR(NGREBitmapR pBmpSrc, CLPNGREOpIRect pRectSrc, CLPNGREOpIRect pRectDest, CLPNGREOpParam pParam)
 int NGREOpBlendBitmapL(lua_State* pLuaState)
 {
 	NGREBitmapR pBmpSrc;
@@ -53,9 +55,9 @@ NGRE_RESULT	NGREInitScriptCoder(LPNGREInitScriptCoderParam param)
 
 	g_pLuaScriptEnv->pRunStack = luaL_newstate();
 	/*register lua funcs for render object*/
-	lua_openlibs(g_pLuaScriptEnv->pRunStack);
-	luaL_register(g_pLuaScriptEnv->pRunStack, NULL, g_lScriptFunctions);
-
+	luaL_openlibs(g_pLuaScriptEnv->pRunStack);
+	//luaL_register(g_pLuaScriptEnv->pRunStack, NULL, g_lScriptFunctions);
+	lua_register (g_pLuaScriptEnv->pRunStack,"BlendBitmap",NGREOpBlendBitmapL);
 	return NGRE_SUCCESS;
 
 }
@@ -79,7 +81,7 @@ NGRE_RESULT	NGRERunScriptCode(NGRE_SCRIPT_CODE_HANDLE hCode)
 {
 	const char* szLuaCode = (const char*)hCode;
 	int nStackTop = lua_gettop(g_pLuaScriptEnv->pRunStack);
-	int lResult = lua_loadstring(g_pLuaScriptEnv->pRunStack, szLuaCode);
+	int lResult = luaL_loadstring(g_pLuaScriptEnv->pRunStack, szLuaCode);
 	if(lResult == 0)
 	{
 		lResult = lua_pcall(g_pLuaScriptEnv->pRunStack,0,0,0);

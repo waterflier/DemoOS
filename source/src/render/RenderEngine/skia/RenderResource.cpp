@@ -3,18 +3,32 @@ extern "C"{
 }
 #include "SkiaDefine.h"
 #include <assert.h>
+#include "SkImageDecoder.h"
+#include "SkStream.h"
+#include "SkImageEncoder.h"
+
+
+LPNGREBitmap NewSkBitmapFromSkBitmap(SkBitmap* pSkBitmap)
+{
+	LPNGRESkBitmap pSkBitmapG = (LPNGRESkBitmap)malloc(sizeof(NGRESkBitmap));
+	pSkBitmapG->pSkGpuDevice = NULL;
+	pSkBitmapG->pSkBitmap = pSkBitmap;
+	LPNGREBitmap pNewBitmap = (LPNGREBitmap)malloc(sizeof(NGREBitmap));
+	pNewBitmap->pExtra = pSkBitmapG;
+	return pNewBitmap;
+}
+
 
 LPNGREBitmap NewSkBitmap(unsigned int uWidth, unsigned int uHeight, unsigned char uBytesPerPixel)
 {
-	LPNGRESkBitmap pSkBitmap = (LPNGRESkBitmap)malloc(sizeof(NGRESkBitmap));
-	pSkBitmap->pSkGpuDevice = NULL;
-	pSkBitmap->pSkBitmap = SkNEW(SkBitmap);
+	SkBitmap* pSkBitmap = SkNEW(SkBitmap);
 	assert(uBytesPerPixel == 4);
-	pSkBitmap->pSkBitmap->setConfig(SkBitmap::kARGB_8888_Config, uWidth, uWidth);
-	LPNGREBitmap pNewBitmap = (LPNGREBitmap)malloc(sizeof(NGREBitmap));
-	pNewBitmap->pExtra = pSkBitmap;
-	return pNewBitmap;
+	pSkBitmap->setConfig(SkBitmap::kARGB_8888_Config, uWidth, uHeight);
+
+	return NewSkBitmapFromSkBitmap(pSkBitmap);
 }
+
+
 
 extern "C" NGRE_RESULT NGRECreateBitmap(unsigned int uWidth, unsigned int uHeight, unsigned char uBytesPerPixel, LPNGREBitmap* ppBitmap)
 {
@@ -27,10 +41,15 @@ extern "C" NGRE_RESULT NGREAllocBitmap(LPNGREBitmap pBitmap, NGREAllocType alloc
 	LPNGRESkBitmap pSkBitmap = (LPNGRESkBitmap)(pBitmap->pExtra);
 	if(allocType & NGREAllocType_mem)
 	{
-		pSkBitmap->pSkBitmap->allocPixels();
+		if(pSkBitmap->pSkBitmap->getPixels() == NULL)
+		{
+			pSkBitmap->pSkBitmap->allocPixels();
+		}
 	}
+
 	if(allocType & NGREAllocType_GpuTexture)
 	{
+	#ifdef NGRE_GL
 		if(pSkBitmap->pSkGpuDevice == NULL)
 		{
 			GrContextFactory contextFactory;
@@ -55,7 +74,12 @@ extern "C" NGRE_RESULT NGREAllocBitmap(LPNGREBitmap pBitmap, NGREAllocType alloc
 				pSkBitmap->pSkGpuDevice = SkNEW_ARGS(SkGpuDevice, (context,SkBitmap::kARGB_8888_Config, pSkBitmap->pSkBitmap->width(), pSkBitmap->pSkBitmap->height()));
 			}
 		}
+	#else
+		NGREAllocBitmap(pBitmap, NGREAllocType_mem);
+	#endif //NGRE_GL
 	}
+
+
 	return NGRE_SUCCESS;
 }
 
@@ -86,5 +110,43 @@ extern "C" unsigned char NGREBitmapBytesPerPixel(LPNGREBitmap pBitmap)
 
 extern "C" NGRE_RESULT NGREGetBitmapBuffer(LPNGREBitmap pBitmap, NGREAllocType allocType, void** ppBitmapBuffer)
 {
+	if(allocType == NGREAllocType_mem)
+	{
+		LPNGRESkBitmap pSkBitmap = (LPNGRESkBitmap)(pBitmap->pExtra);
+		*ppBitmapBuffer = pSkBitmap->pSkBitmap->getPixels();
+	}
+	else if(allocType == NGREAllocType_GpuTexture)
+	{
+	#ifdef NGRE_GL
+		assert(false);
+	#else
+		NGREGetBitmapBuffer(pBitmap,NGREAllocType_mem,ppBitmapBuffer);
+	#endif//NGRE_GL
+	}
+	return NGRE_SUCCESS;
+}
+
+NGRE_RESULT NGRELoadBitmapFromFile(const char* szFilePath, LPNGREBitmap* ppBitmap)
+{
+	SkImageDecoder * pngDecoder = CreatePNGImageDecoder();
+	SkFILEStream    stream(szFilePath);
+	SkBitmap* pSkBitmap = SkNEW(SkBitmap);
+	bool bRes = pngDecoder->decode(&stream, pSkBitmap, SkBitmap::kARGB_8888_Config, SkImageDecoder::kDecodePixels_Mode);
+	if(bRes)
+	{
+		*ppBitmap = NewSkBitmapFromSkBitmap(pSkBitmap);
+		return NGRE_SUCCESS;
+	}
+	else
+	{
+		*ppBitmap = NULL;
+		return NGRE_RESOURCE_INVALIDPATH;
+	}
+}
+
+NGRE_RESULT NGREPrintBimtapToFile(LPNGREBitmap pBitmap, const char* szFilePath)
+{
+	bool success = SkImageEncoder::EncodeFile(szFilePath, *(((LPNGRESkBitmap)(pBitmap->pExtra))->pSkBitmap),
+                               SkImageEncoder::kPNG_Type, 100);
 	return NGRE_SUCCESS;
 }

@@ -8,6 +8,8 @@
 #include "RenderDefine.h"
 #include "RenderResource.h"
 
+#define NGRE_RESOURCE_INVALIDID		1
+
 typedef const char* NGREResId;
 
 #define NGRE_DECLARE_RESOURCE(restype) typedef union restype##R{ \
