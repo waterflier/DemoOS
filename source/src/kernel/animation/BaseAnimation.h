@@ -6,7 +6,6 @@
 #ifndef _NGOS_BASE_ANIMATION_H_
 #define _NGOS_BASE_ANIMATION_H_
 
-#include "../objectIndex/AnimationVector.h"
 
 #define ANIMATIN_STATE_READY (0)
 #define ANIMATION_STATE_RUNNING (1)
@@ -14,22 +13,18 @@
 #define ANIMATION_STATE_END (3)
 #define ANIMATION_STATE_FINISH (4)
 
-typedef void (*pfnAnimationAction) (struct BaseAnimation* pSelf,float progress);
-
-typedef struct tagAnimationProvier
+typedef struct tagAnimationTypeInfo
 {
-	//是否可以和TypeInfo
-	pfnAnimationAction fnAction;
-}AnimationProvier;
+	
+}AnimationTypeInfo;
 
-typedef struct tagBaseAnimation
+typedef struct 
 {
 	//--生命周期与类型信息
 	int32_t RefCount;
 	uint32_t TagFlags;//typeinfo?
 	struct AnimationManager* pOwnerManager;
 	NGOS_UIOBJECT_HANDLE hBindObj;
-	AnimationProvier* pImp;
 	//--运行状态控制
 	uint8_t State;
 	uint8_t IsLoop;
@@ -52,9 +47,10 @@ typedef struct tagBaseAnimation
 	uint8_t m_createLevel;
 }BaseAnimation;
 
+
 BaseAnimation* MallocAnimation(size_t userDataLength);
 void FreeAnimation(BaseAnimation* pAnimation);
-void* GetAnimationUserData(BaseAnimation* pAnimation);
+
 int AddRefAnimation(BaseAnimation* pBaseAnimation);
 int ReleaseAnimation(BaseAnimation* pBaseAnimation);
 
@@ -84,12 +80,10 @@ int AddFollowAnimation(BaseAnimation* pAnimation,NGOS_ANIMATION_HANDLE* hFollowA
 
 typedef struct tagAnimatinManager
 {
-	AnimationtVector* willUpdateAnimation;
+
 }AnimationManager;
 
-AnimationManager* GetAnimationManager();
-int AnimationManagerAddAnimation(AnimationManager* pSelf,NGOS_ANIMATION_HANDLE hAnimation);
-void AnimationManagerUpdateAnimation(AnimationManager* pSelf);
+int AnimationManagerAddAnimation(NGOS_ANIMATION_HANDLE hAnimation);
 
 
 

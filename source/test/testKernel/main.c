@@ -37,7 +37,7 @@ int main(int argc,char** argv)
 
 	NGOS_UIOBJECT_HANDLE hIcon = NGOS_CreateUIObject(NGOS_GetDefaultTypeLoader(),"ImageObject","icon1");
 	NGOS_ImageObjectSetImageID(hIcon,"image.icon1");
-	RECT pos2 = {10,10,10+64,10+64};
+	RECT pos2 = {10,10,10+64,10+64}; 
 	NGOS_SetUIObjectRect(hIcon,&pos2);
 
 	NGOS_UIOBJECT_HANDLE hIcon2 = NGOS_CreateUIObject(NGOS_GetDefaultTypeLoader(),"ImageObject","icon2");

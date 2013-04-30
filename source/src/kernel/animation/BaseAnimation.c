@@ -5,7 +5,6 @@
 
 #include "../perheader.h"
 #include "./BaseAnimation.h"
-#include "../../os_interface/os_interface.h"
 
 static float AnimationGetProgress(BaseAnimation* pBaseAnimation);
 
@@ -71,7 +70,7 @@ void AnimationUpdate(BaseAnimation* pBaseAnimation,uint32_t currentClockTick)
 		{
 			if(pBaseAnimation->m_lastUpdateTime == 0)
 			{
-				pBaseAnimation->m_lastUpdateTime = currentClockTick;
+				pBaseAnimation->m_lastUpdateTime = 0;
 			}
 			else
 			{
@@ -98,7 +97,6 @@ void AnimationUpdate(BaseAnimation* pBaseAnimation,uint32_t currentClockTick)
 			}
 
 			float progress = AnimationGetProgress(pBaseAnimation);
-			printf("%f %d:%d\n",progress,pBaseAnimation->Duration,pBaseAnimation->TotalTime);
 			if(pBaseAnimation->pImp)
 			{
 				pBaseAnimation->pImp->fnAction(pBaseAnimation,progress);
@@ -255,13 +253,6 @@ void AnimationSetTotalTime(BaseAnimation* pBaseAnimation,uint32_t totalTime)
 	}
 }
 
-void AnimationBindUIObject(BaseAnimation* pBaseAnimation,NGOS_UIOBJECT_HANDLE hUIObject)
-{
-	if(pBaseAnimation)
-	{
-		pBaseAnimation->hBindObj = hUIObject;
-	}
-}
 static float AnimationGetProgress(BaseAnimation* pBaseAnimation)
 {
 	if(pBaseAnimation)
@@ -309,41 +300,10 @@ AnimationManager* GetAnimationManager()
 
 int AnimationManagerAddAnimation(AnimationManager* pSelf,NGOS_ANIMATION_HANDLE hAnimation)
 {
-	BaseAnimation* pAni = HandleMapDecodeAnimation(hAnimation);
-	if(pAni)
-	{
-		if(pAni->pOwnerManager == NULL)
-		{
-			AnimationVectorAdd(pSelf->willUpdateAnimation,hAnimation);
-			pAni->pOwnerManager = pSelf;
-			AddRefAnimation(pAni);
-
-			return 0;
-		}
-	}
-
-	return -1;
+	
 }
 
 void AnimationManagerUpdateAnimation(AnimationManager* pSelf)
 {
-	int count = AnimationVectorGetCount(pSelf->willUpdateAnimation);
-	int i;
-	for(i=count-1;i>=0;--i)
-	{
-		NGOS_ANIMATION_HANDLE hAni = AnimationVectorGet(pSelf->willUpdateAnimation,i);
-		BaseAnimation* pAni = HandleMapDecodeAnimation(hAni);
-	
-		if(pAni)
-		{
-			 AnimationUpdate(pAni,OSI_GetTickCount());
-			 if(pAni->State == ANIMATION_STATE_FINISH)
-			 {
-				 ReleaseAnimation(hAni);
-				 AnimationVectorRemoveAt(pSelf->willUpdateAnimation,i);
 
-				 i++;
-			 }
-		}
-	}
 }
