@@ -148,6 +148,14 @@
 			Name="Input"
 			>
 			<File
+				RelativePath=".\input\InputAction.c"
+				>
+			</File>
+			<File
+				RelativePath=".\input\InputAction.h"
+				>
+			</File>
+			<File
 				RelativePath=".\input\InputTarget.c"
 				>
 			</File>

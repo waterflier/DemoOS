@@ -13,11 +13,6 @@
 #define ANIMATION_STATE_END (3)
 #define ANIMATION_STATE_FINISH (4)
 
-typedef struct tagAnimationTypeInfo
-{
-	
-}AnimationTypeInfo;
-
 typedef struct 
 {
 	//--生命周期与类型信息

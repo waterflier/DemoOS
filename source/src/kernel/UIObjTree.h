@@ -27,6 +27,7 @@ typedef struct tagRootUIObjTree
 }RootUIObjTree;
 
 
+
 RootUIObjTree* CreateRootUIObjTree(NGOS_RootTreeEnv* pEnv);
 int FreeRootUIObjTree(RootUIObjTree* pTree);
 
@@ -36,6 +37,9 @@ int RootUIObjTreeMoveObject(RootUIObjTree* pObjTree,NGOS_ROOT_OBJTREE_HANDLE hOb
 int RootUIObjTreePushDirtyRect(RootUIObjTree* pObjTree,RECT* pDirtyRect);
 NGOS_RENDER_SCRIPT_BUFFER_HANDLE RootUIObjTreeGetRenderScrpit(RootUIObjTree* pObjTree,RECT* pClipRect);
 //NGOS_RENDER_SCRIPT_BUFFER_HANDLE UIObjectGetRenderScrpit(UIObject* pObj,RECT* pClipRect);
+
+void SendInputAcitonToUIObjTree(RootUIObjTree* pObjTree,uint32_t Action,void* param1,void* param2,void* eventData);
+void UIObjTreeAddInpuatActionFilter();
 
 #endif 
 

@@ -364,6 +364,7 @@ NGOS_API(int) NGOS_UpdateRootObjTree(NGOS_ROOT_OBJTREE_HANDLE hRootTree)
 			}
 
 			DirtyRectIndexClean(pTree->DirtyRectManager);
+            ReleaseRectList(pRectList);
 		}
 	}
 }

@@ -9,6 +9,7 @@
 #include "./UIObject.h"
 #include "../render_engine/RenderScript.h"
 #include "../uiobjects/UIObjectTypeLoader.h"
+#include "./input/InputAction.h"
 
 static void UpdateObjPos(UIObject* pObj);
 static void UpdateAddedObj(UIObject* pObj);
@@ -122,3 +123,42 @@ NGOS_RENDER_SCRIPT_BUFFER_HANDLE RootUIObjTreeGetRenderScrpit(RootUIObjTree* pOb
 	return NULL;
 }
 
+
+
+void SendInputAcitonToUIObjTree(RootUIObjTree* pObjTree,uint32_t Action,void* param1,void* param2,void* eventData)
+{
+    //TODO:需要大幅强化默认行为
+    uint32_t DeviceType = Action >> 16;
+   
+    if(DeviceType == NGOS_INPUTDEVICE_MOUSE)
+    {
+        uint32_t PointParam = (uint32_t) param1;
+        int16_t X = (PointParam & 0xffff0000)>>16;
+        int16_t Y = (PointParam & 0xffff);
+        
+        UIObjectVector* pResult = CreateUIObjectVector(16);
+        HitTestObjectFromUIObjectIndex(pObjTree->UIObjectRectManager,X,Y,pResult);
+        int count = UIObjectVectorGetCount(pResult);
+        int i = 0;
+        for(i=0;i<count;++i)
+        {
+            NGOS_UIOBJECT_HANDLE hObj = UIObjectVectorGet(pResult,i);
+            UIObject* pObj = HandleMapDecodeUIObject(hObj,NULL);
+            if(pObj)
+            {
+                if(pObj->pInputTarget)
+                {
+                    //find first response
+                    InputTargetProcessAction(pObj->pInputTarget,Action,param1,param2,eventData);
+                    return;
+                }
+            }
+        }
+        DestroyUIObjectVector(pResult);
+    }
+    else if(DeviceType == NGOS_INPUTDEVICE_MAIN_TOUCH_SCREEN)
+    {
+        return;
+    }
+    
+}
