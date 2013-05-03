@@ -12,6 +12,13 @@
 #define ANIMATION_STATE_PAUSE (2)
 #define ANIMATION_STATE_END (3)
 #define ANIMATION_STATE_FINISH (4)
+typedef void (*pfnAnimationAction) (struct BaseAnimation* pSelf,float progress);
+
+typedef struct tagAnimationProvier
+{
+    //是否可以和TypeInfo
+    pfnAnimationAction fnAction;
+}AnimationProvier;
 
 typedef struct 
 {
@@ -20,6 +27,7 @@ typedef struct
 	uint32_t TagFlags;//typeinfo?
 	struct AnimationManager* pOwnerManager;
 	NGOS_UIOBJECT_HANDLE hBindObj;
+    AnimationProvier* pImp;
 	//--运行状态控制
 	uint8_t State;
 	uint8_t IsLoop;
@@ -45,7 +53,7 @@ typedef struct
 
 BaseAnimation* MallocAnimation(size_t userDataLength);
 void FreeAnimation(BaseAnimation* pAnimation);
-
+void* GetAnimationUserData(BaseAnimation* pAnimation);
 int AddRefAnimation(BaseAnimation* pBaseAnimation);
 int ReleaseAnimation(BaseAnimation* pBaseAnimation);
 
@@ -75,11 +83,12 @@ int AddFollowAnimation(BaseAnimation* pAnimation,NGOS_ANIMATION_HANDLE* hFollowA
 
 typedef struct tagAnimatinManager
 {
-
+    AnimationtVector* willUpdateAnimation;
 }AnimationManager;
 
-int AnimationManagerAddAnimation(NGOS_ANIMATION_HANDLE hAnimation);
-
+AnimationManager* GetAnimationManager();
+int AnimationManagerAddAnimation(AnimationManager* pSelf,NGOS_ANIMATION_HANDLE hAnimation);
+void AnimationManagerUpdateAnimation(AnimationManager* pSelf);
 
 
 #endif
