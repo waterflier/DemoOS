@@ -1,6 +1,6 @@
 include ../../../mk.config
 ###################################################################
-SKIA_PATH=/root/win_work/skia
+SKIA_PATH=/root/skia/trunk
 SKIA_OUT:=$(SKIA_PATH)/linux_out/$(CONFIG_NAME)/obj.target/gyp
 
 SkiaFlag:='-DSK_GAMMA_SRGB' '-DSK_GAMMA_APPLY_TO_A8' '-DSK_ALLOW_STATIC_GLOBAL_INITIALIZERS=1' \

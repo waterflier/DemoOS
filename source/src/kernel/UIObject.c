@@ -19,9 +19,9 @@ static void UpdateObjectPosInfo(UIObject* pObject,UIObject* pParent)
 	else
 	{
 		pObject->ObjAbsRect.left = pParent->ObjAbsRect.left + pObject->ObjRect.left;
-		pObject->ObjAbsRect.right = pObject->ObjRect.right - pObject->ObjRect.left + pParent->ObjAbsRect.left; 
+		pObject->ObjAbsRect.right = pObject->ObjRect.right - pObject->ObjRect.left + pObject->ObjAbsRect.left; 
 		pObject->ObjAbsRect.top = pParent->ObjAbsRect.top + pObject->ObjRect.top;
-		pObject->ObjAbsRect.bottom = pObject->ObjRect.bottom - pObject->ObjRect.top + pParent->ObjAbsRect.top; 
+		pObject->ObjAbsRect.bottom = pObject->ObjRect.bottom - pObject->ObjRect.top + pObject->ObjAbsRect.top; 
 	
 		pObject->ObjAbsZorder = pParent->ObjAbsZorder + 100 + pObject->ObjZorder;
 
@@ -181,6 +181,24 @@ int UIObjectAddChild(UIObject* pObject,NGOS_UIOBJECT_HANDLE hChild,BOOL isLogicC
 	return NGOS_RESULT_INVALID_PTR;
 }
 
+void InvalidUIObject(UIObject* pObject)
+{
+	if(pObject->hOwnerTree == NULL)
+	{
+		return;
+	}
+
+	RootUIObjTree* objTree = HandleMapDecodeRootTree(pObject->hOwnerTree,NULL);
+	if(objTree)
+	{
+		RECT absViewRect;
+		UIObjectGetVisibleRect(pObject,&absViewRect);
+		RootUIObjTreePushDirtyRect(objTree,&absViewRect);
+	}
+
+	return;
+	
+}
 int UIObjectGetVisibleRect(UIObject* pObject,RECT* absRect)
 {
 	*absRect = pObject->ObjAbsRect;

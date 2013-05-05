@@ -94,6 +94,7 @@ int OSI_DestroyMsg(RecivedMsg* pMsg);
 
 //timer
 
+uint32_t OSI_GetTickCount();
 //基于MsgQueue的两个易用函数
 //void OSI_AsynCall();
 //void OSI_DelayCall();

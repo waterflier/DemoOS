@@ -40,9 +40,10 @@ int DirtyRectIndexPushRect(DirtyRectIndex* pIndex,RECT* pRect)
 	int count = GetRectListCount(pIndex->pRectList);
 	int i=0;
 	int result;
+	RECT* pRectInList = NULL;
 	for(i=0;i<count;i++)
 	{
-		RECT* pRectInList = GetRectAtIndex(pIndex->pRectList,i);
+		pRectInList = GetRectAtIndex(pIndex->pRectList,i);
 		result = IsRectIntersect(pRectInList,pRect);
 		if(result == 3)
 		{

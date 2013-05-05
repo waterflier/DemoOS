@@ -17,6 +17,12 @@
 #endif
 
 
+typedef struct tagPoint
+{
+	int32_t X;
+	int32_t Y;
+}POINT;
+
 typedef struct tagRect
 {
 	int32_t    left;

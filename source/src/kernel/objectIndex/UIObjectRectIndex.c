@@ -4,9 +4,12 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "../perheader.h"
-#include "./UIObjectRectIndex.h"
+
 #include "../HandleMap.h"
 #include "../UIObject.h"
+#include "./RectList.h"
+#include "./UIObjectRectIndex.h"
+
 #include <stdlib.h>
 
 UIObjectRectIndex* CreateUIObjectRectIndex()
@@ -47,9 +50,21 @@ int SelectObjectFromUIObjectIndex(UIObjectRectIndex* pIndex,RECT* theRect,UIObje
 	return 0;
 }
 
-int HitTestObjectFromUIObjectIndex(UIObjectRectIndex* pIndex,RECT* theRect,UIObjectVector* pResult)
+int HitTestObjectFromUIObjectIndex(UIObjectRectIndex* pIndex,int16_t x,int16_t y,UIObjectVector* pResult)
 {
-	//TODO:
+    int i=0;
+    for(i=0;i<pIndex->Length;++i)
+    {
+        UIObjectRectIndexNode* pNode = pIndex->pList+i;
+        if(PointInRect(x,y,&(pNode->AbsRect)) == PT_MIDMID_RECT)
+        {
+            UIObjectVectorAdd(pResult,pNode->hObject);
+        }
+    }
+
+    //sort
+    qsort(pIndex->pList,pIndex->Length,sizeof(UIObjectRectIndexNode),compareUIObjectIndexNode);
+
 	return -1;
 }
 
