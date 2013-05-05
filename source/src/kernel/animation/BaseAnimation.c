@@ -4,8 +4,10 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "../perheader.h"
+#include "../objectIndex/AnimationVector.h"
 #include "./BaseAnimation.h"
 #include "../../os_interface/os_interface.h"
+
 
 static float AnimationGetProgress(BaseAnimation* pBaseAnimation);
 

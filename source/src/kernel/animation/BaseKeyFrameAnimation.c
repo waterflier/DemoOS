@@ -4,6 +4,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "../perheader.h"
+#include "../objectIndex/AnimationVector.h"
 #include "../TypeLoader.h"
 #include "../../uiobjects/UIObjectTypeLoader.h"
 #include "./BaseKeyFrameAnimation.h"

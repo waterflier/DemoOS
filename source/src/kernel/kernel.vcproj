@@ -312,6 +312,18 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="Event"
+			>
+			<File
+				RelativePath=".\event\EventContainer.c"
+				>
+			</File>
+			<File
+				RelativePath=".\event\EventContainer.h"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath=".\ReadMe.txt"
 			>
