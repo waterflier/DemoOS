@@ -82,7 +82,7 @@ typedef uint32_t NGOS_ROOT_OBJTREE_HANDLE;
 typedef void*    NGOS_UIOBJECT_LOOKUP_ITERATOR;
 
 typedef void* NGOS_ANIMATION_HANDLE;
-typedef void* NGOS_RENDER_SCRIPT_BUFFER_HANDLE;
+typedef void* NGRE_SCRIPT_HANDLE;
 
 //所有的ud都要类似这个结构
 typedef struct tagUserDataContext

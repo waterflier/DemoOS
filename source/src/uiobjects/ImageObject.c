@@ -8,12 +8,13 @@
 #include "../kernel/UIObject.h"
 #include "../kernel/UIObjTree.h"
 #include "./UIObjectTypeLoader.h"
+#include "RenderScript.h"
 
 #include <stdio.h>
 #include <string.h>
 
 static char s_imageRSBuffer[256];
-static NGOS_RENDER_SCRIPT_BUFFER_HANDLE ImageObjectGetRenderScript(void* pSelf,RECT* pViewRect);
+static NGRE_SCRIPT_HANDLE ImageObjectGetRenderScript(void* pSelf,RECT* pViewRect);
 static UIObject* CreateImageObject(UIObjectTypeInfo* self,const char* className,const char* id);
 
 static const char* GetImageObjectClassName(UIObjectTypeInfo* self)
@@ -106,20 +107,24 @@ NGOS_API(const char*) NGOS_ImageObjectGetImageID(NGOS_UIOBJECT_HANDLE hImageObje
 	return NULL;
 }
 
-static NGOS_RENDER_SCRIPT_BUFFER_HANDLE ImageObjectGetRenderScript(void* pSelf,RECT* pViewRect)
+static NGRE_SCRIPT_HANDLE ImageObjectGetRenderScript(void* pSelf,RECT* pViewRect)
 {
-	NGOS_RENDER_SCRIPT_BUFFER_HANDLE hResult;
+	NGRE_SCRIPT_HANDLE hResult;
 	UIObject* pObj = (UIObject*) pSelf;
 	ImageObject* pImg= (ImageObject*) UIObjectGetUserDataStart(pSelf); //todo: fix it
 	//printf("%s:",pObj->strID);
+	NGRE_SCRIPT_HANDLE hRenderScript = NGRECreateSizedScript(500);
 	if(pObj->pTransInfo == NULL && pObj->pMeshInfo == NULL && pObj->pEffectList == NULL)
 	{
 		//没有变换的正常模式下
 		if(pImg->DrawModeIsStretch)
 		{
 			//AppendRenderScript(hResult,"StretchDrawBitmap(id,left,top,right,bottom,antiAlias)");
-			printf("StretchDrawBitmap(%s,%d,%d,%d,%d,%d)\n",pImg->strImageResID,pObj->ObjAbsRect.left,pObj->ObjAbsRect.top,pObj->ObjAbsRect.right,pObj->ObjAbsRect.bottom,
-				pImg->DrawModeAntiAlias);
+			/*printf("StretchDrawBitmap(%s,%d,%d,%d,%d,%d)\n",pImg->strImageResID,pObj->ObjAbsRect.left,pObj->ObjAbsRect.top,pObj->ObjAbsRect.right,pObj->ObjAbsRect.bottom,
+				pImg->DrawModeAntiAlias);*/
+			
+			sprintf(NGREGetScriptBuffer(hRenderScript), "BlendBitmap(\"%s\",nil,nil,{%d,%d,%d,%d},nil)",pImg->strImageResID,pObj->ObjAbsRect.left,
+				pObj->ObjAbsRect.top,pObj->ObjAbsRect.right,pObj->ObjAbsRect.bottom);
 		}
 		else
 		{
@@ -141,7 +146,9 @@ static NGOS_RENDER_SCRIPT_BUFFER_HANDLE ImageObjectGetRenderScript(void* pSelf,R
 			}
 
 			//AppendRenderScript(hResult,"DrawBitmap(%s,%d,%d)");
-			printf("DrawBitmap(%s,%d,%d)\n",pImg->strImageResID,left,top);
+			//printf("DrawBitmap(%s,%d,%d)\n",pImg->strImageResID,left,top);
+			sprintf(NGREGetScriptBuffer(hRenderScript), "BlendBitmap(\"%s\",nil,nil,{%d,%d,nil,nil},nil)",pImg->strImageResID,pObj->ObjAbsRect.left,
+				pObj->ObjAbsRect.top);
 		}
 		
 	}
@@ -154,10 +161,10 @@ static NGOS_RENDER_SCRIPT_BUFFER_HANDLE ImageObjectGetRenderScript(void* pSelf,R
 		//用TransInfo绘制出来
 
 		//AppendRenderScript(hResult,"CreateBitmap(%s,%d,%d)");
-		printf("DrawNotSuppot()\n");
+		//printf("DrawNotSuppot()\n");
 	}
 
-	return hResult;
+	return hRenderScript;
 }	
 	//
 

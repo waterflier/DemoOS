@@ -18,8 +18,8 @@ Target=libngre_engine.a
 
 
 IncludeDirs = 
-ProjectCFlag= -I. -I../RenderScript 
-ProjectCppFlag= -I. -I../RenderScript $(SkiaFlag)
+ProjectCFlag= -I. -I../RenderScript -I ../../../inc
+ProjectCppFlag= -I. -I../RenderScript -I ../../../inc $(SkiaFlag)
 
 ProjectLinkFlag:= -m32
 LinkLibs:=
