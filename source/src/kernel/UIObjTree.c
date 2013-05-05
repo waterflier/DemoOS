@@ -7,7 +7,7 @@
 #include "./UIObjTree.h"
 #include "./RootObjTreeEnv.h"
 #include "./UIObject.h"
-#include "../render_engine/RenderScript.h"
+#include "RenderScript.h"
 #include "../uiobjects/UIObjectTypeLoader.h"
 
 static void UpdateObjPos(UIObject* pObj);
@@ -90,13 +90,12 @@ int RootUIObjTreePushDirtyRect(RootUIObjTree* pObjTree,RECT* pDirtyRect)
 	return NGOS_RESULT_INVALID_PTR;
 }
  
-NGOS_RENDER_SCRIPT_BUFFER_HANDLE RootUIObjTreeGetRenderScrpit(RootUIObjTree* pObjTree,RECT* pClipRect)
+int RootUIObjTreeGetRenderScrpit(RootUIObjTree* pObjTree,RECT* pClipRect, NGRE_SCRIPT_HANDLE hRenderScript)
 {
 	UIObjectVector theVector;
 	InitUIObjectVector(&theVector,16);
 	SelectObjectFromUIObjectIndex(pObjTree->UIObjectRectManager,pClipRect,&theVector);
 	
-	//NGOS_RENDER_SCRIPT_BUFFER_HANDLE hResult = CreateRenderScript();
 	int vectorCount = UIObjectVectorGetCount(&theVector);
 	int i=0;
 	for(i=0;i<vectorCount;++i)
@@ -109,16 +108,16 @@ NGOS_RENDER_SCRIPT_BUFFER_HANDLE RootUIObjTreeGetRenderScrpit(RootUIObjTree* pOb
 
 			if(pObj->Imp)
 			{
-				NGOS_RENDER_SCRIPT_BUFFER_HANDLE hObjRS = pObj->Imp->fnGetRenderScript(pObj,pClipRect);
+				NGRE_SCRIPT_HANDLE hObjRS = pObj->Imp->fnGetRenderScript(pObj,pClipRect);
 				if(hObjRS)
 				{
-					//AppendRenderScript(hResult,hObjRS);
-					//ReleaseRenderScript(hObjRS);
+					NGREAppendScript(hRenderScript,NGREGetScriptCode(hObjRS));
+					NGRECloseScript(hObjRS);
 				}
 			}
 		}
 	}
 
-	return NULL;
+	return NGOS_RESULT_SUCCESS;
 }
 

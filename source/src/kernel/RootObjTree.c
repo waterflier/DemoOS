@@ -341,7 +341,7 @@ NGOS_API(NGOS_UIOBJECT_HANDLE) NGOS_GetRootObject(NGOS_ROOT_OBJTREE_HANDLE hRoot
 }
 
 //²âÊÔÊ¹ÓÃ
-NGOS_API(int) NGOS_UpdateRootObjTree(NGOS_ROOT_OBJTREE_HANDLE hRootTree)
+NGOS_API(int) NGOS_UpdateRootObjTree(NGOS_ROOT_OBJTREE_HANDLE hRootTree, NGRE_SCRIPT_HANDLE hRenderScript)
 {
 	RootUIObjTree* pTree = HandleMapDecodeRootTree(hRootTree,NULL);
 	if(pTree)
@@ -358,12 +358,13 @@ NGOS_API(int) NGOS_UpdateRootObjTree(NGOS_ROOT_OBJTREE_HANDLE hRootTree)
 			{
 				RECT* pClipRect = GetRectAtIndex(pRectList,i);
 				printf("SetClipRect(%d,%d,%d,%d)\n",pClipRect->left,pClipRect->top,pClipRect->right,pClipRect->bottom);
-				RootUIObjTreeGetRenderScrpit(pTree,pClipRect);
+				RootUIObjTreeGetRenderScrpit(pTree,pClipRect,hRenderScript);
 			}
 
 			DirtyRectIndexClean(pTree->DirtyRectManager);
 		}
 	}
+	return 0;
 }
 
 NGOS_API(int) NGOS_AddChild(NGOS_UIOBJECT_HANDLE hParent,NGOS_UIOBJECT_HANDLE hChild)

@@ -7,10 +7,8 @@
 #define _NGOS_UIOBJECT_H_
 
 #include "./TypeLoader.h"
-#include "../render_engine/RenderScript.h"
 #include "./objectIndex/UIObjectVector.h"
 #include "./input/InputTarget.h"
-
 /*
 关键数据结构
 
@@ -84,7 +82,8 @@ typedef struct tagUIObjectEffectList
 
 }UIObjectEffectList;
 
-
+//pViewRect是相对于RootTree的。
+typedef NGRE_SCRIPT_HANDLE (*pfnGetRenderScript) (void* pSelf,RECT* pViewRect);
 
 typedef struct tagUIObjectProvier
 {

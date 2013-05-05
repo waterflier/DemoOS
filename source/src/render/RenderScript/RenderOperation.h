@@ -7,6 +7,7 @@
 //		2. 浮点坐标系？	
 //      3. demo阶段需要实现的操作包括哪些， 依赖kakee的设计稿
 
+#define NGREOpIInv  (0x7fffffff)
 typedef struct NGREOpIRect{
 	int left;
 	int top;

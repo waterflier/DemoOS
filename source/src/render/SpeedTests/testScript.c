@@ -9,19 +9,30 @@ int main(int argc, char * const argv[])
 {
 	NGRE_RESULT lResult = NGREInit();
 	
-	NGRM_AddResource("bmp.test", "/root/win_work/DemoOS/source/src/render/resource/bkg.png", NGRM_ResType_Bitmap);
+	NGRM_AddResource("bkg.test", "/root/win_work/DemoOS/source/src/render/resource/bkg.png", NGRM_ResType_Bitmap);
+	NGRM_AddResource("icon1.test","/root/win_work/DemoOS/source/src/render/resource/icon1.png", NGRM_ResType_Bitmap);
+	NGRM_AddResource("icon2.test","/root/win_work/DemoOS/source/src/render/resource/icon2.png", NGRM_ResType_Bitmap);
+	NGRM_AddResource("icon3.test","/root/win_work/DemoOS/source/src/render/resource/icon3.png", NGRM_ResType_Bitmap);
 
 
 	FILE* pScript = fopen("/root/win_work/DemoOS/source/src/render/resource/script.lua", "r");
-	fseek(pScript, 0, SEEK_END);
+	/*fseek(pScript, 0, SEEK_END);
 	int nSize = ftell(pScript);
 	fseek(pScript, 0, SEEK_SET);
-	char* testScript = (char*)malloc(nSize);
+	char* testScript = (char*)malloc(nSize + 1);
 	fread(testScript, nSize, 1, pScript);
-	
+	testScript[nSize] = '\0';*/
 
 	
-	lResult = NGRERunScript(testScript);
+
+	NGRE_SCRIPT_HANDLE hScript = NGRECreateScript();
+	
+	NGREAppendScript(hScript, "BlendBitmap(\"bkg.test\",nil,nil,{0,0,nil,nil})");
+	NGREAppendScript(hScript, "BlendBitmap(\"icon1.test\",nil,nil,{10,10,nil,nil})");
+	NGREAppendScript(hScript, "BlendBitmap(\"icon2.test\",nil,nil,{110,10,nil,nil})");
+	NGREAppendScript(hScript, "BlendBitmap(\"icon3.test\",nil,nil,{220,10,nil,nil})");
+	
+	lResult = NGRERunScript(hScript);
 
 	NGREDevice* pDevice = NULL;
 	lResult = NGREOpenDevice(&pDevice);

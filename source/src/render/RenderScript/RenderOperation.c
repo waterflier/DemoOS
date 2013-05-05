@@ -6,6 +6,17 @@ NGRE_RESULT NGREOpBlendBitmapR(NGREBitmapR pBmpSrc, CLPNGREOpIRect pRectSrc, NGR
 {
 	NGREResId idBmpSrc = pBmpSrc.idResource;
 	NGRE_RESULT lResult = NGREGetBitmapFromId(idBmpSrc, &(pBmpSrc.pResource));
+	NGREOpIRect rectSrc;
+	LPNGREOpIRect pTmpRectSrc = (LPNGREOpIRect)pRectSrc;
+	if(pRectSrc == NULL)
+	{
+		rectSrc.left = 0;
+		rectSrc.top = 0;
+		rectSrc.right = NGREBitmapWidth(pBmpSrc.pResource);
+		rectSrc.bottom = NGREBitmapHeight(pBmpSrc.pResource);
+		pTmpRectSrc = &rectSrc;
+	}
+
 	NGREResId idBmpDest = pBmpDest.idResource;
 	if(idBmpDest == NULL)
 	{
@@ -16,6 +27,16 @@ NGRE_RESULT NGREOpBlendBitmapR(NGREBitmapR pBmpSrc, CLPNGREOpIRect pRectSrc, NGR
 	else
 	{
 		lResult = NGREGetBitmapFromId(idBmpDest, &(pBmpDest.pResource));
+	}
+	NGREOpIRect rectDest;
+	rectDest = *pRectDest;
+	if(pRectDest->right == NGREOpIInv)
+	{
+		rectDest.right = rectDest.left + pTmpRectSrc->right - pTmpRectSrc->left;
+	}
+	if(pRectDest->bottom == NGREOpIInv)
+	{
+		rectDest.bottom = rectDest.top + pTmpRectSrc->bottom - pTmpRectSrc->top;
 	}
 	
 	NGREResId idMask = NULL;
@@ -29,7 +50,7 @@ NGRE_RESULT NGREOpBlendBitmapR(NGREBitmapR pBmpSrc, CLPNGREOpIRect pRectSrc, NGR
 	}
 	
 
-	lResult = NGREOpBlendBitmap(pBmpSrc, pRectSrc, pBmpDest, pRectDest, pParam);
+	lResult = NGREOpBlendBitmap(pBmpSrc, pTmpRectSrc, pBmpDest, &rectDest, pParam);
 
 	if(idMask != NULL)
 	{
