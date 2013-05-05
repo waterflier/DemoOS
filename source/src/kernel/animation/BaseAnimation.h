@@ -6,6 +6,7 @@
 #ifndef _NGOS_BASE_ANIMATION_H_
 #define _NGOS_BASE_ANIMATION_H_
 
+#include "../objectIndex/AnimationVector.h"
 
 #define ANIMATIN_STATE_READY (0)
 #define ANIMATION_STATE_RUNNING (1)
