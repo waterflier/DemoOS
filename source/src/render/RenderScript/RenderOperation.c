@@ -2,6 +2,24 @@
 #include "ResourceIdentifier.h"
 #include "RenderDevice.h"
 
+
+NGRE_RESULT NGREGetDeviceBitmapIfNull(NGREBitmapR* ppBmp)
+{
+	NGREResId idBmpDest = ppBmp->idResource;
+	NGRE_RESULT lResult;
+	if(idBmpDest == NULL)
+	{
+		NGREDevice* pDevice = NULL;
+		lResult = NGREOpenDevice(&pDevice);
+		lResult = NGREGetBitmapFromDevice(pDevice, (LPNGREBitmap*)(&(ppBmp->pResource)));
+	}
+	else
+	{
+		lResult = NGREGetBitmapFromId(idBmpDest, &(ppBmp->pResource));
+	}
+	return lResult;
+}
+
 NGRE_RESULT NGREOpBlendBitmapR(NGREBitmapR pBmpSrc, CLPNGREOpIRect pRectSrc, NGREBitmapR pBmpDest, CLPNGREOpIRect pRectDest, CLPNGREOpParam pParam)
 {
 	NGREResId idBmpSrc = pBmpSrc.idResource;
@@ -18,16 +36,8 @@ NGRE_RESULT NGREOpBlendBitmapR(NGREBitmapR pBmpSrc, CLPNGREOpIRect pRectSrc, NGR
 	}
 
 	NGREResId idBmpDest = pBmpDest.idResource;
-	if(idBmpDest == NULL)
-	{
-		NGREDevice* pDevice = NULL;
-		lResult = NGREOpenDevice(&pDevice);
-		lResult = NGREGetBitmapFromDevice(pDevice, (LPNGREBitmap*)(&(pBmpDest.pResource)));
-	}
-	else
-	{
-		lResult = NGREGetBitmapFromId(idBmpDest, &(pBmpDest.pResource));
-	}
+	lResult = NGREGetDeviceBitmapIfNull(&pBmpDest);
+
 	NGREOpIRect rectDest;
 	rectDest = *pRectDest;
 	if(pRectDest->right == NGREOpIInv)
@@ -64,4 +74,10 @@ NGRE_RESULT NGREOpBlendBitmapR(NGREBitmapR pBmpSrc, CLPNGREOpIRect pRectSrc, NGR
 
 
 	return lResult;
+}
+
+
+NGRE_RESULT NGREOpFillRectR(NGREBitmapR pBmpDest, CLPNGREOpIRect pRectDest, LPNGREOpColor pColor, CLPNGREOpParam pParam)
+{
+
 }

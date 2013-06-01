@@ -3,10 +3,14 @@ extern "C"
 #include "ResourceManager.h"
 #include "ResourceMap.h"
 }
-#include <ext/hash_map>
 #include <string>
-typedef __gnu_cxx::hash_map<std::string, NGRM_ResourceMapNode*> NGRM_StlResourceMap;
 
+#ifdef ANDROID
+#include <hash_map>
+typedef std::hash_map<std::string, NGRM_ResourceMapNode*> NGRM_StlResourceMap;
+#else
+#include <ext/hash_map>
+typedef __gnu_cxx::hash_map<std::string, NGRM_ResourceMapNode*> NGRM_StlResourceMap;
 namespace __gnu_cxx
 {
 	template<> 
@@ -16,6 +20,7 @@ namespace __gnu_cxx
 		{ return hash<const char*>()( s.c_str() ); }
 	};
 }
+#endif
 
 extern "C" NGRM_ResourceMap NGRM_NewResourceMap()
 {

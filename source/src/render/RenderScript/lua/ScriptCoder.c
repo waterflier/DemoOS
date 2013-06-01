@@ -61,6 +61,21 @@ int NGREOpBlendBitmapL(lua_State* pLuaState)
 	return 1;
 }
 
+
+int NGREOpFillRectL(lua_State* pLuaState)
+{
+	NGREBitmapR pBmpDest;
+	pBmpDest.idResource = lua_tostring(pLuaState, 1);
+	NGREOpIRect rectDest;
+	NGREOpIRectL(pLuaState, 2, &rectDest);
+
+	NGRE_RESULT lResult = 0;
+	//NGREOpFillRectR(pBmpDest, &rectDest, NULL);
+
+	lua_pushnumber(pLuaState, lResult);
+	return 1;
+}
+
 const luaL_Reg g_lScriptFunctions[] = {
 	{"BlendBitmap", NGREOpBlendBitmapL},
 	{NULL, NULL},

@@ -47,6 +47,7 @@ typedef struct tagMatrix3X2
 
 
 #ifdef __linux
+#include <pthread.h>
 typedef pid_t TYPE_NGOS_PID;
 typedef uint32_t TYPE_NGOS_TID;
 typedef pthread_mutex_t TYPE_NGOS_MUTEX;

@@ -7,7 +7,7 @@
 #include "../os_interface.h"
 #include "../utility.h"
 
-union semun{
+union osi_semun{
 	int val;
 	struct semid_ds *buf;
 	unsigned short * ary;
@@ -23,7 +23,7 @@ int OSI_CreateSemaphore(TYPE_NGOS_SEMAPHORE* pResult,const char* id,int maxValue
 		return -1;
 	}
 
-	union semun sem_union;
+	union osi_semun sem_union;
 	sem_union.val = 0;
 
 	if(semctl(semResult, 0, SETVAL, sem_union) == -1) 
@@ -88,7 +88,7 @@ int OSI_ActiveSemaphore(TYPE_NGOS_SEMAPHORE hSem)
 
 int OSI_CloseSemaphore(TYPE_NGOS_SEMAPHORE hSem)
 {
-	union semun sem_union;
+	union osi_semun sem_union;
 
 	if(semctl(hSem, 0, IPC_RMID, sem_union) == -1)
 	{

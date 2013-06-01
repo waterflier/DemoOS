@@ -16,6 +16,13 @@ typedef struct NGREOpIRect{
 }NGREOpIRect, *LPNGREOpIRect;
 typedef const LPNGREOpIRect CLPNGREOpIRect;
 
+typedef struct NGREOpColor{
+	unsigned char b;
+	unsigned char g;
+	unsigned char r;
+	unsigned char a;
+}NGREOpColor, *LPNGREOpColor;
+
 typedef float NGREOpFMatrix44[4][4];
 
 typedef struct NGREOpParam{
@@ -30,7 +37,8 @@ typedef const LPNGREOpParam CLPNGREOpParam;
 
 NGRE_RESULT NGREOpBlendBitmapR(NGREBitmapR pBmpSrc, CLPNGREOpIRect pRectSrc, NGREBitmapR pBmpDest, CLPNGREOpIRect pRectDest, CLPNGREOpParam pParam);
 NGRE_RESULT NGREOpBlendBitmap(NGREBitmapR pBmpSrc, CLPNGREOpIRect pRectSrc, NGREBitmapR pBmpDest, CLPNGREOpIRect pRectDest, CLPNGREOpParam pParam);
-
+NGRE_RESULT NGREOpFillRectR(NGREBitmapR pBmpDest, CLPNGREOpIRect pRectDest, LPNGREOpColor pColor, CLPNGREOpParam pParam);
+NGRE_RESULT NGREOpFillRect(NGREBitmapR pBmpDest, CLPNGREOpIRect pRectDest, LPNGREOpColor pColor, CLPNGREOpParam pParam);
 
 
 #endif

@@ -6,6 +6,9 @@ extern "C"{
 #include "SkImageDecoder.h"
 #include "SkStream.h"
 #include "SkImageEncoder.h"
+#ifndef ANDROID
+#include "GrContextFactory.h"
+#endif
 
 
 LPNGREBitmap NewSkBitmapFromSkBitmap(SkBitmap* pSkBitmap)
@@ -52,9 +55,18 @@ extern "C" NGRE_RESULT NGREAllocBitmap(LPNGREBitmap pBitmap, NGREAllocType alloc
 	#ifdef NGRE_GL
 		if(pSkBitmap->pSkGpuDevice == NULL)
 		{
+#ifdef ANDROID
+			static GrContext* s_pGLContext = NULL;
+			if(s_pGLContext == NULL)
+			{
+				s_pGLContext = GrContext::CreateGLShaderContext();
+			}
+			GrContext* context = s_pGLContext;
+#else
 			GrContextFactory contextFactory;
 			//SKGLContextHelper* ctxHelper = contextFactory.getGLContext(GrContextFactory::kNative_GLContextType);
 			GrContext* context = contextFactory.get(GrContextFactory::kNative_GLContextType);
+#endif
 			if(pSkBitmap->pSkBitmap->getPixels())
 			{
 				GrTextureParams texParam(SkShader::kClamp_TileMode, false);
@@ -128,10 +140,17 @@ extern "C" NGRE_RESULT NGREGetBitmapBuffer(LPNGREBitmap pBitmap, NGREAllocType a
 
 NGRE_RESULT NGRELoadBitmapFromFile(const char* szFilePath, LPNGREBitmap* ppBitmap)
 {
+#ifdef ANDROID
+	SkBitmap* pSkBitmap = SkNEW(SkBitmap);
+	bool bRes = SkImageDecoder::DecodeFile(szFilePath, pSkBitmap,
+                          SkBitmap::kARGB_8888_Config, SkImageDecoder::kDecodePixels_Mode);
+#else
 	SkImageDecoder * pngDecoder = CreatePNGImageDecoder();
 	SkFILEStream    stream(szFilePath);
 	SkBitmap* pSkBitmap = SkNEW(SkBitmap);
 	bool bRes = pngDecoder->decode(&stream, pSkBitmap, SkBitmap::kARGB_8888_Config, SkImageDecoder::kDecodePixels_Mode);
+	delete pngDecoder;
+#endif
 	if(bRes)
 	{
 		*ppBitmap = NewSkBitmapFromSkBitmap(pSkBitmap);
