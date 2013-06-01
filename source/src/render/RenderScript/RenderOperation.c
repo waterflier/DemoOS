@@ -2,20 +2,51 @@
 #include "ResourceIdentifier.h"
 #include "RenderDevice.h"
 
-NGRE_RESULT NGREOpBlendBitmapR(NGREBitmapR pBmpSrc, CLPNGREOpIRect pRectSrc, NGREBitmapR pBmpDest, CLPNGREOpIRect pRectDest, CLPNGREOpParam pParam)
+
+NGRE_RESULT NGREGetDeviceBitmapIfNull(NGREBitmapR* ppBmp)
 {
-	NGREResId idBmpSrc = pBmpSrc.idResource;
-	NGRE_RESULT lResult = NGREGetBitmapFromId(idBmpSrc, &(pBmpSrc.pResource));
-	NGREResId idBmpDest = pBmpDest.idResource;
+	NGREResId idBmpDest = ppBmp->idResource;
+	NGRE_RESULT lResult;
 	if(idBmpDest == NULL)
 	{
 		NGREDevice* pDevice = NULL;
 		lResult = NGREOpenDevice(&pDevice);
-		lResult = NGREGetBitmapFromDevice(pDevice, (LPNGREBitmap*)(&(pBmpDest.pResource)));
+		lResult = NGREGetBitmapFromDevice(pDevice, (LPNGREBitmap*)(&(ppBmp->pResource)));
 	}
 	else
 	{
-		lResult = NGREGetBitmapFromId(idBmpDest, &(pBmpDest.pResource));
+		lResult = NGREGetBitmapFromId(idBmpDest, &(ppBmp->pResource));
+	}
+	return lResult;
+}
+
+NGRE_RESULT NGREOpBlendBitmapR(NGREBitmapR pBmpSrc, CLPNGREOpIRect pRectSrc, NGREBitmapR pBmpDest, CLPNGREOpIRect pRectDest, CLPNGREOpParam pParam)
+{
+	NGREResId idBmpSrc = pBmpSrc.idResource;
+	NGRE_RESULT lResult = NGREGetBitmapFromId(idBmpSrc, &(pBmpSrc.pResource));
+	NGREOpIRect rectSrc;
+	LPNGREOpIRect pTmpRectSrc = (LPNGREOpIRect)pRectSrc;
+	if(pRectSrc == NULL)
+	{
+		rectSrc.left = 0;
+		rectSrc.top = 0;
+		rectSrc.right = NGREBitmapWidth(pBmpSrc.pResource);
+		rectSrc.bottom = NGREBitmapHeight(pBmpSrc.pResource);
+		pTmpRectSrc = &rectSrc;
+	}
+
+	NGREResId idBmpDest = pBmpDest.idResource;
+	lResult = NGREGetDeviceBitmapIfNull(&pBmpDest);
+
+	NGREOpIRect rectDest;
+	rectDest = *pRectDest;
+	if(pRectDest->right == NGREOpIInv)
+	{
+		rectDest.right = rectDest.left + pTmpRectSrc->right - pTmpRectSrc->left;
+	}
+	if(pRectDest->bottom == NGREOpIInv)
+	{
+		rectDest.bottom = rectDest.top + pTmpRectSrc->bottom - pTmpRectSrc->top;
 	}
 	
 	NGREResId idMask = NULL;
@@ -29,7 +60,7 @@ NGRE_RESULT NGREOpBlendBitmapR(NGREBitmapR pBmpSrc, CLPNGREOpIRect pRectSrc, NGR
 	}
 	
 
-	lResult = NGREOpBlendBitmap(pBmpSrc, pRectSrc, pBmpDest, pRectDest, pParam);
+	lResult = NGREOpBlendBitmap(pBmpSrc, pTmpRectSrc, pBmpDest, &rectDest, pParam);
 
 	if(idMask != NULL)
 	{
@@ -43,4 +74,10 @@ NGRE_RESULT NGREOpBlendBitmapR(NGREBitmapR pBmpSrc, CLPNGREOpIRect pRectSrc, NGR
 
 
 	return lResult;
+}
+
+
+NGRE_RESULT NGREOpFillRectR(NGREBitmapR pBmpDest, CLPNGREOpIRect pRectDest, LPNGREOpColor pColor, CLPNGREOpParam pParam)
+{
+
 }

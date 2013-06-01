@@ -7,8 +7,9 @@
 #include "./UIObjTree.h"
 #include "./RootObjTreeEnv.h"
 #include "./UIObject.h"
-#include "../render_engine/RenderScript.h"
+#include "RenderScript.h"
 #include "../uiobjects/UIObjectTypeLoader.h"
+#include "./input/InputAction.h"
 
 static void UpdateObjPos(UIObject* pObj);
 static void UpdateAddedObj(UIObject* pObj);
@@ -34,7 +35,7 @@ RootUIObjTree* CreateRootUIObjTree(NGOS_RootTreeEnv* pEnv)
 		pResult->DirtyRectManager = CreateDirtyRectIndex(800,600);
 		pResult->UIObjectRectManager = CreateUIObjectRectIndex(); 
 		//创建默认的RootUIObject
-		pResult->RootUIObject = NGOS_CreateUIObject(NGOS_GetDefaultUIObjectTypeLoader(),"LayoutObject",NULL);
+		pResult->RootUIObject = NGOS_CreateUIObject(NGOS_GetDefaultTypeLoader(),"LayoutObject",NULL);
 		UIObject* pRootObj = HandleMapDecodeUIObject(pResult->RootUIObject);
 		if(pRootObj)
 		{
@@ -90,13 +91,12 @@ int RootUIObjTreePushDirtyRect(RootUIObjTree* pObjTree,RECT* pDirtyRect)
 	return NGOS_RESULT_INVALID_PTR;
 }
  
-NGOS_RENDER_SCRIPT_BUFFER_HANDLE RootUIObjTreeGetRenderScrpit(RootUIObjTree* pObjTree,RECT* pClipRect)
+int RootUIObjTreeGetRenderScrpit(RootUIObjTree* pObjTree,RECT* pClipRect, NGRE_SCRIPT_HANDLE hRenderScript)
 {
 	UIObjectVector theVector;
 	InitUIObjectVector(&theVector,16);
 	SelectObjectFromUIObjectIndex(pObjTree->UIObjectRectManager,pClipRect,&theVector);
 	
-	//NGOS_RENDER_SCRIPT_BUFFER_HANDLE hResult = CreateRenderScript();
 	int vectorCount = UIObjectVectorGetCount(&theVector);
 	int i=0;
 	for(i=0;i<vectorCount;++i)
@@ -109,16 +109,55 @@ NGOS_RENDER_SCRIPT_BUFFER_HANDLE RootUIObjTreeGetRenderScrpit(RootUIObjTree* pOb
 
 			if(pObj->Imp)
 			{
-				NGOS_RENDER_SCRIPT_BUFFER_HANDLE hObjRS = pObj->Imp->fnGetRenderScript(pObj,pClipRect);
+				NGRE_SCRIPT_HANDLE hObjRS = pObj->Imp->fnGetRenderScript(pObj,pClipRect);
 				if(hObjRS)
 				{
-					//AppendRenderScript(hResult,hObjRS);
-					//ReleaseRenderScript(hObjRS);
+					NGREAppendScript(hRenderScript,NGREGetScriptCode(hObjRS));
+					NGRECloseScript(hObjRS);
 				}
 			}
 		}
 	}
 
-	return NULL;
+	return NGOS_RESULT_SUCCESS;
 }
 
+
+
+void SendInputAcitonToUIObjTree(RootUIObjTree* pObjTree,uint32_t Action,void* param1,void* param2,void* eventData)
+{
+    //TODO:需要大幅强化默认行为
+    uint32_t DeviceType = Action >> 16;
+   
+    if(DeviceType == NGOS_INPUTDEVICE_MOUSE)
+    {
+        uint32_t PointParam = (uint32_t) param1;
+        int16_t X = (PointParam & 0xffff0000)>>16;
+        int16_t Y = (PointParam & 0xffff);
+        
+        UIObjectVector* pResult = CreateUIObjectVector(16);
+        HitTestObjectFromUIObjectIndex(pObjTree->UIObjectRectManager,X,Y,pResult);
+        int count = UIObjectVectorGetCount(pResult);
+        int i = 0;
+        for(i=0;i<count;++i)
+        {
+            NGOS_UIOBJECT_HANDLE hObj = UIObjectVectorGet(pResult,i);
+            UIObject* pObj = HandleMapDecodeUIObject(hObj,NULL);
+            if(pObj)
+            {
+                if(pObj->pInputTarget)
+                {
+                    //find first response
+                    InputTargetProcessAction(pObj->pInputTarget,Action,param1,param2,eventData);
+                    return;
+                }
+            }
+        }
+        DestroyUIObjectVector(pResult);
+    }
+    else if(DeviceType == NGOS_INPUTDEVICE_MAIN_TOUCH_SCREEN)
+    {
+        return;
+    }
+    
+}

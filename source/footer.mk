@@ -3,7 +3,13 @@
 # 
 ##########################################################################
 
+
 ALL_OBJS:=$(cobjs) $(cppobjs) $(asmobjs)
+
+#ifeq ($(ARCH), android)
+#	ALL_OBJS+= $(ANDROID_PATH)/prebuilt/linux-x86/toolchain/arm-linux-androideabi-4.4.x/bin/../lib/gcc/arm-linux-androideabi/4.4.3/armv7-a/libgcc.a
+#endif
+
 ALL_DEPENDS:= $(cobjs:.co=.cd)
 
 LIB_FLAGS := -Wl,--start-group $(foreach name,$(LinkLibs),-l$(name)) -Wl,--end-group

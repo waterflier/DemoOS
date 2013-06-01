@@ -169,3 +169,13 @@ NGOS_ROOT_OBJTREE_HANDLE HandleMapEncodeRootTree(void* pTree)
 
 	return NULL;
 }
+
+void* HandleMapDecodeAnimation(NGOS_ANIMATION_HANDLE hAni)
+{
+	return (void*) hAni;
+}
+
+NGOS_ANIMATION_HANDLE HandleMapEncodeAnimation(void* pAni)
+{
+	return (NGOS_ANIMATION_HANDLE) pAni;
+}

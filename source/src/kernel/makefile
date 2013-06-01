@@ -6,7 +6,7 @@ TargetType=Lib
 Target=libngoskernel.a
 
 IncludeDirs = 
-ProjectCFlag= -I ../../inc
+ProjectCFlag= -I ../../inc -I ../Render/RenderScript -I ../Render/RenderEngine
 ProjectCppFlag=
 
 ProjectLinkFlag=

@@ -1,0 +1,8 @@
+/tmp/all:
+	cd ../../src/Render/RenderScript&&make&&make link&&cd -
+	cd ../../src/Render/RenderEngine&&make&&make link&&cd -
+	cd ../../src/resource_manager&&make&&make link&&cd -
+	cd ../../src/os_interface&&make&&make link&&cd -
+	cd ../../src/kernel&&make&&make link&&cd -
+	cd ../../src/uiobjects&&make&&make link&&cd -
+	make&&make link

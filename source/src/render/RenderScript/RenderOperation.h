@@ -7,6 +7,7 @@
 //		2. 浮点坐标系？	
 //      3. demo阶段需要实现的操作包括哪些， 依赖kakee的设计稿
 
+#define NGREOpIInv  (0x7fffffff)
 typedef struct NGREOpIRect{
 	int left;
 	int top;
@@ -14,6 +15,13 @@ typedef struct NGREOpIRect{
 	int bottom;
 }NGREOpIRect, *LPNGREOpIRect;
 typedef const LPNGREOpIRect CLPNGREOpIRect;
+
+typedef struct NGREOpColor{
+	unsigned char b;
+	unsigned char g;
+	unsigned char r;
+	unsigned char a;
+}NGREOpColor, *LPNGREOpColor;
 
 typedef float NGREOpFMatrix44[4][4];
 
@@ -29,7 +37,8 @@ typedef const LPNGREOpParam CLPNGREOpParam;
 
 NGRE_RESULT NGREOpBlendBitmapR(NGREBitmapR pBmpSrc, CLPNGREOpIRect pRectSrc, NGREBitmapR pBmpDest, CLPNGREOpIRect pRectDest, CLPNGREOpParam pParam);
 NGRE_RESULT NGREOpBlendBitmap(NGREBitmapR pBmpSrc, CLPNGREOpIRect pRectSrc, NGREBitmapR pBmpDest, CLPNGREOpIRect pRectDest, CLPNGREOpParam pParam);
-
+NGRE_RESULT NGREOpFillRectR(NGREBitmapR pBmpDest, CLPNGREOpIRect pRectDest, LPNGREOpColor pColor, CLPNGREOpParam pParam);
+NGRE_RESULT NGREOpFillRect(NGREBitmapR pBmpDest, CLPNGREOpIRect pRectDest, LPNGREOpColor pColor, CLPNGREOpParam pParam);
 
 
 #endif

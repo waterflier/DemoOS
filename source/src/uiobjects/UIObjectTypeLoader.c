@@ -9,6 +9,7 @@
 #include "./ImageObject.h"
 #include "./TextObject.h"
 #include "./TextureObject.h"
+#include "../kernel/animation/BaseKeyFrameAnimation.h"
 
 static TypeLoader s_defaultUIObjectLoader = {0};
 
@@ -35,10 +36,12 @@ UIObjectTypeInfo s_LayoutObjecTypeInfo =
 {
 	.fnGetClassName = GetLayoutObjectClassName,
 	.fnCraeteUIObject = LayoutObjectCreateUIObject,
-	.fnGetOwnerTypeLoader = NGOS_GetDefaultUIObjectTypeLoader,
+	.fnGetOwnerTypeLoader = NGOS_GetDefaultTypeLoader,
 	.fnAddRef = NULL,
 	.fnRelease = NULL
 };
+
+
 
 
 static UIObjectTypeInfo* GetDefaultUIObjectTypeInfo(TypeLoader* self,const char* className)
@@ -75,9 +78,30 @@ static UIObjectTypeInfo* GetDefaultUIObjectTypeInfo(TypeLoader* self,const char*
 	return NULL;
 }
 
+static AnimationTypeInfo* GetDefaultAnimationTypeInfo(TypeLoader* self,const char* className)
+{
+	if(className)
+	{
+		switch(*className)
+		{
+		case 'A':
+			if(strcmp(className,"AlphaChangeAnimation") == 0)
+			{
+				return GetAlphaChangeAnimationTypeInfo(); 
+			
+			}
+			break;
+		case 'P':
+			if(strcmp(className,"PosChangeAnimation") == 0)
+			{
+				return GetPosChangeAnimationTypeInfo();
+			}
 
+		}
+	}
+}
 
-TypeLoader* NGOS_GetDefaultUIObjectTypeLoader()
+TypeLoader* NGOS_GetDefaultTypeLoader()
 {
 	if(s_defaultUIObjectLoader.fnGetUIObjectTypeInfoByClassName == NULL)
 	{
@@ -85,6 +109,7 @@ TypeLoader* NGOS_GetDefaultUIObjectTypeLoader()
 		//s_defaultUIObjectLoader.fnCreateUIObject = CreateDefaultUIObject;
 		s_defaultUIObjectLoader.fnGetUIObjectTypeInfoByClassName = GetDefaultUIObjectTypeInfo;
 		s_defaultUIObjectLoader.fnGetUIObjectTypeInfo = NULL;
+		s_defaultUIObjectLoader.fnGetAnimationTypeInfoByClassName = GetDefaultAnimationTypeInfo;
 		s_defaultUIObjectLoader.fnAddRef = NULL;
 		s_defaultUIObjectLoader.fnRelease = NULL;
 		s_defaultUIObjectLoader.fnRegisterTypeInfo = NULL;
@@ -105,6 +130,25 @@ NGOS_UIOBJECT_HANDLE NGOS_CreateUIObject(TypeLoader* pLoader,const char* classNa
 			{
 				pResultObj->pTypeInfo = pType;
 				return pResultObj->hSelf;
+			}
+		}
+	}
+
+	return NULL;
+}
+
+NGOS_ANIMATION_HANDLE NGOS_CreateAnimation(TypeLoader* pLoader,const char* className)
+{
+	AnimationTypeInfo* pType = pLoader->fnGetAnimationTypeInfoByClassName(pLoader,className);
+	if(pType)
+	{
+		if(pType->fnCraeteAnimation)
+		{
+			BaseAnimation* pResult = pType->fnCraeteAnimation(pType,className);
+			if(pResult)
+			{
+				//
+				return HandleMapEncodeAnimation(pResult);
 			}
 		}
 	}

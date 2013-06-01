@@ -18,7 +18,7 @@ UIObjectVector* CreateUIObjectVector(size_t defaultSize)
 
 	if(defaultSize > UIOBJECT_VECTOR_INNER_SIZE)
 	{
-		pResult->Ptr = (NGOS_ROOT_OBJTREE_HANDLE*) malloc(sizeof(NGOS_UIOBJECT_HANDLE) * defaultSize);
+		pResult->Ptr = (NGOS_UIOBJECT_HANDLE*) malloc(sizeof(NGOS_UIOBJECT_HANDLE) * defaultSize);
 		pResult->Size = defaultSize;
 	}
 	else
@@ -42,7 +42,7 @@ void InitUIObjectVector(UIObjectVector* pVector,size_t defaultSize)
 
 	if(defaultSize > UIOBJECT_VECTOR_INNER_SIZE)
 	{
-		pVector->Ptr = (NGOS_ROOT_OBJTREE_HANDLE*) malloc(sizeof(NGOS_UIOBJECT_HANDLE) * defaultSize);
+		pVector->Ptr = (NGOS_UIOBJECT_HANDLE*) malloc(sizeof(NGOS_UIOBJECT_HANDLE) * defaultSize);
 		pVector->Size = defaultSize;
 	}
 	else

@@ -17,6 +17,12 @@
 #endif
 
 
+typedef struct tagPoint
+{
+	int32_t X;
+	int32_t Y;
+}POINT;
+
 typedef struct tagRect
 {
 	int32_t    left;
@@ -41,6 +47,7 @@ typedef struct tagMatrix3X2
 
 
 #ifdef __linux
+#include <pthread.h>
 typedef pid_t TYPE_NGOS_PID;
 typedef uint32_t TYPE_NGOS_TID;
 typedef pthread_mutex_t TYPE_NGOS_MUTEX;
@@ -82,7 +89,7 @@ typedef uint32_t NGOS_ROOT_OBJTREE_HANDLE;
 typedef void*    NGOS_UIOBJECT_LOOKUP_ITERATOR;
 
 typedef void* NGOS_ANIMATION_HANDLE;
-typedef void* NGOS_RENDER_SCRIPT_BUFFER_HANDLE;
+typedef void* NGRE_SCRIPT_HANDLE;
 
 //所有的ud都要类似这个结构
 typedef struct tagUserDataContext

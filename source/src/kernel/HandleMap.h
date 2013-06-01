@@ -15,7 +15,9 @@ void DestoryObjectHandleMap();
 
 void* HandleMapDecodeUIObject(NGOS_UIOBJECT_HANDLE hObject,TYPE_NGOS_PID* pOwner);
 void* HandleMapDecodeRootTree(NGOS_ROOT_OBJTREE_HANDLE hTree,TYPE_NGOS_PID* pOwner);
+void* HandleMapDecodeAnimation(NGOS_ANIMATION_HANDLE hAni);
 
 NGOS_UIOBJECT_HANDLE HandleMapEncodeUIObject(void* pUIObject);
 NGOS_ROOT_OBJTREE_HANDLE HandleMapEncodeRootTree(void* pTree);
+NGOS_ANIMATION_HANDLE HandleMapEncodeAnimation(void* pAni);
 #endif //_NGOS_HANDLE_MAP_H_

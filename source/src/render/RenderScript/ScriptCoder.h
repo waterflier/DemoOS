@@ -13,4 +13,7 @@ NGRE_RESULT	NGREDecodeScript(NGRE_SCRIPT_HANDLE hScript, NGRE_SCRIPT_CODE_HANDLE
 NGRE_RESULT	NGRERunScriptCode(NGRE_SCRIPT_CODE_HANDLE hCode);
 void		NGREReleaseScriptCode(NGRE_SCRIPT_CODE_HANDLE hCode);
 
+#define NGRE_SCRIPT_SPECCHAR_SPLIT	1
+const char  NGREScriptSpecChar(int nSpecChar);
+
 #endif

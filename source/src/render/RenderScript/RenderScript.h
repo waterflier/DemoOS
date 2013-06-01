@@ -2,6 +2,7 @@
 #define _NGOS_RENDER_SCRIPT_H_
 #include "RenderDefine.h"
 #include <stdlib.h>
+#include <NGOS_Types.h>
 /*问题：  最基本的问题，一， 为何需要渲染脚本：1. 隔离渲染实现 2. 为ipc提供marshal实现  3.方便定制半主动对象 4....
 						二， 依赖于问题一， 渲染脚本需要多强的语言能力（表达式， 迭代调用， 参数传递， 结构化控制）
 			1. 脚本内核需不需要可读性和文本编码（即便内核没有可读性，也可以通过可读脚本语言的包装来提供可读性） 
@@ -11,16 +12,25 @@
 			本地内存， 远程内存， 本地显卡缓存， 远程显卡缓存， 网络设备)， 定位资源的实现分层到哪里实现
 
 */
-#define NGRE_SCRIPT_HANDLE	void*
+
 
 #define NGRE_SCRIPT_DECODE_FAIL		-1
 #define NGRE_SCRIPT_RUN_FAIL		-100
+#define NGRE_SCRIPT_INVALIDSIZE		-200
 typedef struct NGREScpritInitParam{
 }*LPNGREScriptInitParam;
 
 NGRE_RESULT NGREScriptInit(LPNGREScriptInitParam pParam);
 NGRE_RESULT	NGRERunScript(NGRE_SCRIPT_HANDLE hScript);
 void		NGREScriptUninit();
+
+NGRE_SCRIPT_HANDLE NGRECreateScript();
+NGRE_RESULT NGREAppendScript(NGRE_SCRIPT_HANDLE hScript, const char* szScriptCode);
+void		NGREClearScript(NGRE_SCRIPT_HANDLE hScript);
+void		NGRECloseScript(NGRE_SCRIPT_HANDLE hScript);
+const char* NGREGetScriptCode(NGRE_SCRIPT_HANDLE hScript);
+char*		NGREGetScriptBuffer(NGRE_SCRIPT_HANDLE hScript);
+NGRE_SCRIPT_HANDLE NGRECreateSizedScript(unsigned int unSize);
 
 //drawbitmap
 //drawtext

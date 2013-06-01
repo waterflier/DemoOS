@@ -54,6 +54,6 @@ int UpdateUIObjectToUIObjectIndex(UIObjectRectIndex* pIndex,NGOS_UIOBJECT_HANDLE
 
 //为了绘制选择对象
 int SelectObjectFromUIObjectIndex(UIObjectRectIndex* pIndex,RECT* theRect,UIObjectVector* pResult);
-int HitTestObjectFromUIObjectIndex(UIObjectRectIndex* pIndex,RECT* theRect,UIObjectVector* pResult);
+int HitTestObjectFromUIObjectIndex(UIObjectRectIndex* pIndex,int16_t x,int16_t y,UIObjectVector* pResult);
 
 #endif //_NGOS_UIOBJECT_RECT_INDEX_H_
