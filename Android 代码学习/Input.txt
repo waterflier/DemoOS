@@ -1,0 +1,5 @@
+关键代码在
+1.打开输入设备
+/dev/input/ 目录下
+
+EventHub::openDeviceLocked ，

@@ -22,6 +22,7 @@ int DestroyDirtyRectIndex(DirtyRectIndex* pIndex)
 	ReleaseRectList(pIndex->pRectList);
 	free(pIndex);
 
+
 	return 0;
 }
 

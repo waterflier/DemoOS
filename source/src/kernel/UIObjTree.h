@@ -40,6 +40,7 @@ int RootUIObjTreeGetRenderScrpit(RootUIObjTree* pObjTree,RECT* pClipRect,NGRE_SC
 
 void SendInputAcitonToUIObjTree(RootUIObjTree* pObjTree,uint32_t Action,void* param1,void* param2,void* eventData);
 void UIObjTreeAddInpuatActionFilter();
+NGOS_UIOBJECT_HANDLE UIObjTreeGetObjectByPath(RootUIObjTree* pObjTree,const char* path);
 
 #endif 
 

@@ -1,0 +1,14 @@
+1.编译Android内核没什么好说的，几乎不用改
+2.原来的基于标准linux kernel构建系统生成的rootfs几乎可以直接用，也有效果（但是系统应该缺少足够的库）
+3.基于开饭版提供的Android源代码可知：
+a.andorid修改了init的代码，相关的配置文件与标准init不同。这里的重点是去掉原有的android逻辑，最好是能启动一个控制台就好了
+   我的想法是：
+   保留属性服务
+   保留adbd服务（这样在没有串口的设备上调试的时候，会方便一些）
+   
+  直接启动一个自己写的uitest进程，这个进程会：初始化Display硬件，并使用android的图形库进行绘制，同时能处理一定的UI event
+        初始化display硬件的代码在 frameworks\base\services\surfacefinger\surfaceflinger.cpp:onFirstRef()->readyToRun()
+         
+b.android默认的rootfs没有busybox,为了方便可以加上
+
+c

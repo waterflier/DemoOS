@@ -13,8 +13,9 @@
 TYPE_NGOS_PID OSI_GetPID();
 BOOL OSI_IsProcessExist(TYPE_NGOS_PID pid);
 //thread
+typedef (int) (*fnOSIThreadProc) (void* ud);
 TYPE_NGOS_TID OSI_GetThreadID();
-int OSI_CreateThread();
+int OSI_CreateThread(void* ud,fnOSIThreadProc proc);
 TYPE_NGOS_TID OSI_GetMainThread();
 void OSI_WaitThreadEnd(TYPE_NGOS_TID tid);
 TYPE_NGOS_PID OSI_GetThreadOwnerPID(TYPE_NGOS_TID tid);

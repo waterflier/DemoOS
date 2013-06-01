@@ -1,0 +1,9 @@
+1.在板子上用自己编译的原始Linux内核+自己的rootfs跑Demo
+交叉编译
+正确进入图形模式
+正确处理触摸屏
+完成Demo
+
+2.在板子上用自己编译的Android内核+自己的rootfs跑Demo
+
+3.如果2能成，把2移植到GlaxyNexus上跑Demo

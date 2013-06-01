@@ -132,11 +132,15 @@ int UIObjectVectorRemove(UIObjectVector* pVector,NGOS_UIOBJECT_HANDLE hUIObject)
 					//TODO: ºı–°¥Û–°?
 				}
 			}
+
+            return 0;
 		}
 	}
+
+    return -1;
 }
 
-int UIObjectVectorClear(UIObjectVector* pVector)
+int UIObjectVectorClean(UIObjectVector* pVector)
 {
 	if(pVector == NULL)
 	{

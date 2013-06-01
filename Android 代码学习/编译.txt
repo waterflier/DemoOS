@@ -1,0 +1,14 @@
+http://nosemaj.org/howto-build-android-nexus-4
+1.编译时要注意把vendor的闭源驱动下载，解压
+2.目前编译的boot.img,system.img,recovery.img,userdata.img还没有刷真机成过，貌似是boot.img和system.img不配套？
+还是boot.img里的kernel需要自己build?
+3.如何在真机上部署自己编译的二进制应用？目前连正确的通过Android.mk编译都做不到
+
+
+
+在$(ANDROID_SOURCE)目录下
+mm 目录  showcommands 编译该目录并显示命令
+mmm
+
+
+make －snod生成新的system.img

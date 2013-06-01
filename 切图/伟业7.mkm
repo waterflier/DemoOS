@@ -1,0 +1,14 @@
+<MKM version="2.0" imageFileUrl="file:///D:/Dropbox/Dropbox/Project/BoltOS/DemoOS/%e5%88%87%e5%9b%be/%e4%bc%9f%e4%b8%9a7.png">
+  <Marks>
+    <LengthMark direction="3" color="16711680" length="54" x="225" y="0"/>
+    <RectMark color="16711680" x="150" y="23" offsetX="8" offsetY="6"/>
+    <LengthMark direction="12" color="16711680" length="259" x="462" y="25"/>
+    <LengthMark direction="3" color="16711680" length="105" x="177" y="54"/>
+    <RectMark color="16711680" x="232" y="47" offsetX="0" offsetY="0"/>
+    <LengthMark direction="3" color="16711680" length="1042" x="361" y="-363"/>
+    <RectMark color="16711680" x="2" y="1059" offsetX="76" offsetY="14"/>
+    <RectMark color="16711680" x="105" y="1222" offsetX="90" offsetY="44"/>
+    <LengthMark direction="12" color="16711680" length="67" x="224" y="1145"/>
+    <LengthMark direction="3" color="16711680" length="159" x="1" y="0"/>
+  </Marks>
+</MKM>

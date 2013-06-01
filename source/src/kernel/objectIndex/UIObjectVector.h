@@ -25,7 +25,7 @@ UIObjectVector* CreateUIObjectVector(size_t defaultSize);
 void DestroyUIObjectVector(UIObjectVector* pVector);
 
 void InitUIObjectVector(UIObjectVector* pVector,size_t defautSize);
-int UIObjectVectorClear(UIObjectVector* pVector);
+int UIObjectVectorClean(UIObjectVector* pVector);
 
 int UIObjectVectorAdd(UIObjectVector* pVector,NGOS_UIOBJECT_HANDLE hUIObject);
 int UIObjectVectorRemove(UIObjectVector* pVector,NGOS_UIOBJECT_HANDLE hUIObject);
