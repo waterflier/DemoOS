@@ -3,6 +3,7 @@
 //
 //////////////////////////////////////
 
+#include "./perheader.h"
 #include "./app_header.h"
 
 NGOS_UIOBJECT_HANDLE CreateAppHeader(int width,int height)
