@@ -23,7 +23,7 @@ NGRE_RESULT NGREOpenDevice(NGREDevice** ppDevice)
 		memset(pFbDevice, 0, sizeof(NGREFBDevice));
 
 		do{
-			pFbDevice->fbDesc = open("/dev/fb0", O_RDWR);
+			pFbDevice->fbDesc = open("/dev/graphics/fb0", O_RDWR);
 			if(pFbDevice->fbDesc < 0)
 			{
 				break;

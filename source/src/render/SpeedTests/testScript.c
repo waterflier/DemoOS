@@ -9,13 +9,13 @@ int main(int argc, char * const argv[])
 {
 	NGRE_RESULT lResult = NGREInit();
 	
-	NGRM_AddResource("bkg.test", "/root/win_work/DemoOS/source/src/render/resource/bkg.png", NGRM_ResType_Bitmap);
-	NGRM_AddResource("icon1.test","/root/win_work/DemoOS/source/src/render/resource/icon1.png", NGRM_ResType_Bitmap);
-	NGRM_AddResource("icon2.test","/root/win_work/DemoOS/source/src/render/resource/icon2.png", NGRM_ResType_Bitmap);
-	NGRM_AddResource("icon3.test","/root/win_work/DemoOS/source/src/render/resource/icon3.png", NGRM_ResType_Bitmap);
+	NGRM_AddResource("bkg.test", "/system/bin/demoresource/bkg.png", NGRM_ResType_Bitmap);
+	NGRM_AddResource("icon1.test","/system/bin/demoresource/icon1.png", NGRM_ResType_Bitmap);
+	NGRM_AddResource("icon2.test","/system/bin/demoresource/icon2.png", NGRM_ResType_Bitmap);
+	NGRM_AddResource("icon3.test","/system/bin/demoresource/icon3.png", NGRM_ResType_Bitmap);
 
 
-	FILE* pScript = fopen("/root/win_work/DemoOS/source/src/render/resource/script.lua", "r");
+	//FILE* pScript = fopen("../demoresource/script.lua", "r");
 	/*fseek(pScript, 0, SEEK_END);
 	int nSize = ftell(pScript);
 	fseek(pScript, 0, SEEK_SET);
