@@ -6,6 +6,7 @@
 //
 //////////////////////////////////////////
 
+#include "./perheader.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -66,7 +67,7 @@ void StartInputEventThread()
      case MSG_USER_TIMER:
         if(pMsg->Param1 == TIMER_ID_UPDATE_TREE)   
         {
-            NGOS_UpdateRootObjTree(hTree);
+            //NGOS_UpdateRootObjTree(hTree);
         }
         else if(pMsg->Param1 == TIMER_ID_CLOCK_TICK)
         {
@@ -85,7 +86,7 @@ NGOS_UIOBJECT_HANDLE CreateDesktopBKG()
 	NGOS_UIOBJECT_HANDLE hResult;
 	
 	hResult = NGOS_CreateUIObject(NGOS_GetDefaultTypeLoader(),"ImageObject","bkg");
-	NGOS_ImageObjectSetImageID(hBkg,"bkg");
+	NGOS_ImageObjectSetImageID(hResult,"bkg");
 	RECT pos = {.left=0,.top=0,.right=screenWidth,.bottom=screenHeight};
 	NGOS_SetUIObjectRect(hResult,&pos);
 
@@ -110,16 +111,16 @@ int main(int argc,char** argv)
 	NGOS_UIOBJECT_HANDLE hBkg = CreateDesktopBKG();
 	NGOS_AddChild(hRoot,hBkg);
 
-	NGOS_UIOBJECT_HANDLE hStatusBar = CreateStatusBar();
+	NGOS_UIOBJECT_HANDLE hStatusBar = CreateStatusBar(0,0,800,24);
 	NGOS_AddChild(hRoot,hStatusBar);
 
-	NGOS_UIOBJECT_HANDLE hAppHeader = CreateAppHeader();
+	NGOS_UIOBJECT_HANDLE hAppHeader = CreateAppHeader(800,24);
 	NGOS_AddChild(hRoot,hAppHeader);
 
-	NGOS_UIOBJECT_HANDLE hAppList = CreateAppList();
+	NGOS_UIOBJECT_HANDLE hAppList = CreateAppList(800,400);
 	NGOS_AddChild(hRoot,hAppList);
 
-	NGOS_UIOBJECT_HANDLE hAppBottom = CreateAppBottom();
+	NGOS_UIOBJECT_HANDLE hAppBottom = CreateAppBottom(800,60);
 	NGOS_AddChild(hRoot,hAppBottom);
 	//start timer thread
 	StartTimerThread();

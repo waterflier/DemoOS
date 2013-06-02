@@ -3,6 +3,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include "../perheader.h"
 #include "./EventContainer.h"
 
 
@@ -10,7 +11,7 @@ EventContainer* CreateEventContainer(uint16_t flag)
 {
     EventContainer* pResult = (EventContainer*) malloc(sizeof(EventContainer));
     memset(pResult,0,sizeof(EventContainer));
-    pResult->EventContainerFlag = float;
+    pResult->EventContainerFlag = flag;
     pResult->Size = EVENT_CONTAINER_INNER_SIZE;
     pResult->Ptr = pResult->Buffer;
     return pResult;

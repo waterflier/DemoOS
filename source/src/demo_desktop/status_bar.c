@@ -2,17 +2,17 @@
 // status_bar.c
 //
 ///////////////////////////////
-
+#include "./perheader.h"
 #include "./status_bar.h"
 
 const char* GetDateImageID(int date)
 {
-
+    return NULL;
 }
 
 const char* GetBatteryImageID(int status)
 {
-
+    return NULL;
 }
 
 

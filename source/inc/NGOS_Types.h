@@ -54,10 +54,8 @@ typedef pthread_mutex_t TYPE_NGOS_MUTEX;
 typedef int TYPE_NGOS_SEMAPHORE;
 typedef int TYPE_NGOS_SHAREMEMORY;
 typedef uint64_t TYPE_NGOS_MSG_RECIVER;
-#else
-
-
 #endif
+
 
 
 typedef void* TYPE_NGOS_MSGQUEUE_RUNLOOP;

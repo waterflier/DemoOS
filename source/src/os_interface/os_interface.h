@@ -13,7 +13,7 @@
 TYPE_NGOS_PID OSI_GetPID();
 BOOL OSI_IsProcessExist(TYPE_NGOS_PID pid);
 //thread
-typedef (int) (*fnOSIThreadProc) (void* ud);
+typedef int (*fnOSIThreadProc) (void* ud);
 TYPE_NGOS_TID OSI_GetThreadID();
 int OSI_CreateThread(void* ud,fnOSIThreadProc proc);
 TYPE_NGOS_TID OSI_GetMainThread();
