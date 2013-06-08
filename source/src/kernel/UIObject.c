@@ -8,7 +8,7 @@
 #include "./RootObjTree.h"
 #include "./UIObjTree.h"
 
-static void UpdateObjectPosInfo(UIObject* pObject,UIObject* pParent)
+static void UpdateObjectAbsPosInfo(UIObject* pObject,UIObject* pParent)
 {
 	//update self
 	if(pParent == NULL)
@@ -42,9 +42,10 @@ static void UpdateObjectPosInfo(UIObject* pObject,UIObject* pParent)
 		UIObject* pChild = HandleMapDecodeUIObject(UIObjectVectorGet(pObject->pChildren,i),NULL);
 		if(pChild)
 		{
-			UpdateObjectPosInfo(pChild,pObject);
+			UpdateObjectAbsPosInfo(pChild,pObject);
 		}
 	}
+    
 
 }
 static void UpdateBindObjectToIndex(UIObject* pObject,RootUIObjTree* pTree)
@@ -56,6 +57,11 @@ static void UpdateBindObjectToIndex(UIObject* pObject,RootUIObjTree* pTree)
         {
             //TODO:
         }
+    }
+
+    if(pObject->Imp->fnOnBind)
+    {
+        pObject->Imp->fnOnBind(pObject);
     }
 
 	if(pObject->pChildren == NULL)
@@ -73,14 +79,59 @@ static void UpdateBindObjectToIndex(UIObject* pObject,RootUIObjTree* pTree)
 			UpdateBindObjectToIndex(pChild,pTree);
 		}
 	}
+
+    if(pObject->Imp->fnOnInitChild)
+    {
+        pObject->Imp->fnOnInitChild(pObject);
+    }
 }
 
-static void FireCreateEvent(UIObject* pObject)
+static int UIObjectOnBind(void* pSelf)
 {
-	return ;
+    UIObject* pObj = (UIObject*) pSelf;
+    NGOS_UIOBJECT_HANDLE hObj = pObj->hSelf;
+    EventContainer* pEA = UIObjectGetEventContainer(pObj,EVENT_NAME_ONBIND,FALSE);
+    if(pEA)
+    {
+        FIRE_EVENT(pEA,CALLBACK_OnBind,hObj);
+    }
+
+}
+
+static int UIObjectOnInitChild(void* pSelf)
+{
+    UIObject* pObj = (UIObject*) pSelf;
+    NGOS_UIOBJECT_HANDLE hObj = pObj->hSelf;
+    EventContainer* pEA = UIObjectGetEventContainer(pObj,EVENT_NAME_ONBIND,FALSE);
+    if(pEA)
+    {
+        FIRE_EVENT(pEA,CALLBACK_OnInitChild,hObj);
+    }
+}
+
+static int UIObjectOnPosChanged(void* pSelf)
+{
+    UIObject* pObj = (UIObject*) pSelf;
+    NGOS_UIOBJECT_HANDLE hObj = pObj->hSelf;
+    EventContainer* pEA = UIObjectGetEventContainer(pObj,EVENT_NAME_ONBIND,FALSE);
+    if(pEA)
+    {
+        //TODO:
+    }
 }
 
 
+static UIObjectProvier* GetUIObjectDefaultProvier()
+{
+    static UIObjectProvier theResult = {
+        .fnGetRenderScript = NULL,
+        .fnOnInitChild = UIObjectOnInitChild,
+        .fnOnBind = UIObjectOnBind,
+        .fnOnPosChanged = UIObjectOnPosChanged
+    };
+
+    return &theResult;
+}
 
 UIObject* MallocUIObject(NGOS_RootTreeEnv* pEnv,size_t userDataLen)
 {
@@ -90,6 +141,7 @@ UIObject* MallocUIObject(NGOS_RootTreeEnv* pEnv,size_t userDataLen)
 		pResult = malloc(sizeof(UIObject)+userDataLen);
 		memset(pResult,0,sizeof(UIObject)+userDataLen);
 		//pResult = (UIObject*)pEnv->fnAlloc(NGOS_ENTITY_TYPE_UIOBJ,pEnv->AllocUD,NULL,sizeof(UIObject)+userDataLen,0);
+        pResult->Imp = GetUIObjectDefaultProvier;
 		if(pResult)
 		{
 			//pResult->Header.Env = pEnv;
@@ -169,13 +221,12 @@ int UIObjectAddChild(UIObject* pObject,NGOS_UIOBJECT_HANDLE hChild,BOOL isLogicC
 			
 			//todo: 从父到子计算位置表达式，并更新abspos
 			//注意这个过程是无事件的
-			UpdateObjectPosInfo(pChild,pObject);
+			UpdateObjectAbsPosInfo(pChild,pObject);
 
 			//从父到子将刚刚绑定的对象加入到对象树的index里,这里也是不触发事件的
 			UpdateBindObjectToIndex(pChild,objTree);
 
-			FireCreateEvent(pChild);
-
+			
 			//重画
 			RECT absViewRect;
 			UIObjectGetVisibleRect(pChild,&absViewRect);
@@ -245,7 +296,7 @@ int UIObjectMove(UIObject* pObject,RECT* pNewPos)
 	if(pObject->hOwnerTree)
 	{	
 		UIObject* pParent = HandleMapDecodeUIObject(pObject->hParent,NULL);
-		UpdateObjectPosInfo(pObject,pParent);
+		UpdateObjectAbsPosInfo(pObject,pParent);
 	}
 	//fire event OnPosChange
 	
@@ -276,4 +327,32 @@ int UIObjectSetVisibleFlags(UIObject* pObject,uint32_t visibleFlags)
 int UIObjectSetTrans(UIObject* pObject,Matrix3X2* pTransMartix)
 {
 	return -1;
+}
+
+EventContainer* UIObjectGetEventContainer(UIObject* pObject,int EventName,BOOL isAutoCreate)
+{
+    if(pObject->pAllEventContainer == NULL)
+    {
+        if(isAutoCreate)
+        {
+            pObject->pAllEventContainer = malloc(sizeof(EventContainer*) * EVENT_MAX);
+        }
+        else
+        {
+            return NULL;
+        }
+    }
+    
+    int index = EventName-EVENT_BEGIN;
+    EventContainer* result = NULL;
+    if(pObject->pAllEventContainer[index] == NULL)
+    {
+        if(isAutoCreate)
+        {
+            result = pObject->pAllEventContainer[index] = CreateEventContainer(EventName & 0xffff);//TODO: Need free
+        }
+
+    }
+
+    return result;
 }

@@ -9,6 +9,7 @@
 #include "./TypeLoader.h"
 #include "./objectIndex/UIObjectVector.h"
 #include "./input/InputTarget.h"
+#include "./Event/EventContainer.h"
 /*
 关键数据结构
 
@@ -83,12 +84,18 @@ typedef struct tagUIObjectEffectList
 }UIObjectEffectList;
 
 //pViewRect是相对于RootTree的。
-typedef NGRE_SCRIPT_HANDLE (*pfnGetRenderScript) (void* pSelf,RECT* pViewRect);
+
 
 typedef struct tagUIObjectProvier
 {
-	//是否可以和TypeInfo
-	pfnGetRenderScript fnGetRenderScript;
+	//是否可以和TypeInfo合并?
+	NGRE_SCRIPT_HANDLE (*fnGetRenderScript) (void* pSelf,RECT* pViewRect);
+
+    //event
+    int (*fnOnInitChild) (void* pSelf);
+    int (*fnOnBind) (void* pSelf);
+    int (*fnOnPosChanged) (void* pSelf);
+    //int (*fnOnAbsPosChanged) (void* pSelf);
 }UIObjectProvier;
 
 typedef struct tagUIObject
@@ -141,7 +148,8 @@ typedef struct tagUIObject
 	//UIObjectBlendInfo* pBlendInfo;
 	UIObjectEffectList* pEffectList;
 	
-	
+	//events
+    EventContainer** pAllEventContainer;
 
 }UIObject;
 
@@ -163,4 +171,6 @@ int UIObjectSetVisibleFlags(UIObject* pObject,uint32_t visibleFlags);
 
 int UIObjectGetVisibleRect(UIObject* pObject,RECT* absRect);
 void InvalidUIObject(UIObject* pObject);
+
+EventContainer* UIObjectGetEventContainer(UIObject* pObject,int EventName,BOOL isAutoCreate);
 #endif 

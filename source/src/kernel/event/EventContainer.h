@@ -14,6 +14,12 @@
 
 #define EVENT_CONTAINER_MAX_SIZE (65535)
 
+#define EVENT_BEGIN (100)
+#define EVENT_MAX (64)
+#define EVENT_NAME_ONBIND (100)
+#define EVENT_NAME_ONINITCHILD (101)
+#define EVENT_NAME_ONPOSCHANGED (102)
+
 typedef struct tagEventCallbackNode
 {
     void* pfnCallback;
@@ -44,7 +50,42 @@ int DetachEvent(EventContainer* pSelf,uint32_t cookie);
 void CleanEventContainer(EventContainer* pSelf);
 
 //Ê¹ÓÃºêÀ´FireEvent?
-//FIRE_EVENT(pSelf,returnType,arg2,arg3)
+#define FIRE_EVENT(pSelf,CallbackType,...) int i=0; \
+    pSelf->IsInFireProgress = TRUE; \
+    for(i=0;i<pSelf->Length;++i) \
+    { \
+        EventCallbackNode* pNode = pSelf->Ptr+i; \
+        if(pNode) \
+        { \
+            if(pNode->pfnCallback) \ 
+            { \
+                CallbackType fnCallback = (CallbackType) (pNode->pfnCallback); \
+                fnCallback(pNode->pUserData,__VA_ARGS__); \
+            } \
+        } \
+    } \
+    pSelf->IsInFireProgress = FALSE;
+/*
+int i=0;
+pEA->IsInFireProgress = TRUE;
+for(i=0;i<pEA->Length;++i)
+{
+    if(pEA->Ptr+i)
+    {
+        if((pEA->Ptr+i)->pfnCallback)
+        {
+            //(pEA->Ptr+i)->pfnCallback(pUserData,....)
+        }
+    }
+}
+pEA->IsInFireProgress = FALSE;
+//TODO: Remove wil remove node
+
+*/
+
 //typdef returnType (*pfn##__LINE__) 
 
+typedef int (*CALLBACK_OnBind) (UserDataContext* pUserData,NGOS_UIOBJECT_HANDLE hObj);
+typedef int (*CALLBACK_OnInitChild) (UserDataContext* pUserData,NGOS_UIOBJECT_HANDLE hObj);
+//typedef int (*pfnOnPosChanged) (NGOS_UIOBJECT_HANDLE hObj,UserDataContext* pUserData);
 #endif //_NGOS_EVENT_CONTAINER_H_

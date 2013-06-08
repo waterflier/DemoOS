@@ -27,6 +27,7 @@ typedef struct tagUIObjectTypeInfo
 	struct TypeLoader* (*fnGetOwnerTypeLoader) (struct UIObjectTypeInfo* self);
 	int (*fnAddRef) (struct UIObjectTypeInfo* self);
 	int (*fnRelease) (struct UIObjectTypeInfo* self);
+
 }UIObjectTypeInfo;
 
 
