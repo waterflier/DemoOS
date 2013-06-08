@@ -49,7 +49,14 @@ static void UpdateObjectPosInfo(UIObject* pObject,UIObject* pParent)
 }
 static void UpdateBindObjectToIndex(UIObject* pObject,RootUIObjTree* pTree)
 {
-	AddObjectToUIObjectIndex(pTree->UIObjectRectManager,pObject->hSelf);
+	AddObjectToUIObjectRectIndex(pTree->UIObjectRectManager,pObject->hSelf);
+    if(pObject->strID)
+    {
+        if(UIObjectMapInsert(pTree->NamedUIObjectMap,pObject->hSelf,pObject->strID) !=0 )
+        {
+            //TODO:
+        }
+    }
 
 	if(pObject->pChildren == NULL)
 	{
@@ -223,6 +230,8 @@ int UIObjectRemoveChild(UIObject* pObject,NGOS_UIOBJECT_HANDLE hChild)
 		
 		UIObjectVectorRemove(pObject->pChildren,hChild);
 		//为了支持OnDestroy事件，合适删除对象比较合适?
+
+        //TODO: remove from some index
 	}
 }
 

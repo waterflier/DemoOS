@@ -33,7 +33,7 @@ static int compareUIObjectIndexNode(UIObjectRectIndexNode* left,UIObjectRectInde
 	return left->ZOrder - right->ZOrder;
 }
 
-int SelectObjectFromUIObjectIndex(UIObjectRectIndex* pIndex,RECT* theRect,UIObjectVector* pResult)
+int SelectObjectFromUIObjectRectIndex(UIObjectRectIndex* pIndex,RECT* theRect,UIObjectVector* pResult)
 {
 	int i=0;
 	for(i=0;i<pIndex->Length;++i)
@@ -50,7 +50,7 @@ int SelectObjectFromUIObjectIndex(UIObjectRectIndex* pIndex,RECT* theRect,UIObje
 	return 0;
 }
 
-int HitTestObjectFromUIObjectIndex(UIObjectRectIndex* pIndex,int16_t x,int16_t y,UIObjectVector* pResult)
+int HitTestObjectFromUIObjectRectIndex(UIObjectRectIndex* pIndex,int16_t x,int16_t y,UIObjectVector* pResult)
 {
     int i=0;
     for(i=0;i<pIndex->Length;++i)
@@ -68,7 +68,7 @@ int HitTestObjectFromUIObjectIndex(UIObjectRectIndex* pIndex,int16_t x,int16_t y
 	return -1;
 }
 
-int AddObjectToUIObjectIndex(UIObjectRectIndex* pIndex,NGOS_UIOBJECT_HANDLE hObject)
+int AddObjectToUIObjectRectIndex(UIObjectRectIndex* pIndex,NGOS_UIOBJECT_HANDLE hObject)
 {
 	UIObject* pObj = HandleMapDecodeUIObject(hObject,NULL);
 	if(pObj == NULL)
@@ -104,7 +104,7 @@ int AddObjectToUIObjectIndex(UIObjectRectIndex* pIndex,NGOS_UIOBJECT_HANDLE hObj
 	return 0;
 }
 
-int RemoveObjectFromUIObjectIndex(UIObjectRectIndex* pIndex,NGOS_UIOBJECT_HANDLE hObject)
+int RemoveObjectFromUIObjectRectIndex(UIObjectRectIndex* pIndex,NGOS_UIOBJECT_HANDLE hObject)
 {
 	int i = 0;
 	for(i=0;i<pIndex->Length;++i)
@@ -122,7 +122,7 @@ int RemoveObjectFromUIObjectIndex(UIObjectRectIndex* pIndex,NGOS_UIOBJECT_HANDLE
 	return -1;
 }
 
-int UpdateUIObjectToUIObjectIndex(UIObjectRectIndex* pIndex,NGOS_UIOBJECT_HANDLE hObject)
+int UpdateUIObjectToUIObjectRectIndex(UIObjectRectIndex* pIndex,NGOS_UIOBJECT_HANDLE hObject)
 {
 	int i = 0;
 	for(i=0;i<pIndex->Length;++i)

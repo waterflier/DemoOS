@@ -264,6 +264,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\objectIndex\UIObjectMap.c"
+				>
+			</File>
+			<File
+				RelativePath=".\objectIndex\UIObjectMap.h"
+				>
+			</File>
+			<File
 				RelativePath=".\objectIndex\UIObjectRectIndex.c"
 				>
 			</File>

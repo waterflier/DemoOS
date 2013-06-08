@@ -34,7 +34,8 @@ RootUIObjTree* CreateRootUIObjTree(NGOS_RootTreeEnv* pEnv)
 		pResult->DPI = 72;
 		pResult->DirtyRectManager = CreateDirtyRectIndex(800,600);
 		pResult->UIObjectRectManager = CreateUIObjectRectIndex(); 
-		//创建默认的RootUIObject
+		pResult->NamedUIObjectMap = CreateUIObjectMap();
+        //创建默认的RootUIObject
 		pResult->RootUIObject = NGOS_CreateUIObject(NGOS_GetDefaultTypeLoader(),"LayoutObject",NULL);
 		UIObject* pRootObj = HandleMapDecodeUIObject(pResult->RootUIObject);
 		if(pRootObj)
@@ -95,7 +96,7 @@ int RootUIObjTreeGetRenderScrpit(RootUIObjTree* pObjTree,RECT* pClipRect, NGRE_S
 {
 	UIObjectVector theVector;
 	InitUIObjectVector(&theVector,16);
-	SelectObjectFromUIObjectIndex(pObjTree->UIObjectRectManager,pClipRect,&theVector);
+	SelectObjectFromUIObjectRectIndex(pObjTree->UIObjectRectManager,pClipRect,&theVector);
 	
 	int vectorCount = UIObjectVectorGetCount(&theVector);
 	int i=0;
@@ -136,7 +137,7 @@ void SendInputAcitonToUIObjTree(RootUIObjTree* pObjTree,uint32_t Action,void* pa
         int16_t Y = (PointParam & 0xffff);
         
         UIObjectVector* pResult = CreateUIObjectVector(16);
-        HitTestObjectFromUIObjectIndex(pObjTree->UIObjectRectManager,X,Y,pResult);
+        HitTestObjectFromUIObjectRectIndex(pObjTree->UIObjectRectManager,X,Y,pResult);
         int count = UIObjectVectorGetCount(pResult);
         int i = 0;
         for(i=0;i<count;++i)
@@ -160,4 +161,15 @@ void SendInputAcitonToUIObjTree(RootUIObjTree* pObjTree,uint32_t Action,void* pa
         return;
     }
     
+}
+
+NGOS_UIOBJECT_HANDLE UIObjTreeGetObjectByPath(RootUIObjTree* pObjTree,const char* path)
+{
+    NGOS_UIOBJECT_HANDLE hResult = NULL;
+    if(pObjTree->NamedUIObjectMap)
+    {
+        hResult = UIObjectMapFind(pObjTree->NamedUIObjectMap,path);
+    }
+    
+    return hResult;
 }

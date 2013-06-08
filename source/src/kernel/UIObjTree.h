@@ -14,6 +14,7 @@
 #include "./RootObjTreeEnv.h"
 #include "./objectIndex/DirtyRectIndex.h"
 #include "./objectIndex/UIObjectRectIndex.h"
+#include "./objectIndex/UIObjectMap.h"
 
 typedef struct tagRootUIObjTree
 {
@@ -24,6 +25,7 @@ typedef struct tagRootUIObjTree
 
 	DirtyRectIndex* DirtyRectManager;
 	UIObjectRectIndex* UIObjectRectManager;
+    UIObjectMap* NamedUIObjectMap;
 }RootUIObjTree;
 
 

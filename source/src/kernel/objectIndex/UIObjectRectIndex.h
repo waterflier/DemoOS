@@ -48,12 +48,12 @@ typedef struct tagUIObjectRectIndex
 UIObjectRectIndex* CreateUIObjectRectIndex();
 void DestroyUIObjectRectIndex(UIObjectRectIndex* pIndex);
 
-int AddObjectToUIObjectIndex(UIObjectRectIndex* pIndex,NGOS_UIOBJECT_HANDLE hObject);
-int RemoveObjectFromUIObjectIndex(UIObjectRectIndex* pIndex,NGOS_UIOBJECT_HANDLE hObject);
-int UpdateUIObjectToUIObjectIndex(UIObjectRectIndex* pIndex,NGOS_UIOBJECT_HANDLE hObject);
+int AddObjectToUIObjectRectIndex(UIObjectRectIndex* pIndex,NGOS_UIOBJECT_HANDLE hObject);
+int RemoveObjectFromUIObjectRectIndex(UIObjectRectIndex* pIndex,NGOS_UIOBJECT_HANDLE hObject);
+int UpdateUIObjectToUIObjectRectIndex(UIObjectRectIndex* pIndex,NGOS_UIOBJECT_HANDLE hObject);
 
 //为了绘制选择对象
-int SelectObjectFromUIObjectIndex(UIObjectRectIndex* pIndex,RECT* theRect,UIObjectVector* pResult);
-int HitTestObjectFromUIObjectIndex(UIObjectRectIndex* pIndex,int16_t x,int16_t y,UIObjectVector* pResult);
+int SelectObjectFromUIObjectRectIndex(UIObjectRectIndex* pIndex,RECT* theRect,UIObjectVector* pResult);
+int HitTestObjectFromUIObjectRectIndex(UIObjectRectIndex* pIndex,int16_t x,int16_t y,UIObjectVector* pResult);
 
 #endif //_NGOS_UIOBJECT_RECT_INDEX_H_
