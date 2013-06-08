@@ -1,6 +1,6 @@
 include ../../mk.config
 
-SKIA_PATH=/root/win_work/skia
+SKIA_PATH=/root/skia/trunk
 SKIA_OUT:=$(SKIA_PATH)/linux_out/$(CONFIG_NAME)
 ###################################################################
 ProjectName=DemoOS
