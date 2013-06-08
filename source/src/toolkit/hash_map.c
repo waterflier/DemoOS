@@ -1,7 +1,7 @@
 /*
  * Generic map implementation.
  */
-#include "hashmap.h"
+#include "./hash_map.h"
 
 #include <stdlib.h>
 #include <stdio.h>
