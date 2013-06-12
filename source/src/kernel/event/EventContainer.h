@@ -65,25 +65,9 @@ void CleanEventContainer(EventContainer* pSelf);
         } \
     } \
     pSelf->IsInFireProgress = FALSE;
-/*
-int i=0;
-pEA->IsInFireProgress = TRUE;
-for(i=0;i<pEA->Length;++i)
-{
-    if(pEA->Ptr+i)
-    {
-        if((pEA->Ptr+i)->pfnCallback)
-        {
-            //(pEA->Ptr+i)->pfnCallback(pUserData,....)
-        }
-    }
-}
-pEA->IsInFireProgress = FALSE;
+
 //TODO: Remove wil remove node
 
-*/
-
-//typdef returnType (*pfn##__LINE__) 
 
 typedef int (*CALLBACK_OnBind) (UserDataContext* pUserData,NGOS_UIOBJECT_HANDLE hObj);
 typedef int (*CALLBACK_OnInitChild) (UserDataContext* pUserData,NGOS_UIOBJECT_HANDLE hObj);
