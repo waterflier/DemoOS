@@ -7,7 +7,7 @@
 #include "./InputTarget.h"
 
 
-void InputTargetProcessAction(InputTarget* pSelf,uint32_t Action,void* param1,void* param2,void* eventData)
+void InputTargetProcessAction(InputTarget* pSelf,uint32_t Action,uint32_t  value,void* param,void* eventData)
 {
     printf("process input action\n");
     return;

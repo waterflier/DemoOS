@@ -41,7 +41,7 @@ typedef struct tagInputTarget
     struct InputTarget* NextResponseTarget; 
 }InputTarget;
 
-void InputTargetProcessAction(InputTarget* pSelf,uint32_t Action,void* param1,void* param2,void* eventData);
+void InputTargetProcessAction(InputTarget* pSelf,uint32_t Action,uint32_t value,void* param,void* eventData);
 
 InputTarget* CreateInputTarget();
 int ReleaseInputTarget(InputTarget* pSelf);

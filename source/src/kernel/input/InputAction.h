@@ -48,10 +48,31 @@
 
 //Ö÷´¥ÃþÆÁ
 #define NGOS_INPUTDEVICE_MAIN_TOUCH_SCREEN (8)
-#define NGOS_ACTION_TOUCH_DOWN (100)
-#define NGOS_ACTION_TOUCH_MOVE  (101) 
-#define NGOS_ACTION_TOUCH_UP   (102)
-#define NGOS_ACTION_TOUCH_BREAK (103)
+#define NGOS_ACTION_TOUCH_DOWN (100)  //value x|y param:null data:null
+#define NGOS_ACTION_TOUCH_MOVE  (101) //value x|y param:null data:null
+#define NGOS_ACTION_TOUCH_UP   (102) //value x|y param:null data:null
+
+typedef struct tagMTEventSolt
+{
+	uint16_t x;
+	uint16_t y;
+	uint16_t major;
+	uint16_t minor;
+	uint16_t trackerID;
+}MTEventSolt;
+
+typedef struct tagMTEventData
+{
+	int16_t RefCount;
+	int16_t FingerSoltCount;
+	MTEventSolt Solts; //size = sizeof (MTEventSolt) * FingerSoltCount
+}MTEventData;
+
+int ReleaseMTEventData(MTEventData* pData);
+int AddRefMTEventData(MTEventData* pData);
+MTEventSolt* GetFingerSoltData(MTEventData* pData,uint16_t index);
+
+#define NGOS_ACTION_TOUCH_BREAK (103) //not support now
 
 //Ö÷´¥Ãþ°å
 #define NGOS_INPUTDEVICE_MAIN_TOUCH_PAD (16)
