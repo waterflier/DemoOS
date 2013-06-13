@@ -1,0 +1,22 @@
+#ifconfig 配置网络与标准linux不同
+ifconfig eth0 192.168.1.1 netmask 255.255.255.0 up
+route add default gw 192.168.1.1 dev eth0 
+setprop net.dns1 202.106.0.20
+
+#开启coredump
+（1）adb连接手机，开启coredump
+# ulimit -a
+ulimit -a
+time(seconds)        unlimited
+file(blocks)         unlimited
+data(kbytes)         unlimited
+stack(kbytes)        8192
+coredump(blocks)     100 ==》我这里coredump是开启的，大小为100，可以用ulimit -c unlimited修改成不限制大小
+memory(kbytes)       unlimited
+locked memory(kbytes) 64
+process(processes)   4096
+nofiles(descriptors) 1024
+（2）配置coredump文件生成位置与名称（没找到默认情况下放在哪里）
+#echo "1" > /proc/sys/kernel/core_uses_pid
+#echo "/local/log/core-%e-%p" > /proc/sys/kernel/core_pattern
+把dump文件存放目录改到local/log下。

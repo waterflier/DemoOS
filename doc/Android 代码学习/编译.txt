@@ -1,0 +1,14 @@
+http://nosemaj.org/howto-build-android-nexus-4
+1.编译时要注意把vendor的闭源驱动下载，解压
+2.目前编译的boot.img,system.img,recovery.img,userdata.img,编译出来后自带su,但貌似与通用的su不兼容，跑ES浏览器无法检查到su
+3.不修改上述文件进入系统，可以通过remount的方法修改 / 以及  /system分区的权限，可以建目录并copy文件进去，但无法直接修改init.rc这样的重要文件？remout后对文件系统的修改貌似下次reboot就全回来了
+4./分区由boot.img里的ramdisk建立，可以通过一个脚本文件重新生成。这样任何文件都可以修改（特别是init.rc）
+5.为了方便，最好安装busybox.这里可以通过自己编译busybox的方法?(未验证)
+
+
+在$(ANDROID_SOURCE)目录下
+mm 目录  showcommands 编译该目录并显示命令
+mmm
+
+
+make －snod生成新的system.img

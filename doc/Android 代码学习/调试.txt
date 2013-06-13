@@ -1,0 +1,20 @@
+#0  0x00000000 in ?? ()
+#1  0x40116172 in ?? ()
+#2  0x40116172 in ?? ()
+
+Program received signal SIGSEGV, Segmentation fault
+
+gdb调试
+
+adb forward tcp:1984 tcp:1984
+adb shell
+gdbserver :1984 uitest_exe
+
+/toolchain/bin/gdb
+(gdb command)
+file i:/NexusTools/Mynexus7/uitest_exe
+set solib-absolute-prefix i:/NexusTools/Mynexus7/
+set solib-search-path i:/NexusTools/Mynexus7/system/lib/
+target remote :1984
+==========================================================
+1.如何确定上述地址属于哪个模块?

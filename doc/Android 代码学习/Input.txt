@@ -1,0 +1,62 @@
+关键代码在  frameworks/base/services/input/
+
+===========================================================
+1.Reader线程启动
+打开输入设备
+/dev/input/ 目录下所有设备文件
+EventHub::openDeviceLocked 
+等等初始化操作
+
+2.InputReader.cpp::loopOnce() 
+表达了Reader线程中的一次读取:调用了mEventHub->getEvents
+注意这里对RawEvent的处理
+
+3.在非Device变化事件里，会调用InputDevice->Process方法对输入事件进行进一步的处理
+
+
+4.InputDevice的定义也在InputReader里，注意这并不是一个看起来像的抽象类，而是
+Represents the state of a single input device这样的实体类
+
+5.InputDevice::process里的注释解释了一些关于不同设备之间的事件顺序同步问题
+
+
+6.InputDevice会继续调用对应的Mapper的Process函数
+InputMapper就有了具体的不同设备的特征，有
+SwitchInputMapper
+VibratorInputMapper
+KeyboardInputMapper
+CursorInputMapper
+MultiTouchInputMapper
+SingleTouchInputMapper
+JoystickInputMapper
+
+这些Mapper是在InputReader::createDeviceLocked函数里，创建InputDevice后，根据设备的classes创建的
+这些Mapper会的Process函数会对RawEvent做进一步的处理
+
+7.MultiTouchInputMapper在InputReader.cpp中定义
+内部引用了TouchInputMapper
+以及MultiTouchMotionAccumulator，这个类的process函数对RawEvent进行了转换，存储到了很多个slot里
+
+=======================================
+event hub 初始化并读取RawEvent的代码分析
+
+EventHub::getEvents代码分析
+1.先处理一些设备变化，并生成一些设备变化的Event
+2.从 // Grab the next input event. 注释开始取得真正的Event
+3.考虑到多核的支持，得到epoll通知后，并不会马上去read fd,只是去纪录本次得到的事件数量，在usleep 250(0.25ms)  后，再下一次进入循环时读取
+
+
+
+
+===========================
+参考阅读
+http://blog.csdn.net/myarrow/article/details/7091061
+
+==========================
+自己实现
+1.正确的打开 /dev/input下的文件，并正确处理ioctrl，以创建正确的逻辑Device对象
+2.在一个read thread里对这些文件epoll
+3.epoll成功后等待 0.25ms后，读取有事件的文件。安装android的要求，每个fd上能读到的数据应该是struct input_event的整数倍大小
+(所以这也是linux定义的一种标准，一种类似HAL的约束？)
+4.struct input_event的结构 ：发生时间,type,code,value (基本上就是windows消息的 ID,LPARM,WPARM的节奏)
+5.读取得到input_event后  就能拿到正经消息了

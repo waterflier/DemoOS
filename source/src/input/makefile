@@ -5,12 +5,11 @@ ModuleName=input
 TargetType=Execute
 Target=inputtest
 
-IncludeDirs = 
-ProjectCFlag= -I ../../inc
-ProjectCppFlag=
+IncludeDirs =
+ProjectCFlag= 
+ProjectCppFlag= $(ProjectCFlag)
 
-ProjectLinkFlag=
-LibDirs=$(OUTPUT)
+ProjectLinkFlag= 
 LinkLibs=
 ####################################################################
 cfiles_root := $(wildcard *.c)
