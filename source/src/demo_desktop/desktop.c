@@ -17,6 +17,11 @@
 #include "./status_bar.h"
 #include "../input/InputReader.h"
 
+#include "RenderEngine.h"
+#include "RenderScript.h"
+#include "ResourceManager.h"
+#include "RenderDevice.h"
+
 short screenWidth = 800;
 short screenHeight = 600;
 short screenDPI = 72;
@@ -24,6 +29,8 @@ short screenDPI = 72;
 TYPE_NGOS_MSG_RECIVER hMainMsgRecv;
 NGOS_ROOT_OBJTREE_HANDLE hTree;
 
+NGRE_SCRIPT_HANDLE hRenderScript;
+NGREDevice* pDevice;
 
 #define  MSG_USER_TIMER 1
 
@@ -77,6 +84,11 @@ void StartInputEventThread()
         {
         	//todo: 
             //NGOS_UpdateRootObjTree(hTree);
+			NGREClearScript(hRenderScript);
+			NGOS_UpdateRootObjTree(hTree, hRenderScript);
+			//printf("%s\r\n",NGREGetScriptCode(hRenderScript));
+			NGRERunScript(hRenderScript, pDevice);
+			NGREFlushDevice(pDevice);
         }
         else if(pMsg->Param1 == TIMER_ID_CLOCK_TICK)
         {
@@ -114,7 +126,11 @@ int main(int argc,char** argv)
 	NGOS_InitRootUIObjTreeEnv(NULL);
 	OSI_InitMsgQueue();
 	hMainMsgRecv = OSI_CreateMsgReciver(fnMainMsgProc,NULL);
-
+	hRenderScript = NGRECreateScript();
+	pDevice = NULL;
+	NGREOpenDevice(&pDevice);
+	
+	
 	//create uiobjtree
 	hTree = NGOS_CreateRootObjTree(NULL);
 	NGOS_UIOBJECT_HANDLE hRoot = NGOS_GetRootObject(hTree);

@@ -6,12 +6,19 @@ TargetType=Execute
 Target=demodesktop
 
 IncludeDirs = 
-ProjectCFlag= -I ../../inc -I ../Render/RenderScript -I ../Render/RenderEngine
+ProjectCFlag= -I ../../inc -I ../../src/Render/RenderScript -I ../../src/Render/RenderEngine -I../../src/resource_manager 
 ProjectCppFlag=
 
 ProjectLinkFlag=
-LibDirs=$(OUTPUT)
-LinkLibs=ngoskernel osi_interface uiobjects inputreader toolkit
+LibDirs=$(OUTPUT) $(SKIA_OUT) $(OUTPUT)../../resource_manager/$(CONFIG_NAME) $(OUTPUT)../../render/$(CONFIG_NAME)
+LinkLibs=ngoskernel osi_interface uiobjects inputreader toolkit lua ngre_engine ngre_script ngrm
+
+ifeq ($(ARCH), android)
+	LinkLibs += skia stdc++ stlport c m
+else
+	LinkLibs += rt pthread cityhash jpeg pthread freetype fontconfig dl GL GLU png skia_effects skia_images skia_core skia_opts skia_opts_ssse3 skia_ports skia_sfnt skia_utils skia_gr skia_skgr 
+endif
+
 ####################################################################
 cfiles_root := $(wildcard *.c)
 cobjs_root := $(patsubst %.c,$(TEMP_DIR)%.co,$(notdir $(cfiles_root)))
