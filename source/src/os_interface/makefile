@@ -11,14 +11,16 @@ ProjectCppFlag=
 
 ProjectLinkFlag=
 LinkLibss=
+SubDir = linux
+ifeq ($(ARCH),android)
+SubDir = android
+endif
 
-SubFileDirs := linux
 
 ####################################################################
 cfiles_root := $(wildcard *.c)
 cobjs_root := $(patsubst %.c,$(TEMP_DIR)%.co,$(notdir $(cfiles_root)))
-
-SubDir = linux
+ 
 cfiles1 := $(wildcard $(SubDir)/*.c)
 cobjs1 := $(patsubst %.c,$(TEMP_DIR)%.co, $(cfiles1))
 
