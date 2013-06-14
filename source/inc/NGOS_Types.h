@@ -52,9 +52,9 @@ typedef struct tagMatrix3X2
 typedef pid_t TYPE_NGOS_PID;
 typedef uint32_t TYPE_NGOS_TID;
 typedef pthread_mutex_t TYPE_NGOS_MUTEX;
-typedef struct sem_t* TYPE_NGOS_SEMAPHORE;
+typedef sem_t TYPE_NGOS_SEMAPHORE;
 typedef void* TYPE_NGOS_SHAREMEMORY;
-typedef uint64_t TYPE_NGOS_MSG_RECIVER;
+typedef void* TYPE_NGOS_MSG_RECIVER;
 #endif
 
 

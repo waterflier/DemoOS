@@ -42,10 +42,10 @@ int OSI_ReleaseMutex(TYPE_NGOS_MUTEX hMutex);
 //semaphore (½ø³Ì¼ä)
 int OSI_CreateSemaphore(TYPE_NGOS_SEMAPHORE* pResult,const char* id,int maxValue);
 int OSI_OpenSemaphore(TYPE_NGOS_SEMAPHORE* pResult,const char* id);
-int OSI_WaitSemaphore(TYPE_NGOS_SEMAPHORE hSem);
-int OSI_TryWaitSemaphore(TYPE_NGOS_SEMAPHORE hSem);
-int OSI_ActiveSemaphore(TYPE_NGOS_SEMAPHORE hSem);
-int OSI_CloseSemaphore(TYPE_NGOS_SEMAPHORE hSem);
+int OSI_WaitSemaphore(TYPE_NGOS_SEMAPHORE* hSem);
+int OSI_TryWaitSemaphore(TYPE_NGOS_SEMAPHORE* hSem);
+int OSI_ActiveSemaphore(TYPE_NGOS_SEMAPHORE* hSem);
+int OSI_CloseSemaphore(TYPE_NGOS_SEMAPHORE* hSem);
 //spin_lock
 
 //msg queue

@@ -60,7 +60,7 @@ static map_t msgQueueMap;
 
 void OSI_InitMsgQueue()
 {
-	if(!isCreateHashMap)
+	if(isCreateHashMap == 0)
 	{
 		isCreateHashMap = 1;
 		OSI_CreateMutex(&hHashMapLock);
@@ -72,7 +72,7 @@ static int CreateMsgQueue(MsgQueueHeader* pResult,TYPE_NGOS_TID tid)
 {
 
 	//TYPE_NGOS_PID pid = OSI_GetPID();
-
+	//printf("create\n");
 	unsigned char* pBuffer =  (unsigned char*)malloc(MSG_QUEUE_BUFFER_SIZE);
 
 	uint32_t* pIntWrite = (uint32_t*) pBuffer;
@@ -94,6 +94,7 @@ static int CreateMsgQueue(MsgQueueHeader* pResult,TYPE_NGOS_TID tid)
 static int GetMsgQueueHeaderFromThread(TYPE_NGOS_TID tid,MsgQueueHeader** ppResult)
 {
 	OSI_LockMutex(hHashMapLock);
+	//printf("*** enter\n");
 	void* pHeader = NULL;
 	if(hashmap_get(msgQueueMap,tid,&pHeader) == MAP_OK)
 	{
@@ -108,7 +109,7 @@ static int GetMsgQueueHeaderFromThread(TYPE_NGOS_TID tid,MsgQueueHeader** ppResu
 		*ppResult = newHeader;
 	}
 	OSI_UnlockMutex(hHashMapLock);
-
+	//printf("*** out\n");
 	return 0;
 	//尝试打开share memory,sem,mutex
 	//
@@ -271,6 +272,7 @@ int OSI_PostMsg(TYPE_NGOS_MSG_RECIVER hReciver,uint32_t msg,TYPE_NGOS_MSG_PARAM 
 	}
 
 	OSI_LockMutex(pheader->hWriteLock);
+	//printf("post\n");
 	if(MsgQueuePushBack(pheader->pData,hReciver,msg,param1,param2,msgData) != 0)
 	{
 		OSI_UnlockMutex(pheader->hWriteLock);
@@ -278,7 +280,7 @@ int OSI_PostMsg(TYPE_NGOS_MSG_RECIVER hReciver,uint32_t msg,TYPE_NGOS_MSG_PARAM 
 	}
 	OSI_UnlockMutex(pheader->hWriteLock);
 
-	OSI_ActiveSemaphore(pheader->hSem);
+	OSI_ActiveSemaphore(&(pheader->hSem));
 	
 	return 0;
 }
@@ -355,15 +357,18 @@ int OSI_RemoveMsgFilter(TYPE_NGOS_MSGQUEUE_RUNLOOP hRunLoop,int cookie)
 //不推荐直接使用的函数，应该使用系统内置的MsgQueueLoop和Filter
 int OSI_GetMsg(RecivedMsg* pResult)
 {
-	int result = 0;
+	int result = -1;
 	TYPE_NGOS_TID ctid = OSI_GetThreadID();
 	MsgQueueHeader* pheader;
 	//todo
 	GetMsgQueueHeaderFromThread(ctid,&pheader);
 	if(pheader->pData)
 	{
-		if(OSI_WaitSemaphore(pheader->hSem) == 0)
+		//printf("get msg\n");
+		if(OSI_WaitSemaphore(&(pheader->hSem)) == 0)
 		{
+			result = 0;
+			//printf("get a msg\n");
 			OSI_LockMutex(pheader->hWriteLock);
 			MsgQueuePopFront(pheader->pData,pResult)==0;
 			OSI_UnlockMutex(pheader->hWriteLock);

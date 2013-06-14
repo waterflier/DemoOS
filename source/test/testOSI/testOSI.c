@@ -85,6 +85,15 @@ int test_msgqueue(int argc,char** argv)
 
 int test_lock(int argc,char** argv)
 {
+	TYPE_NGOS_MUTEX hM1;
+	TYPE_NGOS_MUTEX hM2;
+	TYPE_NGOS_MUTEX hM3;
+
+	OSI_CreateMutex(&hM1);
+	OSI_CreateMutex(&hM2);
+	OSI_CreateMutex(&hM3);
+
+	printf("%d,%d,%d\n",hM1,hM2,hM3);
 	return 0;
 }
 
@@ -143,10 +152,11 @@ int test_sm(int argc,char** argv)
 
 int main(int argc,char** argv)
 {
+
 	TYPE_NGOS_SEMAPHORE hSem;
 	int result;
 	int i = 0;
-
+	//return test_lock(argc,argv);
 	return test_thread_and_msgqueue(argc,argv);
 	//return test_sm(argc,argv);
 
@@ -163,7 +173,7 @@ int main(int argc,char** argv)
 		
 		while(i<5000)
 		{
-			OSI_ActiveSemaphore(hSem);
+			OSI_ActiveSemaphore(&hSem);
 			printf("server active %d.\n",i);
 			i++;
 			sleep(1);
@@ -181,7 +191,7 @@ int main(int argc,char** argv)
 		
 		while(1)
 		{
-			OSI_WaitSemaphore(hSem);
+			OSI_WaitSemaphore(&hSem);
 			printf("%d get it!\n",getpid());
 			sleep(5);
 		}

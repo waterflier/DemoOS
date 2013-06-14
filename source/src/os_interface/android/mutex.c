@@ -10,7 +10,7 @@ int OSI_CreateMutex(TYPE_NGOS_MUTEX* pResult)
 {
 	pthread_mutex_t result;
 	int return_value = pthread_mutex_init(&result,NULL);
-	if(return_value)
+	if(return_value == 0)
 	{
 		*pResult = (TYPE_NGOS_MUTEX)result;
 		return 0;
