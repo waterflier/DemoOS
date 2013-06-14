@@ -277,7 +277,7 @@ int MultiTouchAccumulatorPopAction(MultiTouchAccumulator* pSelf,MultiTouchAction
 		return 0;
 	}
 	
-	printf("PopAction");
+	//printf("PopAction");
 	memcpy(pResult,pSelf->resultData+pSelf->resultHeaderPos,sizeof(MultiTouchAction));
 	if(pResult->pData)
 	{
