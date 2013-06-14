@@ -26,6 +26,7 @@ typedef struct tagMultiTouchAccumulator
 
 	MTEventSolt currentSolts[MT_SOLT_MAX_CACHE];
 	uint16_t soltCount;
+	int soltInUse;
 	//struct input_event 
 	MultiTouchAction resultData[MT_ACTION_MAX_CACHE]; //ring buffer
 	uint16_t resultHeaderPos;
@@ -41,6 +42,7 @@ void MultiTouchAccumulatorPushRawInputEvent(MultiTouchAccumulator* pSelf, const 
 int MultiTouchAccumulatorPopAction(MultiTouchAccumulator* pSelf,MultiTouchAction* pResult);
 
 //TODO :
+MTEventData* CreateMTEventData(int soltSize);
 void ReleaseActionData(MTEventData* pData);
 
 #endif //_NGOS_MULTI_TOUCH_ACCUMLATOR_H_

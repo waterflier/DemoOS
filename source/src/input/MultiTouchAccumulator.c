@@ -18,7 +18,7 @@ MultiTouchAccumulator* CreateMultiTouchAccumulator()
 
 int ReleaseMultiTouchAccumulator(MultiTouchAccumulator* pSelf)
 {
-
+    //TODO:
 }
 void ReleaseActionData(MTEventData* pData)
 {
@@ -28,14 +28,22 @@ void ReleaseActionData(MTEventData* pData)
 		free(pData);
 	}
 }
+MTEventData* CreateMTEventData(int soltSize)
+{
+    MTEventData* pResult = (MTEventData*) malloc (sizeof(MTEventData) + sizeof(MTEventSolt)*(soltSize-1));
+    pResult->RefCount = 1;
+    pResult->FingerSoltCount = soltSize;
+    return pResult;
+}
 
 static MTEventSolt* GetCurrentSolt(MultiTouchAccumulator* pSelf)
 {
-	if(pSelf->soltCount == 0)
+	if(pSelf->soltInUse == 0)
 	{
 		pSelf->soltCount++;
+		pSelf->soltInUse = 1;
 	}
-
+	
 	return pSelf->currentSolts + (pSelf->soltCount - 1);
 }
 
@@ -44,7 +52,8 @@ static void AppendSolt(MultiTouchAccumulator* pSelf)
 	if(pSelf->soltCount == 0)
 		return;
 	
-	pSelf->soltCount++;
+	//pSelf->soltCount++;
+	pSelf->soltInUse = 0;
 }
 
 static MultiTouchAction* GetCurrentAction(MultiTouchAccumulator* pSelf)
@@ -66,7 +75,7 @@ static void SetLastSoltData(MultiTouchAccumulator* pSelf,MTEventData* pData)
 	}
 	
 }
-//TODO : Reing buffer my error?
+//TODO : Reing buffer may error?
 static void AppendAction(MultiTouchAccumulator* pSelf)
 {
 	pSelf->resultEndPos++;
@@ -91,38 +100,38 @@ static  void CovertSoltDataToAction(MultiTouchAccumulator* pSelf)
 		}
 	}
 
-
-	//compare current solt data and last solt data
 	MTEventData* pLastData = pSelf->pLastData;
 	if(pLastData == NULL)
 	{
+
 		if(pSelf->soltCount > 0)
 		{
-			printf("First Down\n");
+			//printf("Down\n");
 			MultiTouchAction* pWrite = GetCurrentAction(pSelf);
 			pWrite->actionType = NGOS_ACTION_TOUCH_DOWN;
 			pWrite->x = pSelf->currentSolts->x;
 			pWrite->y = pSelf->currentSolts->y;
-			pWrite->pData =(MTEventData*) malloc (sizeof(MTEventData) + sizeof(MTEventSolt)*(pSelf->soltCount-1));
-			pWrite->pData->RefCount = 1;
-			pWrite->pData->FingerSoltCount = pSelf->soltCount;
+			pWrite->pData =CreateMTEventData(pSelf->soltCount);
 			memcpy(&(pWrite->pData->Solts),pSelf->currentSolts,sizeof(MTEventSolt)*(pSelf->soltCount));
-			SetLastSoltData(pSelf,pWrite->pData);
-
+			
 			AppendAction(pSelf);
+            
+            SetLastSoltData(pSelf,pWrite->pData);
+            //printf("Down over\n");
 		}
 	}
 	else if(pSelf->soltCount == 0)
 	{
-		
 		if(pLastData)
 		{
-			printf("UP \n");
+			//printf("UP\n");
 			MultiTouchAction* pWrite = GetCurrentAction(pSelf);
 			pWrite->actionType = NGOS_ACTION_TOUCH_UP;	
 			pWrite->x = pLastData->Solts.x;
 			pWrite->y = pLastData->Solts.y;
-			pWrite->pData = NULL;
+			pWrite->pData = CreateMTEventData(1);
+            pWrite->pData->Solts = pLastData->Solts;
+
 			AppendAction(pSelf);
 		}	
 
@@ -134,29 +143,78 @@ static  void CovertSoltDataToAction(MultiTouchAccumulator* pSelf)
 		int i=0;
 		int j=0;
 		int isFind = 0;
-		for(i=0;i<pSelf->soltCount;++i)
-		{
-			isFind = 0;
-			MTEventSolt* pNow = pSelf->currentSolts+i;
-			for(j=0;j<pLastData->FingerSoltCount;++j)
-			{
-				MTEventSolt* pComp = &(pLastData->Solts)+j;
-				if(pComp->trackerID == pNow->trackerID)
-				{
-					isFind = 1;
-					//move action
-					printf("MOVE\n");
-					break;
-				}
 
-			}
+        //1)求当前soltdata与last soltdata的交集
+        //  交集部分触发一次MOVE (1次MOVE 多个soltdata)
+        //2) soltdata与交集的差 触发发多次NEW_DOWN
+        //3) lastsoltdata与交集的差 触发多次NEW_UP
 
-			if(!isFind)
-			{
-				//new down action
-				printf("UP Solt\n");
-			}
-		}
+        int findcount = 0;
+        MTEventData* pMovingData = CreateMTEventData(pSelf->soltCount);
+        MTEventSolt* pWriteSolt = &(pMovingData->Solts);
+        pMovingData->FingerSoltCount = 0;
+        for(i=0;i<pSelf->soltCount;++i)
+        {
+            isFind = 0;
+            MTEventSolt* pNow = pSelf->currentSolts+i;
+            for(j=0;j<pLastData->FingerSoltCount;++j)
+            {
+                MTEventSolt* pComp = &(pLastData->Solts)+j;
+                if(pComp->trackerID == pNow->trackerID)
+                {
+                	//printf("moving\n");
+                    isFind = 1;
+                    pComp->trackerID |= 0x1000;//mark find
+                    findcount++;
+                    *pWriteSolt = *pNow;
+                    pWriteSolt++;
+                    pMovingData->FingerSoltCount++;
+                    break;
+                }
+            }
+
+            if(!isFind)
+            {
+                //printf("one Down\n");
+                MultiTouchAction* pOneDownAction = GetCurrentAction(pSelf);
+                pOneDownAction->actionType = NGOS_ACTION_TOUCH_ONE_DOWN;	
+                pOneDownAction->x = pNow->x;
+                pOneDownAction->y = pNow->y;
+                pOneDownAction->pData =CreateMTEventData(1);
+                pOneDownAction->pData->Solts = *pNow;
+
+                AppendAction(pSelf);
+            }
+        }
+
+        MultiTouchAction* pMoveAction = GetCurrentAction(pSelf);
+        pMoveAction->actionType = NGOS_ACTION_TOUCH_MOVE;	
+        pMoveAction->x = pMovingData->Solts.x;
+        pMoveAction->y =  pMovingData->Solts.y;
+        pMoveAction->pData = pMovingData;
+
+        AppendAction(pSelf);
+
+        if(findcount != pLastData->FingerSoltCount)
+        {
+            for(j=0;j<pLastData->FingerSoltCount;++j)
+            {
+                MTEventSolt* pSolt = &(pLastData->Solts)+j;
+                if(!(pSolt->trackerID & 0xF000))
+                {
+                    //printf("New UP");
+                    MultiTouchAction* pOneUpAction = GetCurrentAction(pSelf);
+                    pOneUpAction->actionType = NGOS_ACTION_TOUCH_ONE_UP;	
+                    pOneUpAction->x = pSolt->x;
+                    pOneUpAction->y = pSolt->y;
+                    pOneUpAction->pData =CreateMTEventData(1);
+                    pOneUpAction->pData->Solts = *pSolt;
+
+                    AppendAction(pSelf);
+                }
+            }
+        }
+
 
 		MTEventData* pTempData =(MTEventData*) malloc (sizeof(MTEventData) + sizeof(MTEventSolt)*(pSelf->soltCount-1));
 		pTempData->RefCount = 1;
@@ -182,6 +240,7 @@ void MultiTouchAccumulatorPushRawInputEvent(MultiTouchAccumulator* pSelf, const 
 				//OK ,heare is a full action ,compare with last solt ,then create new action
 				CovertSoltDataToAction(pSelf);
 				pSelf->soltCount = 0;
+				pSelf->soltInUse = 0;
 			break;
 		}
 	}
@@ -200,7 +259,11 @@ void MultiTouchAccumulatorPushRawInputEvent(MultiTouchAccumulator* pSelf, const 
 			pSolt->major = pEV->value;
 			break;
 		case ABS_MT_TRACKING_ID:
-			pSolt->trackerID = pEV->value;
+            if(pEV->value & 0xf000)
+            {
+                printf("**** error!\n");
+            }
+			pSolt->trackerID = pEV->value & 0x0fff;//high bit is use for compare
 			break;
 		}
 	}
@@ -214,7 +277,12 @@ int MultiTouchAccumulatorPopAction(MultiTouchAccumulator* pSelf,MultiTouchAction
 		return 0;
 	}
 	
+	printf("PopAction");
 	memcpy(pResult,pSelf->resultData+pSelf->resultHeaderPos,sizeof(MultiTouchAction));
+	if(pResult->pData)
+	{
+		pResult->pData->RefCount++;
+	}
 	pSelf->resultHeaderPos ++ ;
 	if(pSelf->resultHeaderPos == MT_ACTION_MAX_CACHE)
 	{

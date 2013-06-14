@@ -318,6 +318,26 @@ static int InputReaderGetMultTouchEvents(InputReader* pSelf)
     }
 }
 
+static const char* GetActionType(int typeCode)
+{
+    switch(typeCode)
+    {
+    case  NGOS_ACTION_TOUCH_DOWN:  //value x|y param:null data:null
+        return "NGOS_ACTION_TOUCH_DOWN";
+    case NGOS_ACTION_TOUCH_MOVE: //value x|y param:null data:null
+        return "NGOS_ACTION_TOUCH_MOVE";
+    case NGOS_ACTION_TOUCH_UP: //value x|y param:null data:null
+        return "NGOS_ACTION_TOUCH_UP";
+    case  NGOS_ACTION_TOUCH_ONE_DOWN: //value  x|y
+        return "NGOS_ACTION_TOUCH_ONE_DOWN";
+    case NGOS_ACTION_TOUCH_ONE_UP: //value x|y
+        return "NGOS_ACTION_TOUCH_ONE_UP";
+    }
+
+    return "unknown action";
+}
+
+
 static int InputReaderThreadProc(void* ud)
 {
 	InputReader* pSelf = (InputReader*) ud;
@@ -346,6 +366,8 @@ static int InputReaderThreadProc(void* ud)
         	while(MultiTouchAccumulatorPopAction(pSelf->pMTAccumulator,&theAction))
         	{
         		//printf action;
+                printf("action type=%s,x=%d,y=%d,solt count=%d\n",GetActionType(theAction.actionType),theAction.x,theAction.y,theAction.pData->FingerSoltCount);
+
                 if(theAction.pData)
                 {
                     ReleaseActionData(theAction.pData);
