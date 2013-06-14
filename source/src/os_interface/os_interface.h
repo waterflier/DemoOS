@@ -62,6 +62,8 @@ typedef struct tagRecivedMsg
 	TYPE_NGOS_MSG_DATA	MsgData;
 }RecivedMsg;
 
+void OSI_InitMsgQueue();
+
 typedef int (*pfnMsgFilter) (RecivedMsg* pMsg,UserDataContext* udc,int step);
 typedef int (*pfnMsgProc) (RecivedMsg* pMsg,TYPE_NGOS_MSG_RECIVER hReciver,UserDataContext* udc);
 

@@ -29,6 +29,7 @@ typedef struct tagMsgQueueHeader
 	unsigned char* 		  pData;
 	TYPE_NGOS_SEMAPHORE   hSem;
 	TYPE_NGOS_MUTEX       hWriteLock;
+	TYPE_NGOS_TID          OwnerTID;
 }MsgQueueHeader;
 
 
@@ -67,7 +68,7 @@ void OSI_InitMsgQueue()
 	}	
 }
 
-static int CreateMsgQueue(MsgQueueHeader* pResult,tid)
+static int CreateMsgQueue(MsgQueueHeader* pResult,TYPE_NGOS_TID tid)
 {
 
 	//TYPE_NGOS_PID pid = OSI_GetPID();
@@ -84,6 +85,7 @@ static int CreateMsgQueue(MsgQueueHeader* pResult,tid)
 	OSI_CreateSemaphore(&(pResult->hSem),NULL,MSG_QUEUE_MAX_VALUE);
 	OSI_CreateMutex(&(pResult->hWriteLock));
 	pResult->pData = pBuffer;
+	pResult->OwnerTID = tid;
 
 	return 0;
 }
@@ -93,17 +95,17 @@ static int GetMsgQueueHeaderFromThread(TYPE_NGOS_TID tid,MsgQueueHeader** ppResu
 {
 	OSI_LockMutex(hHashMapLock);
 	void* pHeader = NULL;
-	if(hashmap_get(msgQueueMap,tid,&pResult) == MAP_OK)
+	if(hashmap_get(msgQueueMap,tid,&pHeader) == MAP_OK)
 	{
 		//return 0;
-		;
+		*ppResult = pHeader;
 	}
 	else
 	{
 		MsgQueueHeader* newHeader = (MsgQueueHeader*) malloc(sizeof(MsgQueueHeader));
 		CreateMsgQueue(newHeader,tid);
 		hashmap_put(msgQueueMap,tid,newHeader);
-		*pResult = newHeader;
+		*ppResult = newHeader;
 	}
 	OSI_UnlockMutex(hHashMapLock);
 
@@ -261,22 +263,22 @@ int OSI_PostMsg(TYPE_NGOS_MSG_RECIVER hReciver,uint32_t msg,TYPE_NGOS_MSG_PARAM 
 		return -1;
 	}
 	//get struct msgqueue from tid
-	MsgQueueHeader header;
-	GetMsgQueueHeaderFromThread(tid,&header);
-	if(header.pData == NULL)
+	MsgQueueHeader* pheader;
+	GetMsgQueueHeaderFromThread(tid,&pheader);
+	if(pheader->pData == NULL)
 	{
 		return -1;
 	}
 
-	OSI_LockMutex(header.hWriteLock);
-	if(MsgQueuePushBack(header.pData,hReciver,msg,param1,param2,msgData) != 0)
+	OSI_LockMutex(pheader->hWriteLock);
+	if(MsgQueuePushBack(pheader->pData,hReciver,msg,param1,param2,msgData) != 0)
 	{
-		OSI_UnlockMutex(header.hWriteLock);
+		OSI_UnlockMutex(pheader->hWriteLock);
 		return -1;
 	}
-	OSI_UnlockMutex(header.hWriteLock);
+	OSI_UnlockMutex(pheader->hWriteLock);
 
-	OSI_ActiveSemaphore(header.hSem);
+	OSI_ActiveSemaphore(pheader->hSem);
 	
 	return 0;
 }
@@ -355,16 +357,16 @@ int OSI_GetMsg(RecivedMsg* pResult)
 {
 	int result = 0;
 	TYPE_NGOS_TID ctid = OSI_GetThreadID();
-	MsgQueueHeader header;
+	MsgQueueHeader* pheader;
 	//todo
-	GetMsgQueueHeaderFromThread(ctid,&header);
-	if(header.pData)
+	GetMsgQueueHeaderFromThread(ctid,&pheader);
+	if(pheader->pData)
 	{
-		if(OSI_WaitSemaphore(header.hSem) == 0)
+		if(OSI_WaitSemaphore(pheader->hSem) == 0)
 		{
-			OSI_LockMutex(header.hWriteLock);
-			MsgQueuePopFront(header.pData,pResult)==0;
-			OSI_UnlockMutex(header.hWriteLock);
+			OSI_LockMutex(pheader->hWriteLock);
+			MsgQueuePopFront(pheader->pData,pResult)==0;
+			OSI_UnlockMutex(pheader->hWriteLock);
 		}
 	}
 
