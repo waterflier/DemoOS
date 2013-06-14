@@ -12,6 +12,10 @@
 
 #include "./MultiTouchAccumulator.h"
 
+#include "../os_interface/os_interface.h"
+
+#define  MSG_INPUT_ACTION 2
+
 #define EPOLL_MAX_EVENTS (16)
 #define EPOLL_SIZE_HINT (8)
 #define RAW_INPUT_EVENT_READ_LEN (64)
@@ -30,12 +34,15 @@ typedef struct tagInputReader
 	//accumulator
 	MultiTouchAccumulator* pMTAccumulator;
 
+	//recv
+	TYPE_NGOS_MSG_RECIVER hRecv;
+
 }InputReader;
 
 InputReader* CreateInputReader();
 int ReleaseInputReader(InputReader* pReader);
 
-//void SetInputReadeActionNotify 
+void SetInputReadeActionReciver(InputReader* pSelf,TYPE_NGOS_MSG_RECIVER hRecv); 
 int InputReaderStart(InputReader* pSelf);
 
 

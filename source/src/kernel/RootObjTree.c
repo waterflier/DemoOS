@@ -434,3 +434,15 @@ NGOS_API(int) NGOS_SetUIObjectAlpha(NGOS_UIOBJECT_HANDLE hUIObject,uint8_t newAl
 	}
 	return -1;
 }
+
+NGOS_API(int) NGOS_PutInputActionToRootObjTree(NGOS_ROOT_OBJTREE_HANDLE hRootTree,uint32_t Action,void* param1,void* param2,void* eventData)
+{
+	RootUIObjTree* pTree = HandleMapDecodeRootTree(hRootTree,NULL);
+	if(pTree)
+	{
+		SendInputAcitonToUIObjTree(pTree,Action,param1,param2,eventData);
+		return 0;
+	}	
+
+	return -1;
+}

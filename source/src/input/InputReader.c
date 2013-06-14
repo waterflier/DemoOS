@@ -3,6 +3,20 @@
 //
 //////////////////////////////////////////////
 
+#include <pthread.h>
+#ifdef ANDROID
+#include <linux/sem.h>
+#include <linux/types.h>
+#include <linux/ipc.h>
+#include <linux/types.h>
+#else
+#include <sys/sem.h>
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/types.h>
+#endif
+#include <unistd.h>
+
 #include "./InputReader.h"
 
 
@@ -15,6 +29,7 @@
 #include <linux/input.h>
 #include <dirent.h>
 #include <sys/epoll.h>
+
 
 struct InputDeviceIdentifier {
     char name[128];
@@ -338,7 +353,7 @@ static const char* GetActionType(int typeCode)
 }
 
 
-static int InputReaderThreadProc(void* ud)
+static  void* InputReaderThreadProc(void* ud)
 {
 	InputReader* pSelf = (InputReader*) ud;
 
@@ -366,13 +381,34 @@ static int InputReaderThreadProc(void* ud)
         	while(MultiTouchAccumulatorPopAction(pSelf->pMTAccumulator,&theAction))
         	{
         		//printf action;
-                printf("action type=%s,x=%d,y=%d,solt count=%d\n",GetActionType(theAction.actionType),theAction.x,theAction.y,theAction.pData->FingerSoltCount);
+                //printf("action type=%s,x=%d,y=%d,solt count=%d\n",GetActionType(theAction.actionType),theAction.x,theAction.y,theAction.pData->FingerSoltCount);
 
-                if(theAction.pData)
+      
+                if(pSelf->hRecv)
                 {
-                    ReleaseActionData(theAction.pData);
+                    OSI_PostMsg(pSelf->hRecv,MSG_INPUT_ACTION,
+                        (NGOS_INPUTDEVICE_MAIN_TOUCH_SCREEN<<16) | theAction.actionType,(theAction.x<<16) | theAction.y,theAction.pData);
                 }
-        	}
+                else
+                {
+                    if(theAction.pData)
+                    {
+                        ReleaseActionData(theAction.pData);
+                    } 
+                }
+        	}#include <pthread.h>
+#ifdef ANDROID
+#include <linux/sem.h>
+#include <linux/types.h>
+#include <linux/ipc.h>
+#include <linux/types.h>
+#else
+#include <sys/sem.h>
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/types.h>
+#endif
+#include <unistd.h>
         }
 	}
 	else
@@ -411,7 +447,15 @@ int InputReaderStart(InputReader* pSelf)
 	}
 
 	//TODO: start thread;
-    InputReaderThreadProc(pSelf);
+    OSI_CreateThread(InputReaderThreadProc,pSelf);
+    //InputReaderThreadProc(pSelf);
 	return  0;
 }
 
+void SetInputReadeActionReciver(InputReader* pSelf,TYPE_NGOS_MSG_RECIVER hRecv)
+{
+    if(pSelf)
+    {
+        pSelf->hRecv = hRecv;
+    }
+}

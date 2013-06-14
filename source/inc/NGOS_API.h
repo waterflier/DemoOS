@@ -38,6 +38,7 @@ NGOS_API(int) NGOS_GetRootObjTree(TYPE_NGOS_PID ownerPID, TYPE_NGOS_OBJTREE_OWNE
 NGOS_API(int) NGOS_DestoryRootObjTree(NGOS_ROOT_OBJTREE_HANDLE hRootTree);
 NGOS_API(int) NGOS_UpdateRootObjTree(NGOS_ROOT_OBJTREE_HANDLE hRootTree, NGRE_SCRIPT_HANDLE hRenderScript);
 NGOS_API(TYPE_NGOS_PID) NGOS_GetRootObjTreeOwnerPID(NGOS_ROOT_OBJTREE_HANDLE hRootTree);
+NGOS_API(int) NGOS_PutInputActionToRootObjTree(NGOS_ROOT_OBJTREE_HANDLE hRootTree,uint32_t Action,void* param1,void* param2,void* eventData);
 //得到root ui object,这个object一定是一个无id的layoutobject,在创建objtree的时候由objtree创建
 NGOS_API(NGOS_UIOBJECT_HANDLE) NGOS_GetRootObject(NGOS_ROOT_OBJTREE_HANDLE hRootTree);
 

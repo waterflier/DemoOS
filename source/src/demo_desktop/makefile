@@ -11,7 +11,7 @@ ProjectCppFlag=
 
 ProjectLinkFlag=
 LibDirs=$(OUTPUT)
-LinkLibs=ngoskernel osi_interface uiobjects
+LinkLibs=ngoskernel osi_interface uiobjects inputreader toolkit
 ####################################################################
 cfiles_root := $(wildcard *.c)
 cobjs_root := $(patsubst %.c,$(TEMP_DIR)%.co,$(notdir $(cfiles_root)))

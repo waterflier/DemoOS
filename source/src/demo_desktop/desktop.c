@@ -15,6 +15,7 @@
 #include "./buttom.h"
 #include "./clock.h"
 #include "./status_bar.h"
+#include "../input/InputReader.h"
 
 short screenWidth = 800;
 short screenHeight = 600;
@@ -23,7 +24,7 @@ short screenDPI = 72;
 TYPE_NGOS_MSG_RECIVER hMainMsgRecv;
 NGOS_ROOT_OBJTREE_HANDLE hTree;
 
-#define  MSG_USER_INPUT_ACTION 0
+
 #define  MSG_USER_TIMER 1
 
 #define TIMER_ID_UPDATE_TREE 0
@@ -39,20 +40,27 @@ void GetScrennInfo()
 	return;
 }
 
-void StartTimerThread()
+void* TimerThread(void* ud)
 {
-	return;
+	while(1)
+	{
+		usleep(25000);
+		OSI_PostMsg(hMainMsgRecv,MSG_USER_TIMER,TIMER_ID_UPDATE_TREE,0,NULL);
+	}
 }
 
-int InputEventHubThread (void* ud)
+void StartTimerThread()
 {
-
-    return 0;
+	OSI_CreateThread(NULL,TimerThread);
+	return;
 }
 
 void StartInputEventThread()
 {
-    OSI_CreateThread(NULL,InputEventHubThread);
+	InputReader* pReader = CreateInputReader();
+
+	SetInputReadeActionReciver(pReader,hMainMsgRecv); 
+    InputReaderStart(pReader);
 	return;
 }
 
@@ -61,12 +69,13 @@ void StartInputEventThread()
 	 printf("main msgqueue recv msg! %d\n",pMsg->Msg);
      switch(pMsg->Msg)
      {
-     case MSG_USER_INPUT_ACTION:
-
+     case MSG_INPUT_ACTION:
+     	SendInputAcitonToUIObjTree(pMsg->Param1,(uint32_t)pMsg->Param2>>16,(uint32_t)pMsg->Param2&0xffff,pMsg->MsgData);
         break;
      case MSG_USER_TIMER:
         if(pMsg->Param1 == TIMER_ID_UPDATE_TREE)   
         {
+        	//todo: 
             //NGOS_UpdateRootObjTree(hTree);
         }
         else if(pMsg->Param1 == TIMER_ID_CLOCK_TICK)
@@ -95,6 +104,7 @@ NGOS_UIOBJECT_HANDLE CreateDesktopBKG()
 
 
 
+
 int main(int argc,char** argv)
 {
 	printf("demo_desktop start...\n");
@@ -102,6 +112,7 @@ int main(int argc,char** argv)
 	GetScrennInfo();
 	//init librarys
 	NGOS_InitRootUIObjTreeEnv(NULL);
+	OSI_InitMsgQueue();
 	hMainMsgRecv = OSI_CreateMsgReciver(fnMainMsgProc,NULL);
 
 	//create uiobjtree

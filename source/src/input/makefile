@@ -1,12 +1,12 @@
 include ../../mk.config
 ###################################################################
 ProjectName=DemoOS
-ModuleName=input
-TargetType=Execute
-Target=inputtest
+ModuleName=inputreader
+TargetType=Lib
+Target=libinputreader.a
 
 IncludeDirs =
-ProjectCFlag= 
+ProjectCFlag= -I ../../inc
 ProjectCppFlag= $(ProjectCFlag)
 
 ProjectLinkFlag= 
