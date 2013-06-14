@@ -123,8 +123,9 @@ static NGRE_SCRIPT_HANDLE ImageObjectGetRenderScript(void* pSelf,RECT* pViewRect
 			/*printf("StretchDrawBitmap(%s,%d,%d,%d,%d,%d)\n",pImg->strImageResID,pObj->ObjAbsRect.left,pObj->ObjAbsRect.top,pObj->ObjAbsRect.right,pObj->ObjAbsRect.bottom,
 				pImg->DrawModeAntiAlias);*/
 			
-			sprintf(NGREGetScriptBuffer(hRenderScript), "BlendBitmap(\"%s\",nil,nil,{%d,%d,%d,%d},nil)",pImg->strImageResID,pObj->ObjAbsRect.left,
-				pObj->ObjAbsRect.top,pObj->ObjAbsRect.right,pObj->ObjAbsRect.bottom);
+			sprintf(NGREGetScriptBuffer(hRenderScript), "BlendBitmap(\"%s\",nil,nil,{%d,%d,%d,%d},{[\"clipRect\"]={%d,%d,%d,%d}})",
+				pImg->strImageResID,pObj->ObjAbsRect.left,pObj->ObjAbsRect.top,pObj->ObjAbsRect.right,pObj->ObjAbsRect.bottom,
+				pViewRect->left,pViewRect->top,pViewRect->right,pViewRect->bottom);
 		}
 		else
 		{
@@ -147,8 +148,8 @@ static NGRE_SCRIPT_HANDLE ImageObjectGetRenderScript(void* pSelf,RECT* pViewRect
 
 			//AppendRenderScript(hResult,"DrawBitmap(%s,%d,%d)");
 			//printf("DrawBitmap(%s,%d,%d)\n",pImg->strImageResID,left,top);
-			sprintf(NGREGetScriptBuffer(hRenderScript), "BlendBitmap(\"%s\",nil,nil,{%d,%d,nil,nil},nil)",pImg->strImageResID,pObj->ObjAbsRect.left,
-				pObj->ObjAbsRect.top);
+			sprintf(NGREGetScriptBuffer(hRenderScript), "BlendBitmap(\"%s\",nil,nil,{%d,%d,nil,nil},{[\"clipRect\"]={%d,%d,%d,%d}})",
+				pImg->strImageResID,pObj->ObjAbsRect.left,pObj->ObjAbsRect.top,pViewRect->left,pViewRect->top,pViewRect->right,pViewRect->bottom );
 		}
 		
 	}

@@ -66,7 +66,7 @@ int NGREOpParamL(lua_State* pLuaState, int nIndex, LPNGREOpParam pParam)
 			NGREOpFMatrix33L(pLuaState, lua_gettop(pLuaState), pParam->matrix);
 		}
 		lua_pop(pLuaState, 1);
-		lua_pushstring(pLuaState, "clipIndex");
+		lua_pushstring(pLuaState, "clipRect");
 		lua_gettable(pLuaState, nIndex);
 		if(!lua_isnoneornil(pLuaState, nIndex))
 		{
@@ -197,6 +197,8 @@ NGRE_RESULT	NGREInitScriptCoder(LPNGREInitScriptCoderParam param)
 	lua_register (g_pLuaScriptEnv->pRunStack, "FillRect", NGREOpFillRectL);
 	lua_register (g_pLuaScriptEnv->pRunStack, "EraseBitmap", NGREOpEraseBitmapL);
 	lua_register (g_pLuaScriptEnv->pRunStack, "AddClipRect", NGREOpAddClipRectL);
+
+	
 	
 	return NGRE_SUCCESS;
 

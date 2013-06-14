@@ -359,6 +359,12 @@ NGOS_API(int) NGOS_UpdateRootObjTree(NGOS_ROOT_OBJTREE_HANDLE hRootTree, NGRE_SC
 			for(i=0;i<count;i++)
 			{
 				RECT* pClipRect = GetRectAtIndex(pRectList,i);
+				//这里添加脏矩形到设备，擦背景
+				char szScriptCode[100];
+				sprintf(szScriptCode,  "AddClipRect({%d,%d,%d,%d})", pClipRect->left,pClipRect->top,pClipRect->right,pClipRect->bottom);
+				NGREAppendScript(hRenderScript, szScriptCode);
+				sprintf(szScriptCode,  "EraseBitmap(nil, nil, {%d,%d,%d,%d})", pClipRect->left,pClipRect->top,pClipRect->right,pClipRect->bottom);
+				NGREAppendScript(hRenderScript, szScriptCode);
 				printf("SetClipRect(%d,%d,%d,%d)\n",pClipRect->left,pClipRect->top,pClipRect->right,pClipRect->bottom);
 				RootUIObjTreeGetRenderScrpit(pTree,pClipRect,hRenderScript);
 			}

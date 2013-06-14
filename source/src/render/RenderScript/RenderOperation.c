@@ -35,6 +35,9 @@ void NGREGetRectIfNull(CLPNGREOpIRect pSrcRect, LPNGREOpIRect pRect, NGREBitmapR
 	}
 }
 
+
+
+
 NGRE_RESULT NGREOpBlendBitmapR(NGREBitmapR pBmpSrc, CLPNGREOpIRect pRectSrc, NGREBitmapR pBmpDest, CLPNGREOpIRect pRectDest, CLPNGREOpParam pParam)
 {
 	NGREResId idBmpSrc = pBmpSrc.idResource;
@@ -83,6 +86,20 @@ NGRE_RESULT NGREOpBlendBitmapR(NGREBitmapR pBmpSrc, CLPNGREOpIRect pRectSrc, NGR
 	return lResult;
 }
 
+void NGREGetBlankColorIfNull(NGREOpColorR* ppColor)
+{
+	static NGREOpColor s_blankColor = 0;
+	NGREResId idColor = pColor.idResource;
+	if(idColor == NULL)
+	{
+		ppColor->pResource = &s_blankColor;
+	}
+	else
+	{
+		NGREGetColorFromId(idColor, &(pColor.pResource));
+	}
+}
+
 
 NGRE_RESULT NGREOpFillRectR(NGREBitmapR pBmpDest, CLPNGREOpIRect pRectDest, NGREOpColorR pColor, CLPNGREOpParam pParam)
 {
@@ -91,8 +108,7 @@ NGRE_RESULT NGREOpFillRectR(NGREBitmapR pBmpDest, CLPNGREOpIRect pRectDest, NGRE
 	NGREOpIRect rectDest;
 	NGREGetRectIfNull(pRectDest, &rectDest, pBmpDest);
 
-	NGREResId idColor = pColor.idResource;
-	lResult = NGREGetColorFromId(idColor, &(pColor.pResource));
+	NGREGetBlankColorIfNull(&pColor);
 
 	lResult = NGREOpFillRect(pBmpDest, &rectDest, pColor.pResource, pParam);
 
@@ -109,8 +125,7 @@ NGRE_RESULT NGREOpEraseBitmapR(NGREBitmapR pBmpDest, CLPNGREOpIRect pRectDest, N
 	NGREOpIRect rectDest;
 	NGREGetRectIfNull(pRectDest, &rectDest, pBmpDest);
 
-	NGREResId idColor = pColor.idResource;
-	lResult = NGREGetColorFromId(idColor, &(pColor.pResource));
+	NGREGetBlankColorIfNull(&pColor);
 
 	lResult = NGREOpEraseBitmap(pBmpDest, &rectDest, pColor.pResource, pParam);
 

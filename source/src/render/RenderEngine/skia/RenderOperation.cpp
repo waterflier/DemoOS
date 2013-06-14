@@ -19,6 +19,11 @@ extern "C" NGRE_RESULT NGREOpBlendBitmap(NGREBitmapR pBmpSrc, CLPNGREOpIRect pRe
 {
 	SkCanvas canvas(NGREBitmap2CanvasInput(pBmpDest.pResource)); 
 	SkIRect srcRect = NGREOpIRect2SkIRect(*pRectSrc);
+	if(pParam != NULL && (((NGREOpParamHeader*)pParam)->flag & OpParamClipRect))
+	{
+		SkRect clipRect = NGREOpIRect2SkRect(pParam->clipRect);
+		canvas.clipRect(clipRect, SkRegion::kReplace_Op);
+	}
 	if(pParam != NULL && (((NGREOpParamHeader*)pParam)->flag & OpParamMatrix))
 	{
 		if(NGREOpIRectWidth(*pRectSrc) && NGREOpIRectHeight(*pRectSrc))

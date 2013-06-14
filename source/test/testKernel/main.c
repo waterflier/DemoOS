@@ -33,10 +33,10 @@ int main(int argc,char** argv)
 	
 	
 	NGRE_RESULT lResult = NGREInit();
-	NGRM_AddResource("image.bkg", "/root/win_work/DemoOS/source/src/render/resource/bkg.png", NGRM_ResType_Bitmap);
-	NGRM_AddResource("image.icon0","/root/win_work/DemoOS/source/src/render/resource/icon1.png", NGRM_ResType_Bitmap);
-	NGRM_AddResource("image.icon1","/root/win_work/DemoOS/source/src/render/resource/icon2.png", NGRM_ResType_Bitmap);
-	NGRM_AddResource("image.icon2","/root/win_work/DemoOS/source/src/render/resource/icon3.png", NGRM_ResType_Bitmap);
+	NGRM_AddResource("image.bkg", "/system/bin/demoresource/bkg.png", NGRM_ResType_Bitmap);
+	NGRM_AddResource("image.icon0","/system/bin/demoresource/icon1.png", NGRM_ResType_Bitmap);
+	NGRM_AddResource("image.icon1","/system/bin/demoresource/icon2.png", NGRM_ResType_Bitmap);
+	NGRM_AddResource("image.icon2","/system/bin/demoresource/icon3.png", NGRM_ResType_Bitmap);
 
 	NGOS_InitRootUIObjTreeEnv(NULL);
 	NGOS_ROOT_OBJTREE_HANDLE hTree = NGOS_CreateRootObjTree(NULL);
