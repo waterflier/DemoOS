@@ -51,7 +51,8 @@
 #define NGOS_ACTION_TOUCH_DOWN (100)  //value x|y param:null data:null
 #define NGOS_ACTION_TOUCH_MOVE  (101) //value x|y param:null data:null
 #define NGOS_ACTION_TOUCH_UP   (102) //value x|y param:null data:null
-
+#define NGOS_ACTION_TOUCH_ONE_DOWN (103) //value  x|y
+#define NGOS_ACTION_TOUCH_ONE_UP (104) //value x|y
 typedef struct tagMTEventSolt
 {
 	uint16_t x;
