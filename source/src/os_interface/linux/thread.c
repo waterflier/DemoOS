@@ -6,15 +6,19 @@
 #include "./perheader.h"
 #include "../os_interface.h"
 #include <sys/syscall.h>
+#include <unistd.h>
 
 TYPE_NGOS_TID OSI_GetThreadID()
 {
-	return syscall(SYS_gettid);
+	//return syscall(SYS_gettid);
+	return gettid();
 }
 
-int OSI_CreateThread()
+int OSI_CreateThread(void* ud,fnOSIThreadProc proc)
 {
-	return 0;
+	pthread_t resultTID;
+	pthread_create(&resultTID,NULL,proc,ud);
+	return resultTID;
 }
 
 TYPE_NGOS_TID OSI_GetMainThread()
@@ -24,6 +28,8 @@ TYPE_NGOS_TID OSI_GetMainThread()
 
 void OSI_WaitThreadEnd(TYPE_NGOS_TID tid)
 {
+	void* pResult;
+	pthread_join(tid,&pResult);
 	return;
 }
 
