@@ -20,6 +20,43 @@
 	 printf("recv msg! %d\n",pMsg->Msg);
  }
 
+int tid1;
+TYPE_NGOS_MSG_RECIVER hRecv;
+void* threadProc1(void* ud)
+{
+	printf("this is thread proc1\n");
+	hRecv = OSI_CreateMsgReciver(fnMsgProc,NULL);
+
+
+	OSI_RunMsgQueueLoop();
+	return NULL;
+}
+
+void* threadProc2(void* ud)
+{
+	printf("this is thread proc2\n");
+	sleep(2);
+
+	int i=0;
+	for(i=0;i<10;i++)
+	{
+		OSI_PostMsg(hRecv,i,1,1,NULL);
+	}
+	return NULL;
+}
+
+int test_thread_and_msgqueue(int argc,char** argv)
+{
+	OSI_InitMsgQueue();
+	
+	tid1 = OSI_CreateThread(NULL,threadProc1);
+	int tid2 = OSI_CreateThread(NULL,threadProc2);
+
+	OSI_WaitThreadEnd(tid1);
+	OSI_WaitThreadEnd(tid2);
+	return 0;
+}
+
 int test_msgqueue(int argc,char** argv)
 {
 	int i = 0;
@@ -110,7 +147,7 @@ int main(int argc,char** argv)
 	int result;
 	int i = 0;
 
-	return test_msgqueue(argc,argv);
+	return test_thread_and_msgqueue(argc,argv);
 	//return test_sm(argc,argv);
 
 	if(argc==1)
