@@ -11,7 +11,7 @@ ProjectCppFlag=
 
 LibDirs=$(OUTPUT)
 ProjectLinkFlag=
-LinkLibs=osi_interface pthread
+LinkLibs=osi_interface c
 
 ####################################################################
 cfiles := testOSI.c
