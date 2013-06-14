@@ -69,7 +69,8 @@ typedef struct tagMTEventData
 	MTEventSolt Solts; //size = sizeof (MTEventSolt) * FingerSoltCount
 }MTEventData;
 
-int ReleaseMTEventData(MTEventData* pData);
+MTEventData* CreateMTEventData(int soltSize);
+void ReleaseMTEventData(MTEventData* pData);
 int AddRefMTEventData(MTEventData* pData);
 MTEventSolt* GetFingerSoltData(MTEventData* pData,uint16_t index);
 

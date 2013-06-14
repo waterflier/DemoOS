@@ -20,21 +20,7 @@ int ReleaseMultiTouchAccumulator(MultiTouchAccumulator* pSelf)
 {
     //TODO:
 }
-void ReleaseActionData(MTEventData* pData)
-{
-	pData->RefCount --;
-	if(pData->RefCount = 0)
-	{
-		free(pData);
-	}
-}
-MTEventData* CreateMTEventData(int soltSize)
-{
-    MTEventData* pResult = (MTEventData*) malloc (sizeof(MTEventData) + sizeof(MTEventSolt)*(soltSize-1));
-    pResult->RefCount = 1;
-    pResult->FingerSoltCount = soltSize;
-    return pResult;
-}
+
 
 static MTEventSolt* GetCurrentSolt(MultiTouchAccumulator* pSelf)
 {
@@ -65,13 +51,13 @@ static void SetLastSoltData(MultiTouchAccumulator* pSelf,MTEventData* pData)
 {
 	if(pSelf->pLastData)
 	{
-		ReleaseActionData(pSelf->pLastData);
+		ReleaseMTEventData(pSelf->pLastData);
 	}
 	
 	pSelf->pLastData = pData;
 	if(pData)
 	{
-		pData->RefCount ++;
+		AddRefMTEventData(pSelf->pLastData);
 	}
 	
 }
@@ -216,9 +202,7 @@ static  void CovertSoltDataToAction(MultiTouchAccumulator* pSelf)
         }
 
 
-		MTEventData* pTempData =(MTEventData*) malloc (sizeof(MTEventData) + sizeof(MTEventSolt)*(pSelf->soltCount-1));
-		pTempData->RefCount = 1;
-		pTempData->FingerSoltCount = pSelf->soltCount;
+        MTEventData* pTempData = CreateMTEventData(pSelf->soltCount);
 		memcpy(&(pTempData->Solts),pSelf->currentSolts,sizeof(MTEventSolt)*(pSelf->soltCount));
 		SetLastSoltData(pSelf,pTempData);
 	}
@@ -281,7 +265,7 @@ int MultiTouchAccumulatorPopAction(MultiTouchAccumulator* pSelf,MultiTouchAction
 	memcpy(pResult,pSelf->resultData+pSelf->resultHeaderPos,sizeof(MultiTouchAction));
 	if(pResult->pData)
 	{
-		pResult->pData->RefCount++;
+        AddRefMTEventData(pResult->pData);
 	}
 	pSelf->resultHeaderPos ++ ;
 	if(pSelf->resultHeaderPos == MT_ACTION_MAX_CACHE)

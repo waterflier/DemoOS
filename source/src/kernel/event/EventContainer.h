@@ -7,6 +7,8 @@
 #ifndef _NGOS_EVENT_CONTAINER_H_
 #define _NGOS_EVENT_CONTAINER_H_
 
+#include "../input/InputAction.h"
+
 
 #ifndef EVENT_CONTAINER_INNER_SIZE
 #define EVENT_CONTAINER_INNER_SIZE (8)
@@ -38,8 +40,6 @@ typedef struct tagEventContainer
     EventCallbackNode Buffer[EVENT_CONTAINER_INNER_SIZE];
     uint32_t Size;
     uint32_t Length;
-   
-
 }EventContainer;
 
 EventContainer* CreateEventContainer(uint16_t flag);
@@ -71,5 +71,6 @@ void CleanEventContainer(EventContainer* pSelf);
 
 typedef int (*CALLBACK_OnBind) (UserDataContext* pUserData,NGOS_UIOBJECT_HANDLE hObj);
 typedef int (*CALLBACK_OnInitChild) (UserDataContext* pUserData,NGOS_UIOBJECT_HANDLE hObj);
+typedef int (*CALLBACK_OnTouch) (UserDataContext* pUserData,NGOS_UIOBJECT_HANDLE hObj,uint32_t x,uint32_t y,MTEventData* pData);
 //typedef int (*pfnOnPosChanged) (NGOS_UIOBJECT_HANDLE hObj,UserDataContext* pUserData);
 #endif //_NGOS_EVENT_CONTAINER_H_

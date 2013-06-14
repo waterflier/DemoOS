@@ -42,7 +42,6 @@ void MultiTouchAccumulatorPushRawInputEvent(MultiTouchAccumulator* pSelf, const 
 int MultiTouchAccumulatorPopAction(MultiTouchAccumulator* pSelf,MultiTouchAction* pResult);
 
 //TODO :
-MTEventData* CreateMTEventData(int soltSize);
-void ReleaseActionData(MTEventData* pData);
+
 
 #endif //_NGOS_MULTI_TOUCH_ACCUMLATOR_H_

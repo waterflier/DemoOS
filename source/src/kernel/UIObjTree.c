@@ -164,7 +164,7 @@ void SendInputAcitonToUIObjTree(RootUIObjTree* pObjTree,uint32_t Action,void* pa
                 if(pObj->pInputTarget)
                 {
                     //find first response
-                    InputTargetProcessAction(pObj->pInputTarget,Action,param1,param2,eventData);
+                    InputTargetProcessAction(pObj->pInputTarget,pObj,Action,X,Y,eventData);
                     return;
                 }
             }
@@ -173,6 +173,54 @@ void SendInputAcitonToUIObjTree(RootUIObjTree* pObjTree,uint32_t Action,void* pa
     }
     else if(DeviceType == NGOS_INPUTDEVICE_MAIN_TOUCH_SCREEN)
     {
+    	//uint32_t PointParam = (uint32_t) param1;
+        uint32_t X = (uint32_t) param1;
+        uint32_t Y = (uint32_t) param2;
+        MTEventData* pData = eventData;
+        uint32_t theActionCode = Action & 0x0000ffff;
+        if(theActionCode == NGOS_ACTION_TOUCH_DOWN)
+        {
+            UIObjectVector* pResult = CreateUIObjectVector(16);
+            HitTestObjectFromUIObjectRectIndex(pObjTree->UIObjectRectManager,X,Y,pResult);
+            int count = UIObjectVectorGetCount(pResult);
+            int i = 0;
+            for(i=0;i<count;++i)
+            {
+                NGOS_UIOBJECT_HANDLE hObj = UIObjectVectorGet(pResult,i);
+                UIObject* pObj = HandleMapDecodeUIObject(hObj,NULL);
+                if(pObj)
+                {
+                    if(pObj->pInputTarget)
+                    {
+                        //find first response
+                        InputTargetProcessAction(pObj->pInputTarget,pObj,Action, X,Y,eventData);
+                        pObjTree->hTargetTouchObject = hObj;
+                        break;
+                    }
+                }
+            }
+        }
+        else
+        {
+            if(pObjTree->hTargetTouchObject)
+            {
+                UIObject* pObj = HandleMapDecodeUIObject(pObjTree->hTargetTouchObject,NULL);
+                if(pObj && pObj->pInputTarget)
+                {
+                    //find first response
+                    InputTargetProcessAction(pObj->pInputTarget,pObj,Action,X,Y,eventData);
+                   
+                }
+                if(theActionCode == NGOS_ACTION_TOUCH_UP)
+                {
+                    pObjTree->hTargetTouchObject = NULL;
+                }
+            }
+        }
+        if(pData)
+        {
+            ReleaseMTEventData(pData);
+        }
         return;
     }
     

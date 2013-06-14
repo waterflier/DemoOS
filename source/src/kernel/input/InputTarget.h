@@ -7,7 +7,7 @@
 #ifndef _NGOS_INPUT_TARGET_H_
 #define _NGOS_INPUT_TARGET_H_
 
-
+#include "./InputAction.h"
 
 /*
 对象的命中测试有3步 
@@ -41,7 +41,8 @@ typedef struct tagInputTarget
     struct InputTarget* NextResponseTarget; 
 }InputTarget;
 
-void InputTargetProcessAction(InputTarget* pSelf,uint32_t Action,uint32_t value,void* param,void* eventData);
+
+void InputTargetProcessAction(InputTarget* pSelf,NGOS_UIOBJECT_HANDLE hObj,uint32_t Action,uint32_t param1,uint32_t param2,void* eventData);
 
 InputTarget* CreateInputTarget();
 int ReleaseInputTarget(InputTarget* pSelf);

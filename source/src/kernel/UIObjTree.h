@@ -26,6 +26,8 @@ typedef struct tagRootUIObjTree
 	DirtyRectIndex* DirtyRectManager;
 	UIObjectRectIndex* UIObjectRectManager;
     UIObjectMap* NamedUIObjectMap;
+
+    NGOS_UIOBJECT_HANDLE hTargetTouchObject;
 }RootUIObjTree;
 
 
