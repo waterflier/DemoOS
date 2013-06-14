@@ -111,7 +111,7 @@ int main(int argc,char** argv)
 	int i = 0;
 
 	return test_msgqueue(argc,argv);
-	return test_sm(argc,argv);
+	//return test_sm(argc,argv);
 
 	if(argc==1)
 	{
