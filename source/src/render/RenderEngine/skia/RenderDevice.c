@@ -85,8 +85,8 @@ NGRE_RESULT NGREGetBitmapFromDevice(NGREDevice* pDevice, LPNGREBitmap* ppBitmap)
 
 void NGRECopy2FrameBuffer(void* pSrc, void* frameBuffer, CLPNGREOpIRect pRect, unsigned long ulRowBytes, unsigned char uBPP)
 {
-	unsigned char* pCurLine = (unsigned char*)pSrc + ulRowBytes * pRect->top;
-	unsigned char* pFBCurLine = frameBuffer;
+	unsigned char* pCurLine = (unsigned char*)pSrc + ulRowBytes * pRect->top + uBPP * pRect->left;
+	unsigned char* pFBCurLine = frameBuffer + ulRowBytes * pRect->top + uBPP * pRect->left;
 	unsigned char* pCur = NULL;
 	unsigned char* pFBCur = NULL;
 	unsigned int iy , ix;

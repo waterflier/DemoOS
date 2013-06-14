@@ -130,7 +130,7 @@ extern "C" NGRE_RESULT NGREGetBitmapBuffer(LPNGREBitmap pBitmap, NGREAllocType a
 	}
 	else if(allocType == NGREAllocType_GpuTexture)
 	{
-		NGREBitmap2BitmapInput(pBitmap).getPixels();
+		*ppBitmapBuffer = NGREBitmap2BitmapInput(pBitmap).getPixels();
 	}
 	return NGRE_SUCCESS;
 }

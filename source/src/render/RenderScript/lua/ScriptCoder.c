@@ -60,7 +60,7 @@ int NGREOpParamL(lua_State* pLuaState, int nIndex, LPNGREOpParam pParam)
 	{
 		lua_pushstring(pLuaState, "matrix");
 		lua_gettable(pLuaState, nIndex);
-		if(!lua_isnoneornil(pLuaState, nIndex))
+		if(!lua_isnoneornil(pLuaState, -1))
 		{
 			((NGREOpParamHeader*)pParam)->flag |= OpParamMatrix;
 			NGREOpFMatrix33L(pLuaState, lua_gettop(pLuaState), pParam->matrix);
@@ -68,7 +68,7 @@ int NGREOpParamL(lua_State* pLuaState, int nIndex, LPNGREOpParam pParam)
 		lua_pop(pLuaState, 1);
 		lua_pushstring(pLuaState, "clipRect");
 		lua_gettable(pLuaState, nIndex);
-		if(!lua_isnoneornil(pLuaState, nIndex))
+		if(!lua_isnoneornil(pLuaState, -1))
 		{
 			((NGREOpParamHeader*)pParam)->flag |= OpParamClipRect;
 			NGREOpIRectL(pLuaState, lua_gettop(pLuaState),&(pParam->clipRect));

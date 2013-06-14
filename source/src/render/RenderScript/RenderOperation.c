@@ -86,17 +86,17 @@ NGRE_RESULT NGREOpBlendBitmapR(NGREBitmapR pBmpSrc, CLPNGREOpIRect pRectSrc, NGR
 	return lResult;
 }
 
+static NGREOpColor s_blankColor = {0};
 void NGREGetBlankColorIfNull(NGREOpColorR* ppColor)
 {
-	static NGREOpColor s_blankColor = 0;
-	NGREResId idColor = pColor.idResource;
+	NGREResId idColor = ppColor->idResource;
 	if(idColor == NULL)
 	{
 		ppColor->pResource = &s_blankColor;
 	}
 	else
 	{
-		NGREGetColorFromId(idColor, &(pColor.pResource));
+		NGREGetColorFromId(idColor, &(ppColor->pResource));
 	}
 }
 

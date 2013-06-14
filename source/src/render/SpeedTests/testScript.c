@@ -24,43 +24,95 @@ int main(int argc, char * const argv[])
 	testScript[nSize] = '\0';*/
 
 	
+	NGREDevice* pDevice = NULL;
+	lResult = NGREOpenDevice(&pDevice);
 
 	NGRE_SCRIPT_HANDLE hScript = NGRECreateScript();
 	
-	//NGREAppendScript(hScript, "");
-	NGREAppendScript(hScript, "EraseBitmap(nil,\"color.blank\", nil)");
-	NGREAppendScript(hScript, "BlendBitmap(\"bkg.test\",nil,nil,{0,0,nil,nil})");
-	NGREAppendScript(hScript, "BlendBitmap(\"icon1.test\",nil,nil,{10,10,nil,nil},{[\"matrix\"]={0,0,1,1,30,0,0}})");
-	NGREAppendScript(hScript, "BlendBitmap(\"icon2.test\",nil,nil,{110,10,nil,nil})");
-	NGREAppendScript(hScript, "BlendBitmap(\"icon3.test\",nil,nil,{220,10,nil,nil})");
-
-
-	NGREDevice* pDevice = NULL;
-	lResult = NGREOpenDevice(&pDevice);
-	
-	lResult = NGRERunScript(hScript, pDevice);
-
-	
-
-	/*LPNGREBitmap pRenderResult;
-	lResult = NGRM_GetResource(NGRM_ResType_Bitmap, "bmp.test", &pRenderResult);
-
-	lResult = NGREPrintBimtapToFile(pRenderResult, "/root/win_work/DemoOS/source/src/render/resource/renderresult.png");*/
-	
-	/*LPNGREBitmap pRenderResult;
-	lResult = NGREGetBitmapFromDevice(pDevice, &pRenderResult);
-	lResult = NGREPrintBimtapToFile(pRenderResult, "/root/win_work/DemoOS/source/src/render/resource/renderresult.png");*/
-	int ix = 0;
-	for(ix = 0; ix < 10; ++ix)
-	{
-		NGREFlushDevice(pDevice);
-		sleep(1);
-	}
-	hScript = NGRECreateScript();
-	
-	NGREAppendScript(hScript, "EraseBitmap(nil,\"color.blank\", nil)");
+	NGREAppendScript(hScript, "AddClipRect({0,0,800,480})");
+	NGREAppendScript(hScript, "EraseBitmap(nil,nil, nil)");
 	lResult = NGRERunScript(hScript, pDevice);
 	NGREFlushDevice(pDevice);
+	sleep(2);
+
+	NGREClearScript(hScript);
+	NGREAppendScript(hScript, "AddClipRect({0,0,800,480})");
+	NGREAppendScript(hScript, "EraseBitmap(nil,nil, {0,0,800,480})");
+	NGREAppendScript(hScript, "BlendBitmap(\"bkg.test\",nil,nil,{0,0,nil,nil})");
+	lResult = NGRERunScript(hScript, pDevice);
+	NGREFlushDevice(pDevice);
+	sleep(2);
+
+
+	NGREClearScript(hScript);
+	NGREAppendScript(hScript, "AddClipRect({10,10,74,74})");
+	NGREAppendScript(hScript, "EraseBitmap(nil,nil, {10,10,74,74})");
+	NGREAppendScript(hScript, "BlendBitmap(\"bkg.test\",nil,nil,{0,0,nil,nil},{[\"clipRect\"]={10,10,74,74}})");
+	NGREAppendScript(hScript, "BlendBitmap(\"icon1.test\",nil,nil,{10,10,nil,nil},{[\"clipRect\"]={10,10,74,74}})");
+	lResult = NGRERunScript(hScript, pDevice);
+	NGREFlushDevice(pDevice);
+	sleep(2);
+	
+	NGREClearScript(hScript);
+	NGREAppendScript(hScript, "AddClipRect({10,10,74,74})");
+	NGREAppendScript(hScript, "EraseBitmap(nil,nil, {10,10,74,74})");
+	NGREAppendScript(hScript, "BlendBitmap(\"bkg.test\",nil,nil,{0,0,nil,nil},{[\"clipRect\"]={10,10,74,74}})");
+	NGREAppendScript(hScript, "BlendBitmap(\"icon1.test\",nil,nil,{10,10,nil,nil},{[\"clipRect\"]={10,10,74,74}})");
+	lResult = NGRERunScript(hScript, pDevice);
+	NGREFlushDevice(pDevice);
+	sleep(2);
+
+	NGREClearScript(hScript);
+	NGREAppendScript(hScript, "AddClipRect({10,10,74,74})");
+	NGREAppendScript(hScript, "EraseBitmap(nil,nil, {10,10,74,74})");
+	NGREAppendScript(hScript, "BlendBitmap(\"bkg.test\",nil,nil,{0,0,nil,nil},{[\"clipRect\"]={10,10,74,74}})");
+	NGREAppendScript(hScript, "BlendBitmap(\"icon2.test\",nil,nil,{10,10,nil,nil},{[\"clipRect\"]={10,10,74,74}})");
+	lResult = NGRERunScript(hScript, pDevice);
+	NGREFlushDevice(pDevice);
+	sleep(2);
+
+	NGREClearScript(hScript);
+	NGREAppendScript(hScript, "AddClipRect({10,10,74,74})");
+	NGREAppendScript(hScript, "EraseBitmap(nil,nil, {10,10,74,74})");
+	NGREAppendScript(hScript, "BlendBitmap(\"bkg.test\",nil,nil,{0,0,nil,nil},{[\"clipRect\"]={10,10,74,74}})");
+	NGREAppendScript(hScript, "BlendBitmap(\"icon3.test\",nil,nil,{10,10,nil,nil},{[\"clipRect\"]={10,10,74,74}})");
+	lResult = NGRERunScript(hScript, pDevice);
+	NGREFlushDevice(pDevice);
+	sleep(2);
+
+	
+	NGREClearScript(hScript);
+	NGREAppendScript(hScript, "AddClipRect({10,10,74,74})");
+	NGREAppendScript(hScript, "AddClipRect({110,10,174,74})");
+	NGREAppendScript(hScript, "EraseBitmap(nil,nil, {10,10,74,74})");
+	NGREAppendScript(hScript, "EraseBitmap(nil,nil, {110,10,174,74})");
+	NGREAppendScript(hScript, "BlendBitmap(\"bkg.test\",nil,nil,{0,0,nil,nil},{[\"clipRect\"]={110,10,174,74}})");
+	NGREAppendScript(hScript, "BlendBitmap(\"icon3.test\",nil,nil,{110,10,nil,nil},{[\"clipRect\"]={110,10,174,74}})");
+	lResult = NGRERunScript(hScript, pDevice);
+	NGREFlushDevice(pDevice);
+	sleep(2);
+
+	NGREClearScript(hScript);
+	NGREAppendScript(hScript, "AddClipRect({110,10,174,74})");
+	NGREAppendScript(hScript, "AddClipRect({210,10,274,74})");
+	NGREAppendScript(hScript, "EraseBitmap(nil,nil, {110,10,174,74})");
+	NGREAppendScript(hScript, "EraseBitmap(nil,nil, {210,10,274,74})");
+	NGREAppendScript(hScript, "BlendBitmap(\"bkg.test\",nil,nil,{0,0,nil,nil},{[\"clipRect\"]={210,10,274,74}})");
+	NGREAppendScript(hScript, "BlendBitmap(\"icon3.test\",nil,nil,{210,10,nil,nil},{[\"clipRect\"]={210,10,274,74}})");
+	lResult = NGRERunScript(hScript, pDevice);
+	NGREFlushDevice(pDevice);
+	sleep(2);
+
+	NGREClearScript(hScript);
+	NGREAppendScript(hScript, "AddClipRect({210,10,274,74})");
+	NGREAppendScript(hScript, "AddClipRect({310,10,374,74})");
+	NGREAppendScript(hScript, "EraseBitmap(nil,nil, {210,10,274,74})");
+	NGREAppendScript(hScript, "EraseBitmap(nil,nil, {310,10,374,74})");
+	NGREAppendScript(hScript, "BlendBitmap(\"bkg.test\",nil,nil,{0,0,nil,nil},{[\"clipRect\"]={310,10,374,74}})");
+	NGREAppendScript(hScript, "BlendBitmap(\"icon3.test\",nil,nil,{310,10,nil,nil},{[\"clipRect\"]={310,10,374,74}})");
+	lResult = NGRERunScript(hScript, pDevice);
+	NGREFlushDevice(pDevice);
+	sleep(2);
 
 	NGREUninit();
 
