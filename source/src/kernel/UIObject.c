@@ -10,7 +10,9 @@
 
 static void UpdateObjectAbsPosInfo(UIObject* pObject,UIObject* pParent)
 {
+	RECT OldAbsRect = pObject->ObjAbsRect;
 	//update self
+
 	if(pParent == NULL)
 	{
 		pObject->ObjAbsRect = pObject->ObjRect;
@@ -27,7 +29,13 @@ static void UpdateObjectAbsPosInfo(UIObject* pObject,UIObject* pParent)
 
 		pObject->hOwnerTree = pParent->hOwnerTree;
 	}
-
+	
+	RootUIObjTree* pOwnerTree = HandleMapDecodeRootTree(pObject->hOwnerTree, NULL);
+	{	
+		UpdateUIObjectToUIObjectRectIndex(pOwnerTree->UIObjectRectManager,pObject->hSelf);
+		RootUIObjTreePushDirtyRect(pOwnerTree, &OldAbsRect);
+		RootUIObjTreePushDirtyRect(pOwnerTree, &(pObject->ObjAbsRect));
+	}
 	//update children
 	
 	if(pObject->pChildren == NULL)
@@ -209,6 +217,7 @@ int UIObjectAddChild(UIObject* pObject,NGOS_UIOBJECT_HANDLE hChild,BOOL isLogicC
 			pObject->pChildren = CreateUIObjectVector(0);
 		}
 		UIObjectVectorAdd(pObject->pChildren,hChild);
+		pChild->hParent = pObject->hSelf;
 
 
 		if(pObject->hOwnerTree)
@@ -291,6 +300,10 @@ int UIObjectMove(UIObject* pObject,RECT* pNewPos)
 	if(pObject == NULL || pNewPos == NULL)
 	{
 		return NGOS_RESULT_INVALID_PTR;
+	}
+	if(0 == memcmp(&(pObject->ObjRect), pNewPos, sizeof(RECT)))
+	{
+		return NGOS_RESULT_SUCCESS;
 	}
 	pObject->ObjRect = *pNewPos;
 	if(pObject->hOwnerTree)

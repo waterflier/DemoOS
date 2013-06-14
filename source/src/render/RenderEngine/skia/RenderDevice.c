@@ -65,6 +65,18 @@ NGRE_RESULT NGREOpenDevice(NGREDevice** ppDevice)
 	return NGRE_SUCCESS;
 }
 
+NGRE_RESULT NGREGetDeviceSize(NGREDevice* pDevice, int *pWidth, int*pHeight)
+{
+	if(pDevice == NULL || (((NGREFBDevice*)(pDevice->pExtra)) == NULL))
+	{
+		return NGRE_DEVICE_INVALIDPARAM;
+	}
+	*pWidth = ((NGREFBDevice*)(pDevice->pExtra))->origVarInfo.xres;
+	*pHeight = ((NGREFBDevice*)(pDevice->pExtra))->origVarInfo.yres;
+
+	return NGRE_SUCCESS;
+}
+
 NGRE_RESULT NGREGetBitmapFromDevice(NGREDevice* pDevice, LPNGREBitmap* ppBitmap)
 {
 	//assert(pDevice != NULL);

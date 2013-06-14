@@ -31,6 +31,7 @@ NGOS_API(int) NGOS_UninitRootUIObjTreeEnv(void* param);
 
 ////////////////////////////////////////////////Root Tree
 NGOS_API(NGOS_ROOT_OBJTREE_HANDLE) NGOS_CreateRootObjTree();
+NGOS_API(int) NGOS_SetRootUIObjTreeViewPort(NGOS_ROOT_OBJTREE_HANDLE hRootTree, uint16_t uWidth, uint16_t uHeight);
 NGOS_API(int) NGOS_GetRootObjTree(TYPE_NGOS_PID ownerPID, TYPE_NGOS_OBJTREE_OWNERHOST_INFO* ownerHostInfo,NGOS_ROOT_OBJTREE_HANDLE* pResult);
 //NGOS_API(int) NGOS_AddRefRootObjTree(NGOS_ROOT_OBJTREE_HANDLE hRootTree);
 //NGOS_API(int) NGOS_ReleaseRootObjTree(NGOS_ROOT_OBJTREE_HANDLE hRootTree);

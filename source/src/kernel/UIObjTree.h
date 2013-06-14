@@ -31,10 +31,11 @@ typedef struct tagRootUIObjTree
 
 
 RootUIObjTree* CreateRootUIObjTree(NGOS_RootTreeEnv* pEnv);
+int SetRootUIObjTreeViewPort(RootUIObjTree* pTree, uint16_t uWidth, uint16_t uHeight);
+
 int FreeRootUIObjTree(RootUIObjTree* pTree);
 
 int RootUIObjTreeMoveObject(RootUIObjTree* pObjTree,NGOS_ROOT_OBJTREE_HANDLE hObject,NGOS_ROOT_OBJTREE_HANDLE hNewParent);
-
 
 int RootUIObjTreePushDirtyRect(RootUIObjTree* pObjTree,RECT* pDirtyRect);
 int RootUIObjTreeGetRenderScrpit(RootUIObjTree* pObjTree,RECT* pClipRect,NGRE_SCRIPT_HANDLE hRenderScript);

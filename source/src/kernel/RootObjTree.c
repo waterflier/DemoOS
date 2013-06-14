@@ -244,6 +244,12 @@ NGOS_API(NGOS_ROOT_OBJTREE_HANDLE) NGOS_CreateRootObjTree()
 	return hResult;
 }
 
+NGOS_API(int) NGOS_SetRootUIObjTreeViewPort(NGOS_ROOT_OBJTREE_HANDLE hRootTree, uint16_t uWidth, uint16_t uHeight)
+{
+	RootUIObjTree* pTree = (RootUIObjTree*)HandleMapDecodeRootTree(hRootTree,NULL);
+	return SetRootUIObjTreeViewPort(pTree, uWidth, uHeight);
+}
+
 NGOS_API(int) NGOS_GetRootObjTree(TYPE_NGOS_PID ownerPID, TYPE_NGOS_OBJTREE_OWNERHOST_INFO* ownerHostInfo,NGOS_ROOT_OBJTREE_HANDLE* pResult)
 {
 	int resultCode = 0;

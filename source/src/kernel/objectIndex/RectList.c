@@ -96,6 +96,8 @@ RectList* CreateRectList()
 	pResult->Length = 0;
 	pResult->Size = 16;
 	pResult->Ptr = malloc(sizeof(RECT) * 16);
+
+	return pResult;
 }
 
 void ReleaseRectList(RectList* pList)

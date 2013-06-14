@@ -32,7 +32,8 @@ RootUIObjTree* CreateRootUIObjTree(NGOS_RootTreeEnv* pEnv)
 		pResult->RunEnv = pRealEnv;
 		pResult->hTree = HandleMapEncodeRootTree(pResult);
 		pResult->DPI = 72;
-		pResult->DirtyRectManager = CreateDirtyRectIndex(800,600);
+		///放到视口大小改变的时候再创建
+		pResult->DirtyRectManager = NULL;
 		pResult->UIObjectRectManager = CreateUIObjectRectIndex(); 
 		pResult->NamedUIObjectMap = CreateUIObjectMap();
         //创建默认的RootUIObject
@@ -51,6 +52,20 @@ RootUIObjTree* CreateRootUIObjTree(NGOS_RootTreeEnv* pEnv)
 
 	return pResult;
 
+}
+
+int SetRootUIObjTreeViewPort(RootUIObjTree* pTree, uint16_t uWidth, uint16_t uHeight)
+{
+	if(pTree)
+	{
+		///先不管了 只能create之后马上调用
+		if(pTree->DirtyRectManager == NULL)
+		{
+			pTree->DirtyRectManager = CreateDirtyRectIndex(uWidth,uHeight);
+		}
+		return NGOS_RESULT_SUCCESS;
+	}
+	return NGOS_RESULT_INVALID_PTR;
 }
 
 int FreeRootUIObjTree(RootUIObjTree* pTree)

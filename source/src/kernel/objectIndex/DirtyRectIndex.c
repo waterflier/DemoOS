@@ -28,14 +28,23 @@ int DestroyDirtyRectIndex(DirtyRectIndex* pIndex)
 
 int DirtyRectIndexPushRect(DirtyRectIndex* pIndex,RECT* pRect)
 {
-	if(pRect->right < 0 || pRect->left > pIndex->Width)
+	if(pRect->right < 0 || pRect->left >= pIndex->Width)
 	{
 		return 0;
 	}
 
-	if(pRect->bottom < 0 || pRect->top > pIndex->Height)
+	if(pRect->bottom < 0 || pRect->top >= pIndex->Height)
 	{
 		return 0;
+	}
+	RECT realRect = *pRect;
+	if(realRect.right > pIndex->Width)
+	{
+		realRect.right = pIndex->Width;
+	}
+	if(realRect.bottom > pIndex->Height)
+	{
+		realRect.bottom = pIndex->Height;
 	}
 
 	int count = GetRectListCount(pIndex->pRectList);
@@ -45,20 +54,20 @@ int DirtyRectIndexPushRect(DirtyRectIndex* pIndex,RECT* pRect)
 	for(i=0;i<count;i++)
 	{
 		pRectInList = GetRectAtIndex(pIndex->pRectList,i);
-		result = IsRectIntersect(pRectInList,pRect);
+		result = IsRectIntersect(pRectInList,&realRect);
 		if(result == 3)
 		{
 			return 0;
 		}
 		else
 		{
-			UnionRect(pRectInList,pRectInList,pRect);
+			UnionRect(pRectInList,pRectInList,&realRect);
 		}
 	}
 
 	if(count == 0)
 	{
-		AddRectToList(pIndex->pRectList,pRect);
+		AddRectToList(pIndex->pRectList,&realRect);
 	}
 
 	return 0;

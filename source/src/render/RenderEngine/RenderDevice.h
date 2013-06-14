@@ -20,6 +20,7 @@ typedef struct NGREDevice
 NGRE_RESULT NGREOpenDevice(NGREDevice** ppDevice);
 NGRE_RESULT NGREGetBitmapFromDevice(NGREDevice* pDevice, LPNGREBitmap* ppBitmap);
 NGRE_RESULT NGREFlushDevice(NGREDevice* pDevice);
+NGRE_RESULT NGREGetDeviceSize(NGREDevice* pDevice, int *pWidth, int*pHeight);
 void NGRECloseDevice(NGREDevice* pDevice);
 NGRE_RESULT NGREAddDeviceClipRect(NGREDevice* pDevice, CLPNGREOpIRect pRect);
 NGRE_RESULT NGREClearDeviceClipRect(NGREDevice* pDevice);
