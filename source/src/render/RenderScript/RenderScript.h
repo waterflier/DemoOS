@@ -3,6 +3,7 @@
 #include "RenderDefine.h"
 #include <stdlib.h>
 #include <NGOS_Types.h>
+#include "RenderDevice.h"
 /*问题：  最基本的问题，一， 为何需要渲染脚本：1. 隔离渲染实现 2. 为ipc提供marshal实现  3.方便定制半主动对象 4....
 						二， 依赖于问题一， 渲染脚本需要多强的语言能力（表达式， 迭代调用， 参数传递， 结构化控制）
 			1. 脚本内核需不需要可读性和文本编码（即便内核没有可读性，也可以通过可读脚本语言的包装来提供可读性） 
@@ -21,7 +22,7 @@ typedef struct NGREScpritInitParam{
 }*LPNGREScriptInitParam;
 
 NGRE_RESULT NGREScriptInit(LPNGREScriptInitParam pParam);
-NGRE_RESULT	NGRERunScript(NGRE_SCRIPT_HANDLE hScript);
+NGRE_RESULT	NGRERunScript(NGRE_SCRIPT_HANDLE hScript, NGREDevice* pDevice);
 void		NGREScriptUninit();
 
 NGRE_SCRIPT_HANDLE NGRECreateScript();

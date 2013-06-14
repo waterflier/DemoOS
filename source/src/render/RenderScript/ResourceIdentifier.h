@@ -21,15 +21,20 @@ typedef const char* NGREResId;
 NGRE_DECLARE_RESOURCE(NGREBitmap);
 
 
-NGRE_DECLARE_RESOURCE(NGREMask);
+//NGRE_DECLARE_RESOURCE(NGREMask);
+
+
+NGRE_DECLARE_RESOURCE(NGREOpColor);
 
 
 
 NGRE_RESULT NGREInitResIdentifier();
 NGRE_RESULT NGREGetBitmapFromId(NGREResId idRes, LPNGREBitmap* ppBitmap);
 void		NGREReleaseBitmapFromId(NGREResId idRes); 
-NGRE_RESULT NGREGetMaskFromId(NGREResId idRes, LPNGREMask* ppMask);
-void		NGREReleaseMaskFromId(NGREResId idRes); 
+//NGRE_RESULT NGREGetMaskFromId(NGREResId idRes, LPNGREMask* ppMask);
+//void		NGREReleaseMaskFromId(NGREResId idRes); 
+NGRE_RESULT NGREGetColorFromId(NGREResId idRes, NGREOpColor** ppColor);
+void		NGREReleaseColorFromId(NGREResId idRes);
 NGRE_RESULT NGREUninitResIdentifier();
 
 

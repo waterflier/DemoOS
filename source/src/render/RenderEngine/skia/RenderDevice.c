@@ -6,6 +6,7 @@
 #include <fcntl.h>
 
 
+
 typedef struct NGREFBDevice{
 	struct fb_fix_screeninfo fixedInfo;
 	struct fb_var_screeninfo origVarInfo;
@@ -23,7 +24,11 @@ NGRE_RESULT NGREOpenDevice(NGREDevice** ppDevice)
 		memset(pFbDevice, 0, sizeof(NGREFBDevice));
 
 		do{
+		#ifdef ANDROID
 			pFbDevice->fbDesc = open("/dev/graphics/fb0", O_RDWR);
+		#else
+			pFbDevice->fbDesc = open("/dev/fb0",O_RDWR);
+		#endif
 			if(pFbDevice->fbDesc < 0)
 			{
 				break;
@@ -44,6 +49,7 @@ NGRE_RESULT NGREOpenDevice(NGREDevice** ppDevice)
 			g_fbDevice = (NGREDevice*)malloc(sizeof(NGREDevice));
 			g_fbDevice->pExtra = pFbDevice;
 			g_fbDevice->pCacheBitmap = NULL;
+			g_fbDevice->nClipRectCount = 0;
 		}
 		else
 		{
@@ -77,16 +83,123 @@ NGRE_RESULT NGREGetBitmapFromDevice(NGREDevice* pDevice, LPNGREBitmap* ppBitmap)
 	return NGRE_SUCCESS;
 }
 
+void NGRECopy2FrameBuffer(void* pSrc, void* frameBuffer, CLPNGREOpIRect pRect, unsigned long ulRowBytes, unsigned char uBPP)
+{
+	unsigned char* pCurLine = (unsigned char*)pSrc + ulRowBytes * pRect->top;
+	unsigned char* pFBCurLine = frameBuffer;
+	unsigned char* pCur = NULL;
+	unsigned char* pFBCur = NULL;
+	unsigned int iy , ix;
+#ifdef ANDROID 
+	for(iy = pRect->top; iy < pRect->bottom; ++iy)
+	{
+		pCur = pCurLine;
+		pFBCur = pFBCurLine;
+		for(ix = pRect->left; ix < pRect->right; ++ix)
+		{
+			pFBCur[0] = pCur[2];
+			pFBCur[1] = pCur[1];
+			pFBCur[2] = pCur[0];
+			pFBCur[3] = pCur[3];
+			pCur += uBPP;
+			pFBCur += uBPP;
+		}
+		pCurLine += ulRowBytes;
+		pFBCurLine += ulRowBytes;
+	}
+#else
+	unsigned long nCopyWidth = uBPP * NGREOpIRectWidth(*pRect);
+	for(iy = pRect->top; iy < pRect->bottom; ++iy)
+	{
+		memcpy(pFBCurLine, pCurLine, nCopyWidth);
+		pCurLine += ulRowBytes;
+		pFBCurLine += ulRowBytes;
+	}	
+#endif
+}
+
 NGRE_RESULT NGREFlushDevice(NGREDevice* pDevice)
 {
 	unsigned long ulRowBytes = NGREBitmapRowBytes(pDevice->pCacheBitmap);
 	unsigned int uHeight = NGREBitmapHeight(pDevice->pCacheBitmap);
+	unsigned int uWidth = NGREBitmapWidth(pDevice->pCacheBitmap);
 	void* pCacheBuffer = NULL;
+	unsigned char uBPP = NGREBitmapBytesPerPixel(pDevice->pCacheBitmap);
 	NGRE_RESULT lResult = NGREGetBitmapBuffer(pDevice->pCacheBitmap, NGREAllocType_GpuTexture, &pCacheBuffer);
 	//assert(pCacheBuffer != NULL);
-	memcpy(((NGREFBDevice*)(pDevice->pExtra))->frameBuffer, pCacheBuffer, ulRowBytes * uHeight);	
+	unsigned int nClipRectCount = NGREGetDeviceClipRectCount(pDevice);
+	unsigned int cx;
+	NGREOpIRect clipRect;
+	
+	for(cx = 0; cx < nClipRectCount; ++cx)
+	{
+		NGREGetDeviceClipRectByIndex(pDevice, cx, &clipRect);
+		NGRECopy2FrameBuffer(pCacheBuffer, ((NGREFBDevice*)(pDevice->pExtra))->frameBuffer , &clipRect, ulRowBytes, uBPP);
+	}
+	NGREClearDeviceClipRect(pDevice);
 	return NGRE_SUCCESS;
 }
+
+
+NGRE_RESULT NGREAddDeviceClipRect(NGREDevice* pDevice, CLPNGREOpIRect pRect)
+{
+	//assert(pDevice->nClipRectCount <= NGREMaxDeviceClipRectCount);
+	if(pDevice->nClipRectCount == NGREMaxDeviceClipRectCount + 1)
+	{
+		return NGRE_SUCCESS;
+	}
+	if(pDevice->nClipRectCount == NGREMaxDeviceClipRectCount)
+	{
+		LPNGREBitmap pCacheBitmap;
+		NGREGetBitmapFromDevice(pDevice, &pCacheBitmap);
+		pDevice->clipRects[0].left = 0;
+		pDevice->clipRects[0].top = 0;
+		pDevice->clipRects[0].right = NGREBitmapWidth(pCacheBitmap);
+		pDevice->clipRects[0].bottom = NGREBitmapHeight(pCacheBitmap);
+		++ (pDevice->nClipRectCount);
+		return NGRE_SUCCESS;
+	}
+	pDevice->clipRects[pDevice->nClipRectCount] = *pRect;
+	++(pDevice->nClipRectCount);
+	return NGRE_SUCCESS;
+}
+
+NGRE_RESULT NGREClearDeviceClipRect(NGREDevice* pDevice)
+{
+	pDevice->nClipRectCount = 0;
+	return NGRE_SUCCESS;
+}
+
+NGRE_RESULT NGREGetDeviceClipRectByIndex(NGREDevice* pDevice, unsigned int nIndex, LPNGREOpIRect pRect)
+{
+	if(pDevice->nClipRectCount == NGREMaxDeviceClipRectCount + 1)
+	{
+		*pRect = pDevice->clipRects[0];
+		return NGRE_SUCCESS;
+	}
+	else
+	{
+		if(nIndex >= pDevice->nClipRectCount)
+		{
+			return NGRE_DEVICE_INVALIDPARAM;
+		}
+		else
+		{
+			*pRect = pDevice->clipRects[nIndex];
+			return NGRE_SUCCESS;
+		}
+	}
+}
+
+unsigned int NGREGetDeviceClipRectCount(NGREDevice* pDevice)
+{
+	if(pDevice->nClipRectCount == NGREMaxDeviceClipRectCount + 1)
+	{
+		return 1;
+	}
+	return pDevice->nClipRectCount;
+}
+
 
 void NGRECloseDevice(NGREDevice* pDevice)
 {

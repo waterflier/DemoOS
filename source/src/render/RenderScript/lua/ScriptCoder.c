@@ -4,6 +4,16 @@
 #include "RenderOperation.h"
 
 
+NGREDevice* NGREGetScriptDeviceL(lua_State* pLuaState)
+{
+	lua_getglobal(pLuaState, "ScriptDevice");
+	NGREDevice* pDevice = lua_touserdata(pLuaState, -1);
+	lua_pop(pLuaState, 1);
+	return pDevice;
+}
+
+
+
 int NGREOpIRectL(lua_State* pLuaState, int nIndex, NGREOpIRect* pRect)
 {
 	lua_rawgeti(pLuaState, nIndex, 1);
@@ -19,7 +29,6 @@ int NGREOpIRectL(lua_State* pLuaState, int nIndex, NGREOpIRect* pRect)
 	{
 		pRect->right = lua_tointeger(pLuaState, -1);
 	}
-		
 	lua_rawgeti(pLuaState, nIndex, 4);
 	if(lua_isnil(pLuaState,-1))
 	{
@@ -29,8 +38,49 @@ int NGREOpIRectL(lua_State* pLuaState, int nIndex, NGREOpIRect* pRect)
 	{
 		pRect->bottom = lua_tointeger(pLuaState, -1);
 	}
+	lua_pop(pLuaState,4);
 	return 1;
 }
+
+int NGREOpFMatrix33L(lua_State* pLuaState, int nIndex, NGREOpFMatrix33 refMatrix)
+{
+	int ix;
+	for(ix = 0; ix < 8; ++ ix)
+	{
+		lua_rawgeti(pLuaState, nIndex, ix + 1);
+		refMatrix[ix] = lua_tonumber(pLuaState, -1);
+	}
+	lua_pop(pLuaState, 8);
+	return 1;
+}
+
+int NGREOpParamL(lua_State* pLuaState, int nIndex, LPNGREOpParam pParam)
+{
+	if(!lua_isnoneornil(pLuaState, nIndex))
+	{
+		lua_pushstring(pLuaState, "matrix");
+		lua_gettable(pLuaState, nIndex);
+		if(!lua_isnoneornil(pLuaState, nIndex))
+		{
+			((NGREOpParamHeader*)pParam)->flag |= OpParamMatrix;
+			NGREOpFMatrix33L(pLuaState, lua_gettop(pLuaState), pParam->matrix);
+		}
+		lua_pop(pLuaState, 1);
+		lua_pushstring(pLuaState, "clipIndex");
+		lua_gettable(pLuaState, nIndex);
+		if(!lua_isnoneornil(pLuaState, nIndex))
+		{
+			((NGREOpParamHeader*)pParam)->flag |= OpParamClipRect;
+			NGREOpIRectL(pLuaState, lua_gettop(pLuaState),&(pParam->clipRect));
+		}
+		lua_pop(pLuaState, 1);
+	}
+	return 1;
+}
+
+
+
+
 //NGRE_RESULT NGREOpBlendBitmapR(NGREBitmapR pBmpSrc, CLPNGREOpIRect pRectSrc, NGREBitmapR pBmpDest, CLPNGREOpIRect pRectDest, CLPNGREOpParam pParam)
 //忽略dest时候用device上的bitmap
 //NGRE_RESULT NGREOpBlendBitmapR(NGREBitmapR pBmpSrc, CLPNGREOpIRect pRectSrc, CLPNGREOpIRect pRectDest, CLPNGREOpParam pParam)
@@ -54,32 +104,80 @@ int NGREOpBlendBitmapL(lua_State* pLuaState)
 	NGREOpIRect rectDest;
 	NGREOpIRectL(pLuaState, 4, &rectDest);
 
-	NGRE_RESULT lResult = NGREOpBlendBitmapR(pBmpSrc, pRectSrc, pBmpDest,  &rectDest, NULL);
+	NGREOpParam opParam;
+	opParam.header.cbSize = sizeof(NGREOpParam);
+	opParam.header.flag = 0;
+	NGREOpParamL(pLuaState,5,&opParam);
+
+	NGRE_RESULT lResult = NGREOpBlendBitmapR(pBmpSrc, pRectSrc, pBmpDest,  &rectDest, &opParam);
 
 	lua_pushnumber(pLuaState, lResult);
 
 	return 1;
 }
 
-
+//NGRE_RESULT NGREOpFillRectR(NGREBitmapR pBmpDest, CLPNGREOpIRect pRectDest, LPNGREOpColor pColor, CLPNGREOpParam pParam)
+//忽略dest时候用device上的bitmap
+//忽略destRect时使用位图大小
 int NGREOpFillRectL(lua_State* pLuaState)
 {
 	NGREBitmapR pBmpDest;
 	pBmpDest.idResource = lua_tostring(pLuaState, 1);
-	NGREOpIRect rectDest;
-	NGREOpIRectL(pLuaState, 2, &rectDest);
 
-	NGRE_RESULT lResult = 0;
-	//NGREOpFillRectR(pBmpDest, &rectDest, NULL);
+
+	NGREOpColorR pColor;
+	pColor.idResource = lua_tostring(pLuaState,2);
+
+	LPNGREOpIRect pRectDest = NULL;
+	NGREOpIRect rectDest;
+	if(!lua_isnil(pLuaState,3))
+	{
+		NGREOpIRectL(pLuaState, 3, &rectDest);
+		pRectDest = &rectDest;
+	}
+	NGRE_RESULT lResult = NGREOpFillRectR(pBmpDest, pRectDest, pColor,  NULL);
 
 	lua_pushnumber(pLuaState, lResult);
+
+	return 1;
+}
+//同上
+int NGREOpEraseBitmapL(lua_State* pLuaState)
+{
+	NGREBitmapR pBmpDest;
+	pBmpDest.idResource = lua_tostring(pLuaState, 1);
+
+
+	NGREOpColorR pColor;
+	pColor.idResource = lua_tostring(pLuaState,2);
+
+	LPNGREOpIRect pRectDest = NULL;
+	NGREOpIRect rectDest;
+	if(!lua_isnil(pLuaState,3))
+	{
+		NGREOpIRectL(pLuaState, 3, &rectDest);
+		pRectDest = &rectDest;
+	}
+	NGRE_RESULT lResult = NGREOpEraseBitmapR(pBmpDest, pRectDest, pColor,  NULL);
+
+	lua_pushnumber(pLuaState, lResult);
+
 	return 1;
 }
 
-const luaL_Reg g_lScriptFunctions[] = {
-	{"BlendBitmap", NGREOpBlendBitmapL},
-	{NULL, NULL},
-};
+
+int NGREOpAddClipRectL(lua_State* pLuaState)
+{
+	NGREOpIRect clipRect;
+	NGREOpIRectL(pLuaState, 1, &clipRect);
+	NGREDevice* pDevice = NGREGetScriptDeviceL(pLuaState);
+	NGREAddDeviceClipRect(pDevice,  &clipRect);
+	return 1;
+}
+//const luaL_Reg g_lScriptFunctions[] = {
+//	{"BlendBitmap", NGREOpBlendBitmapL},
+//	{NULL, NULL},
+//};
 
 
 typedef struct NGRELuaScriptEnv{
@@ -96,6 +194,10 @@ NGRE_RESULT	NGREInitScriptCoder(LPNGREInitScriptCoderParam param)
 	luaL_openlibs(g_pLuaScriptEnv->pRunStack);
 	//luaL_register(g_pLuaScriptEnv->pRunStack, NULL, g_lScriptFunctions);
 	lua_register (g_pLuaScriptEnv->pRunStack,"BlendBitmap",NGREOpBlendBitmapL);
+	lua_register (g_pLuaScriptEnv->pRunStack, "FillRect", NGREOpFillRectL);
+	lua_register (g_pLuaScriptEnv->pRunStack, "EraseBitmap", NGREOpEraseBitmapL);
+	lua_register (g_pLuaScriptEnv->pRunStack, "AddClipRect", NGREOpAddClipRectL);
+	
 	return NGRE_SUCCESS;
 
 }
@@ -115,10 +217,13 @@ NGRE_RESULT	NGREDecodeScript(NGRE_SCRIPT_HANDLE hScript, NGRE_SCRIPT_CODE_HANDLE
 }
 
 
-NGRE_RESULT	NGRERunScriptCode(NGRE_SCRIPT_CODE_HANDLE hCode)
+NGRE_RESULT	NGRERunScriptCode(NGRE_SCRIPT_CODE_HANDLE hCode, NGREDevice* pDevice)
 {
 	const char* szLuaCode = (const char*)hCode;
 	int nStackTop = lua_gettop(g_pLuaScriptEnv->pRunStack);
+	lua_pushlightuserdata(g_pLuaScriptEnv->pRunStack, pDevice);
+	lua_setglobal(g_pLuaScriptEnv->pRunStack, "ScriptDevice");
+
 	int lResult = luaL_loadstring(g_pLuaScriptEnv->pRunStack, szLuaCode);
 	if(lResult == 0)
 	{

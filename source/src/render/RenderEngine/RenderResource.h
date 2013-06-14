@@ -8,10 +8,28 @@ typedef struct NGREBitmap{
 	void* pExtra;
 }NGREBitmap, *LPNGREBitmap;
 
+#define NGREOpIInv  (0x7fffffff)
+typedef struct NGREOpIRect{
+	int left;
+	int top;
+	int right;
+	int bottom;
+}NGREOpIRect, *LPNGREOpIRect;
+typedef const LPNGREOpIRect CLPNGREOpIRect;
+#define NGREOpIRectWidth(rect) ((rect).right - (rect).left)
+#define NGREOpIRectHeight(rect) ((rect).bottom - (rect).top)
 
-typedef struct NGREMask{
-	void* pExtra;
-}NGREMask, *LPNGREMask;
+
+//typedef struct NGREMask{
+//	void* pExtra;
+//}NGREMask, *LPNGREMask;
+
+typedef struct NGREOpColor{
+	unsigned char b;
+	unsigned char g;
+	unsigned char r;
+	unsigned char a;
+}NGREOpColor, *LPNGREOpColor;
 
 NGRE_RESULT NGRECreateBitmap(unsigned int uWidth, unsigned int uHeight, unsigned char uBytesPerPixel, LPNGREBitmap* ppBitmap);
 unsigned int NGREBitmapWidth(LPNGREBitmap pBitmap);
@@ -29,4 +47,5 @@ NGRE_RESULT NGREGetBitmapBuffer(LPNGREBitmap pBitmap, NGREAllocType allocType, v
 
 ///for testScript
 NGRE_RESULT NGREPrintBimtapToFile(LPNGREBitmap pBitmap, const char* szFilePath);
+
 #endif

@@ -21,6 +21,7 @@ void		NGRM_Uninit();
 
 typedef enum NGRM_ResType{
 	NGRM_ResType_Bitmap = 0,
+	NGRM_ResType_Color = 1,
 	NGRM_ResType_Count,
 }NGRM_ResType;
 

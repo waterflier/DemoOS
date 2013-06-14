@@ -20,20 +20,27 @@ NGRE_RESULT NGREGetDeviceBitmapIfNull(NGREBitmapR* ppBmp)
 	return lResult;
 }
 
+void NGREGetRectIfNull(CLPNGREOpIRect pSrcRect, LPNGREOpIRect pRect, NGREBitmapR pBmp)
+{
+	if(pSrcRect == NULL)
+	{
+		pRect->left = 0;
+		pRect->top = 0;
+		pRect->right = NGREBitmapWidth(pBmp.pResource);
+		pRect->bottom = NGREBitmapHeight(pBmp.pResource);
+	}
+	else
+	{
+		(*pRect) = (*pSrcRect);
+	}
+}
+
 NGRE_RESULT NGREOpBlendBitmapR(NGREBitmapR pBmpSrc, CLPNGREOpIRect pRectSrc, NGREBitmapR pBmpDest, CLPNGREOpIRect pRectDest, CLPNGREOpParam pParam)
 {
 	NGREResId idBmpSrc = pBmpSrc.idResource;
 	NGRE_RESULT lResult = NGREGetBitmapFromId(idBmpSrc, &(pBmpSrc.pResource));
 	NGREOpIRect rectSrc;
-	LPNGREOpIRect pTmpRectSrc = (LPNGREOpIRect)pRectSrc;
-	if(pRectSrc == NULL)
-	{
-		rectSrc.left = 0;
-		rectSrc.top = 0;
-		rectSrc.right = NGREBitmapWidth(pBmpSrc.pResource);
-		rectSrc.bottom = NGREBitmapHeight(pBmpSrc.pResource);
-		pTmpRectSrc = &rectSrc;
-	}
+	NGREGetRectIfNull(pRectSrc, &rectSrc, pBmpSrc);
 
 	NGREResId idBmpDest = pBmpDest.idResource;
 	lResult = NGREGetDeviceBitmapIfNull(&pBmpDest);
@@ -42,14 +49,14 @@ NGRE_RESULT NGREOpBlendBitmapR(NGREBitmapR pBmpSrc, CLPNGREOpIRect pRectSrc, NGR
 	rectDest = *pRectDest;
 	if(pRectDest->right == NGREOpIInv)
 	{
-		rectDest.right = rectDest.left + pTmpRectSrc->right - pTmpRectSrc->left;
+		rectDest.right = rectDest.left + rectSrc.right - rectSrc.left;
 	}
 	if(pRectDest->bottom == NGREOpIInv)
 	{
-		rectDest.bottom = rectDest.top + pTmpRectSrc->bottom - pTmpRectSrc->top;
+		rectDest.bottom = rectDest.top + rectSrc.bottom - rectSrc.top;
 	}
 	
-	NGREResId idMask = NULL;
+	/*NGREResId idMask = NULL;
 	if(pParam != NULL)
 	{
 		if(pParam->pMask.idResource != NULL)
@@ -57,15 +64,15 @@ NGRE_RESULT NGREOpBlendBitmapR(NGREBitmapR pBmpSrc, CLPNGREOpIRect pRectSrc, NGR
 			idMask = pParam->pMask.idResource;
 			lResult = NGREGetMaskFromId(idMask, &(pParam->pMask.pResource));
 		}
-	}
+	}*/
 	
 
-	lResult = NGREOpBlendBitmap(pBmpSrc, pTmpRectSrc, pBmpDest, &rectDest, pParam);
+	lResult = NGREOpBlendBitmap(pBmpSrc, &rectSrc, pBmpDest, &rectDest, pParam);
 
-	if(idMask != NULL)
+	/*if(idMask != NULL)
 	{
 		NGREReleaseMaskFromId(idMask);
-	}
+	}*/
 	if(idBmpDest != NULL)
 	{
 		NGREReleaseBitmapFromId(idBmpDest);
@@ -77,7 +84,40 @@ NGRE_RESULT NGREOpBlendBitmapR(NGREBitmapR pBmpSrc, CLPNGREOpIRect pRectSrc, NGR
 }
 
 
-NGRE_RESULT NGREOpFillRectR(NGREBitmapR pBmpDest, CLPNGREOpIRect pRectDest, LPNGREOpColor pColor, CLPNGREOpParam pParam)
+NGRE_RESULT NGREOpFillRectR(NGREBitmapR pBmpDest, CLPNGREOpIRect pRectDest, NGREOpColorR pColor, CLPNGREOpParam pParam)
 {
+	NGREResId idBmpDest = pBmpDest.idResource;
+	long lResult = NGREGetDeviceBitmapIfNull(&pBmpDest);
+	NGREOpIRect rectDest;
+	NGREGetRectIfNull(pRectDest, &rectDest, pBmpDest);
 
+	NGREResId idColor = pColor.idResource;
+	lResult = NGREGetColorFromId(idColor, &(pColor.pResource));
+
+	lResult = NGREOpFillRect(pBmpDest, &rectDest, pColor.pResource, pParam);
+
+	if(idBmpDest != NULL)
+	{
+		NGREReleaseBitmapFromId(idBmpDest);
+	}
 }
+
+NGRE_RESULT NGREOpEraseBitmapR(NGREBitmapR pBmpDest, CLPNGREOpIRect pRectDest, NGREOpColorR pColor, CLPNGREOpParam pParam)
+{
+	NGREResId idBmpDest = pBmpDest.idResource;
+	long lResult = NGREGetDeviceBitmapIfNull(&pBmpDest);
+	NGREOpIRect rectDest;
+	NGREGetRectIfNull(pRectDest, &rectDest, pBmpDest);
+
+	NGREResId idColor = pColor.idResource;
+	lResult = NGREGetColorFromId(idColor, &(pColor.pResource));
+
+	lResult = NGREOpEraseBitmap(pBmpDest, &rectDest, pColor.pResource, pParam);
+
+	if(idBmpDest != NULL)
+	{
+		NGREReleaseBitmapFromId(idBmpDest);
+	}
+}
+
+

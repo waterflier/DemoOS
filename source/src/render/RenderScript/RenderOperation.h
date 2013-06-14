@@ -7,38 +7,37 @@
 //		2. 浮点坐标系？	
 //      3. demo阶段需要实现的操作包括哪些， 依赖kakee的设计稿
 
-#define NGREOpIInv  (0x7fffffff)
-typedef struct NGREOpIRect{
-	int left;
-	int top;
-	int right;
-	int bottom;
-}NGREOpIRect, *LPNGREOpIRect;
-typedef const LPNGREOpIRect CLPNGREOpIRect;
 
-typedef struct NGREOpColor{
-	unsigned char b;
-	unsigned char g;
-	unsigned char r;
-	unsigned char a;
-}NGREOpColor, *LPNGREOpColor;
 
-typedef float NGREOpFMatrix44[4][4];
+
+typedef float NGREOpFMatrix33[9];
+void NGREOpSetMatrixTranslate(NGREOpFMatrix33 matrix, float x, float y);
+void NGREOpSetMatrixScale(NGREOpFMatrix33 matrix, float x, float y);
+void NGREOpSetMatrixRotate(NGREOpFMatrix33 matrix, float d, float cx, float cy);
+void NGREOpCatMatrix(NGREOpFMatrix33 resultMatrix, NGREOpFMatrix33 srcMatrix);
+
+typedef enum NGREOpParamFlag{
+	OpParamClipRect = 0x01,
+	OpParamMask = 0x02,
+	OpParamMatrix = 0x04,
+}NGREOpParamFlag;
+typedef struct NGREOpParamHeader{
+	unsigned int	cbSize;	
+	NGREOpParamFlag flag;
+}NGREOpParamHeader ;
 
 typedef struct NGREOpParam{
-	unsigned int	cbSize;				
-	CLPNGREOpIRect	pRectRegion;
-	CLPNGREOpIRect	pRectMaskRegion;
-	NGREMaskR pMask;
-
-	void* pExtra;
-}NGREOpParam, *LPNGREOpParam ;
+	NGREOpParamHeader header;
+	NGREOpIRect clipRect;
+	NGREOpFMatrix33 matrix;
+}NGREOpParam, *LPNGREOpParam;
 typedef const LPNGREOpParam CLPNGREOpParam;
 
 NGRE_RESULT NGREOpBlendBitmapR(NGREBitmapR pBmpSrc, CLPNGREOpIRect pRectSrc, NGREBitmapR pBmpDest, CLPNGREOpIRect pRectDest, CLPNGREOpParam pParam);
 NGRE_RESULT NGREOpBlendBitmap(NGREBitmapR pBmpSrc, CLPNGREOpIRect pRectSrc, NGREBitmapR pBmpDest, CLPNGREOpIRect pRectDest, CLPNGREOpParam pParam);
-NGRE_RESULT NGREOpFillRectR(NGREBitmapR pBmpDest, CLPNGREOpIRect pRectDest, LPNGREOpColor pColor, CLPNGREOpParam pParam);
+NGRE_RESULT NGREOpFillRectR(NGREBitmapR pBmpDest, CLPNGREOpIRect pRectDest, NGREOpColorR pColor, CLPNGREOpParam pParam);
 NGRE_RESULT NGREOpFillRect(NGREBitmapR pBmpDest, CLPNGREOpIRect pRectDest, LPNGREOpColor pColor, CLPNGREOpParam pParam);
-
+NGRE_RESULT NGREOpEraseBitmapR(NGREBitmapR pBmpDest, CLPNGREOpIRect pRectDest, NGREOpColorR pColor, CLPNGREOpParam pParam);
+NGRE_RESULT NGREOpEraseBitmap(NGREBitmapR pBmpDest, CLPNGREOpIRect pRectDest, LPNGREOpColor pColor, CLPNGREOpParam pParam);
 
 #endif

@@ -1,8 +1,5 @@
 include ../../../mk.config
 
-SKIA_PATH=/root/win_work/skia
-SKIA_OUT:=$(SKIA_PATH)/linux_out/$(CONFIG_NAME)
-
 ###################################################################
 ProjectName=render
 ModuleName=renderSpeedTests
@@ -22,7 +19,7 @@ else
 	LinkLibs += cityhash jpeg pthread freetype fontconfig dl GL GLU png skia_effects skia_images skia_core skia_opts skia_opts_ssse3 skia_ports skia_sfnt skia_utils skia_gr skia_skgr 
 endif
 
-LibDirs:= $(SKIA_OUT) $(OUTPUT) $(OUTPUT)../../resource_manager/$(CONFIG_NAME)
+LibDirs:= $(OUTPUT) $(OUTPUT)../../resource_manager/$(CONFIG_NAME)
 
 SubFileDirs = 
 

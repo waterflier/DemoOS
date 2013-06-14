@@ -9,13 +9,13 @@ NGRE_RESULT NGREScriptInit(LPNGREScriptInitParam pParam)
 	return lResult;
 }
 
-NGRE_RESULT	NGRERunScript(NGRE_SCRIPT_HANDLE hScript)
+NGRE_RESULT	NGRERunScript(NGRE_SCRIPT_HANDLE hScript, NGREDevice* pDevice)
 {
 	NGRE_SCRIPT_CODE_HANDLE hCode = NULL;
 	NGRE_RESULT lResult = NGREDecodeScript(hScript,&hCode);
 	if(lResult == NGRE_SUCCESS && hCode != NULL)
 	{
-		lResult = NGRERunScriptCode(hCode);
+		lResult = NGRERunScriptCode(hCode, pDevice);
 		NGREReleaseScriptCode(hCode);
 	}
 	return lResult;

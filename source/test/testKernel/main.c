@@ -5,10 +5,10 @@
 
 #include <stdio.h>
 #include <pthread.h>
-#include <sys/sem.h>
-#include <sys/types.h>
-#include <sys/ipc.h>
-#include <sys/types.h>
+//#include <sys/sem.h>
+//#include <sys/types.h>
+//#include <sys/ipc.h>
+//#include <sys/types.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <memory.h>
@@ -88,7 +88,7 @@ int main(int argc,char** argv)
 		NGOS_ImageObjectSetImageID(hIcon,imgID);
 		NGOS_UpdateRootObjTree(hTree, hRenderScript);
 		printf("%s\r\n",NGREGetScriptCode(hRenderScript));
-		NGRERunScript(hRenderScript);
+		NGRERunScript(hRenderScript, pDevice);
 		NGREFlushDevice(pDevice);
 		sleep(1);
 	}

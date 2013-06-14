@@ -10,10 +10,11 @@ typedef struct NGREInitScriptCoderParam{
 NGRE_RESULT	NGREInitScriptCoder(LPNGREInitScriptCoderParam param);
 void		NGREUninitScriptCoder();				
 NGRE_RESULT	NGREDecodeScript(NGRE_SCRIPT_HANDLE hScript, NGRE_SCRIPT_CODE_HANDLE*phCode);
-NGRE_RESULT	NGRERunScriptCode(NGRE_SCRIPT_CODE_HANDLE hCode);
+NGRE_RESULT	NGRERunScriptCode(NGRE_SCRIPT_CODE_HANDLE hCode, NGREDevice* pDevice);
 void		NGREReleaseScriptCode(NGRE_SCRIPT_CODE_HANDLE hCode);
 
 #define NGRE_SCRIPT_SPECCHAR_SPLIT	1
 const char  NGREScriptSpecChar(int nSpecChar);
+
 
 #endif

@@ -26,6 +26,36 @@ void* NGRM_LoadBitmapFromPath(NGRM_ResPath resPath)
 	return pBitmap;
 }
 
+////颜色文本的格式应该是"b g r a"
+void* NGRM_GetColorFromPath(NGRM_ResPath resPath)
+{
+	unsigned int nPathLen = strlen(resPath);
+	char szValue[10] = {0};
+	NGREOpColor color;
+	unsigned char* pColor = (unsigned char*)(&color);
+	unsigned int nValueIndex = 0;
+	unsigned int ix ;
+	for(ix = 0; ix < nPathLen; ++ix)
+	{
+		if(resPath[ix] == ' ')
+		{
+			*pColor = atoi(szValue);
+			memset(szValue, 10, 0);
+			nValueIndex = 0;
+			++ pColor;
+		}
+		else
+		{
+			szValue[nValueIndex] = resPath[ix];
+			++ nValueIndex;
+		}
+	}
+	*pColor = atoi(szValue);
+	pColor = (NGREOpColor*)malloc(sizeof(NGREOpColor));
+	*((NGREOpColor*)pColor) = color;
+	return pColor;
+}
+
 NGRM_RESULT NGRM_Init(NGRM_InitParam* pParam)
 {
 	assert(g_ResourceManager == NULL);
@@ -34,6 +64,9 @@ NGRM_RESULT NGRM_Init(NGRM_InitParam* pParam)
 
 	g_ResourceManager->resourceMaps[NGRM_ResType_Bitmap].resourceMap = NGRM_NewResourceMap();
 	g_ResourceManager->resourceMaps[NGRM_ResType_Bitmap].fnLoader = NGRM_LoadBitmapFromPath;
+
+	g_ResourceManager->resourceMaps[NGRM_ResType_Color].resourceMap = NGRM_NewResourceMap();
+	g_ResourceManager->resourceMaps[NGRM_ResType_Color].fnLoader = NGRM_GetColorFromPath;
 }
 
 void		NGRM_Uninit()

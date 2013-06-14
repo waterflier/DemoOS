@@ -5,4 +5,5 @@
 	cd ../../src/os_interface&&make&&make link&&cd -
 	cd ../../src/kernel&&make&&make link&&cd -
 	cd ../../src/uiobjects&&make&&make link&&cd -
+	cd ../../src/toolkit&&make&&make link&&cd -
 	make&&make link

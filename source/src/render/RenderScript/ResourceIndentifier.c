@@ -32,17 +32,34 @@ void		NGREReleaseBitmapFromId(NGREResId idRes)
 	
 }
 
-NGRE_RESULT NGREGetMaskFromId(NGREResId idRes, LPNGREMask* ppMask)
-{
-	assert(0);
-}
+//NGRE_RESULT NGREGetMaskFromId(NGREResId idRes, LPNGREMask* ppMask)
+//{
+//	assert(0);
+//}
+//
+//void		NGREReleaseMaskFromId(NGREResId idRes)
+//{
+//	assert(0);
+//}
 
-void		NGREReleaseMaskFromId(NGREResId idRes)
+NGRE_RESULT NGREGetColorFromId(NGREResId idRes, NGREOpColor** ppColor)
 {
-	assert(0);
+	NGREOpColor* pColor = NULL;
+	NGRM_RESULT lResult = NGRM_GetResource(NGRM_ResType_Color, idRes, &pColor);
+	if(pColor == NULL)
+	{
+		return 	NGRE_RESOURCE_INVALIDID;
+	}
+	*ppColor = pColor;
+	return NGRE_SUCCESS;
+}
+void		NGREReleaseColorFromId(NGREResId idRes)
+{
+	return ;
 }
 
 NGRE_RESULT NGREUninitResIdentifier()
 {
 	NGRM_Uninit();
 }
+

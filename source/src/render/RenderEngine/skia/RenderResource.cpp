@@ -55,18 +55,18 @@ extern "C" NGRE_RESULT NGREAllocBitmap(LPNGREBitmap pBitmap, NGREAllocType alloc
 	#ifdef NGRE_GL
 		if(pSkBitmap->pSkGpuDevice == NULL)
 		{
-#ifdef ANDROID
+		#ifdef ANDROID
 			static GrContext* s_pGLContext = NULL;
 			if(s_pGLContext == NULL)
 			{
 				s_pGLContext = GrContext::CreateGLShaderContext();
 			}
 			GrContext* context = s_pGLContext;
-#else
+			pSkBitmap->pSkGpuDevice = SkNEW_ARGS(SkGpuDevice, (context,*(pSkBitmap->pSkBitmap) ,context->getRenderTarget()));
+		#else
 			GrContextFactory contextFactory;
 			//SKGLContextHelper* ctxHelper = contextFactory.getGLContext(GrContextFactory::kNative_GLContextType);
 			GrContext* context = contextFactory.get(GrContextFactory::kNative_GLContextType);
-#endif
 			if(pSkBitmap->pSkBitmap->getPixels())
 			{
 				GrTextureParams texParam(SkShader::kClamp_TileMode, false);
@@ -85,6 +85,7 @@ extern "C" NGRE_RESULT NGREAllocBitmap(LPNGREBitmap pBitmap, NGREAllocType alloc
 			{
 				pSkBitmap->pSkGpuDevice = SkNEW_ARGS(SkGpuDevice, (context,SkBitmap::kARGB_8888_Config, pSkBitmap->pSkBitmap->width(), pSkBitmap->pSkBitmap->height()));
 			}
+		#endif
 		}
 	#else
 		NGREAllocBitmap(pBitmap, NGREAllocType_mem);
@@ -129,11 +130,7 @@ extern "C" NGRE_RESULT NGREGetBitmapBuffer(LPNGREBitmap pBitmap, NGREAllocType a
 	}
 	else if(allocType == NGREAllocType_GpuTexture)
 	{
-	#ifdef NGRE_GL
-		assert(false);
-	#else
-		NGREGetBitmapBuffer(pBitmap,NGREAllocType_mem,ppBitmapBuffer);
-	#endif//NGRE_GL
+		NGREBitmap2BitmapInput(pBitmap).getPixels();
 	}
 	return NGRE_SUCCESS;
 }
