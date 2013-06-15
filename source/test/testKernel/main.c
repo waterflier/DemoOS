@@ -51,12 +51,12 @@ int main(int argc,char** argv)
 
 	NGOS_UIOBJECT_HANDLE hBkg = NGOS_CreateUIObject(NGOS_GetDefaultTypeLoader(),"ImageObject","bkg");
 	NGOS_ImageObjectSetImageID(hBkg,"image.bkg");
-	RECT pos = {.left=0,.top=0,.right=800,.bottom=600};
+	RECT pos = {.left=0,.top=0,.right=800,.bottom=300};
 	NGOS_SetUIObjectRect(hBkg,&pos);
 
 	NGOS_UIOBJECT_HANDLE hIcon = NGOS_CreateUIObject(NGOS_GetDefaultTypeLoader(),"ImageObject","icon0");
 	NGOS_ImageObjectSetImageID(hIcon,"image.icon0");
-	RECT pos2 = {10,10,10+64,10+64};
+	RECT pos2 = {10,10,10+64+50,10+64+50};
 	//RECT pos2 = {76,76,141,141};
 	NGOS_SetUIObjectRect(hIcon,&pos2);
 

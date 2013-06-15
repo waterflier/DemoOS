@@ -127,8 +127,9 @@ static NGRE_SCRIPT_HANDLE ImageObjectGetRenderScript(void* pSelf,RECT* pViewRect
 		/*printf("StretchDrawBitmap(%s,%d,%d,%d,%d,%d)\n",pImg->strImageResID,pObj->ObjAbsRect.left,pObj->ObjAbsRect.top,pObj->ObjAbsRect.right,pObj->ObjAbsRect.bottom,
 			pImg->DrawModeAntiAlias);*/
 		
-		sprintf(NGREGetScriptBuffer(hRenderScript), "BlendBitmap(\"%s\",nil,nil,{%d,%d,%d,%d},{[\"clipRect\"]={%d,%d,%d,%d},%s})",
-			pImg->strImageResID,pObj->ObjAbsRect.left,pObj->ObjAbsRect.top,pObj->ObjAbsRect.right,pObj->ObjAbsRect.bottom,
+		sprintf(NGREGetScriptBuffer(hRenderScript), "BlendBitmap(\"%s\",{0,0,%d,%d},nil,{%d,%d,%d,%d},{[\"clipRect\"]={%d,%d,%d,%d},%s})",
+			pImg->strImageResID,pObj->ObjAbsRect.right - pObj->ObjAbsRect.left ,pObj->ObjAbsRect.bottom - pObj->ObjAbsRect.top ,
+			pObj->ObjAbsRect.left,pObj->ObjAbsRect.top,pObj->ObjAbsRect.right,pObj->ObjAbsRect.bottom,
 			pViewRect->left,pViewRect->top,pViewRect->right,pViewRect->bottom, szCodeRotate);
 	}
 	else
