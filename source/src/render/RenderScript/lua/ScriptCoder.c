@@ -222,6 +222,10 @@ NGRE_RESULT	NGREDecodeScript(NGRE_SCRIPT_HANDLE hScript, NGRE_SCRIPT_CODE_HANDLE
 NGRE_RESULT	NGRERunScriptCode(NGRE_SCRIPT_CODE_HANDLE hCode, NGREDevice* pDevice)
 {
 	const char* szLuaCode = (const char*)hCode;
+	if(strlen(szLuaCode) == 0)
+	{
+		return NGRE_SUCCESS;
+	}
 	int nStackTop = lua_gettop(g_pLuaScriptEnv->pRunStack);
 	lua_pushlightuserdata(g_pLuaScriptEnv->pRunStack, pDevice);
 	lua_setglobal(g_pLuaScriptEnv->pRunStack, "ScriptDevice");

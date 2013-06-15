@@ -19,6 +19,8 @@ extern "C" NGRE_RESULT NGREOpBlendBitmap(NGREBitmapR pBmpSrc, CLPNGREOpIRect pRe
 {
 	SkCanvas canvas(NGREBitmap2CanvasInput(pBmpDest.pResource)); 
 	SkIRect srcRect = NGREOpIRect2SkIRect(*pRectSrc);
+	SkPaint skPaint;
+	skPaint.setAntiAlias(true);
 	if(pParam != NULL && (((NGREOpParamHeader*)pParam)->flag & OpParamClipRect))
 	{
 		SkRect clipRect = NGREOpIRect2SkRect(pParam->clipRect);
@@ -38,7 +40,7 @@ extern "C" NGRE_RESULT NGREOpBlendBitmap(NGREBitmapR pBmpSrc, CLPNGREOpIRect pRe
 				pParam->matrix[SkiaMatrixCentreY] - srcRect.fTop);
 			tempMatrix.postTranslate(pParam->matrix[SkiaMatrixTranslateX] + pRectDest->left, 
 				pParam->matrix[SkiaMatrixTranslateY] + pRectDest->top);
-			canvas.drawBitmapMatrix(subBmpToDraw, tempMatrix);
+			canvas.drawBitmapMatrix(subBmpToDraw, tempMatrix, &skPaint);
 		}
 	}
 	else

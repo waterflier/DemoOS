@@ -121,7 +121,7 @@ void StartInputEventThread()
         else if(pMsg->Param1 == TIMER_ID_CLOCK_TICK)
         {
             //一秒钟过去了...
-
+			UpdateClockTime(NULL);
         }
         break; 
      }
@@ -165,7 +165,6 @@ void InitRes()
 
 	NGRM_AddResource("app_icon.call","/system/res/apps/call.png", NGRM_ResType_Bitmap);
 	NGRM_AddResource("app_icon.camer","/system/res/apps/camer.png", NGRM_ResType_Bitmap);
-	NGRM_AddResource("app_icon.clock","/system/res/apps/clock.png", NGRM_ResType_Bitmap);
 	NGRM_AddResource("app_icon.contact","/system/res/apps/contact.png", NGRM_ResType_Bitmap);
 	NGRM_AddResource("app_icon.e-mail","/system/res/apps/e-mail.png", NGRM_ResType_Bitmap);
 	NGRM_AddResource("app_icon.folder","/system/res/apps/folder.png", NGRM_ResType_Bitmap);
@@ -231,19 +230,25 @@ int main(int argc,char** argv)
 	NGOS_UIOBJECT_HANDLE hBkg = CreateDesktopBKG();
 	NGOS_AddChild(hRoot,hBkg);
 	//*****************test*******************
-	hApp1 = CreateAppIcon("call","call");
-	RECT posIcon = {52,95,52+86,95+86+28};
-	NGOS_SetUIObjectRect(hApp1,&posIcon);
-	NGOS_AddChild(hBkg,hApp1);
-	UIObject* pAppObj = HandleMapDecodeUIObject(hApp1);
-	if(pAppObj)
-	{
-		UIObjectGetInputTarget(pAppObj,1);
-		EventContainer* pEA = UIObjectGetEventContainer(pAppObj,NGOS_ACTION_TOUCH_DOWN,TRUE);
-		AttachEvent(pEA,(void*)OnTouchDownApp,NULL);
+	//hApp1 = CreateAppIcon("call","call");
+	//RECT posIcon = {52,95,52+86,95+86+28};
+	//NGOS_SetUIObjectRect(hApp1,&posIcon);
+	//NGOS_AddChild(hBkg,hApp1);
+	//UIObject* pAppObj = HandleMapDecodeUIObject(hApp1);
+	//if(pAppObj)
+	//{
+	//	UIObjectGetInputTarget(pAppObj,1);
+	//	EventContainer* pEA = UIObjectGetEventContainer(pAppObj,NGOS_ACTION_TOUCH_DOWN,TRUE);
+	//	AttachEvent(pEA,(void*)OnTouchDownApp,NULL);
 
-		EventContainer* pEA2 = UIObjectGetEventContainer(pAppObj,NGOS_ACTION_TOUCH_DOWN,FALSE);
-	}
+	//	EventContainer* pEA2 = UIObjectGetEventContainer(pAppObj,NGOS_ACTION_TOUCH_DOWN,FALSE);
+	//}
+
+	
+	NGOS_UIOBJECT_HANDLE hClockObj = CreateClockAppIcon();
+	RECT posIcon = {52,95,52+86,95+86+28};
+	NGOS_SetUIObjectRect(hClockObj,&posIcon);
+	NGOS_AddChild(hBkg,hClockObj);
 
 	//****************************************
 	NGOS_UIOBJECT_HANDLE hStatusBar = CreateStatusBar(0,0,800,35);
