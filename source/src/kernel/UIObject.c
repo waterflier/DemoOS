@@ -369,3 +369,16 @@ EventContainer* UIObjectGetEventContainer(UIObject* pObject,int EventName,BOOL i
 
     return result;
 }
+
+InputTarget* UIObjectGetInputTarget(UIObject* pObject,BOOL isAutoCreate)
+{
+	InputTarget* pResult = NULL;
+	pResult = pObject->pInputTarget;
+	if(pResult == NULL && isAutoCreate)
+	{
+		pObject->pInputTarget = CreateInputTarget();
+		pResult = pObject->pInputTarget;
+	}
+
+	return pResult;
+}

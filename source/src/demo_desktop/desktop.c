@@ -22,6 +22,8 @@
 #include "ResourceManager.h"
 #include "RenderDevice.h"
 
+#include "../kernel/UIObject.h"
+
 short screenWidth = 800;
 short screenHeight = 600;
 short screenDPI = 72;
@@ -115,7 +117,19 @@ NGOS_UIOBJECT_HANDLE CreateDesktopBKG()
 }
 
 
+void InitRes()
+{
+	NGRE_RESULT lResult = NGREInit();
+	NGRM_AddResource("bkg", "/system/res/bkg.png", NGRM_ResType_Bitmap);
+	NGRM_AddResource("app_icon.call","/system/res/call.png", NGRM_ResType_Bitmap);
+	NGRM_AddResource("app_icon.camer","/system/res/camer.png", NGRM_ResType_Bitmap);
+	NGRM_AddResource("app_icon.clock","/system/res/clock.png", NGRM_ResType_Bitmap);
+}
 
+static int OnTouchDownApp (UserDataContext* pUserData,NGOS_UIOBJECT_HANDLE hObj,uint32_t x,uint32_t y,MTEventData* pData)
+{
+	printf("You touch me!\n");
+}
 
 int main(int argc,char** argv)
 {
@@ -137,18 +151,32 @@ int main(int argc,char** argv)
 
 	NGOS_UIOBJECT_HANDLE hBkg = CreateDesktopBKG();
 	NGOS_AddChild(hRoot,hBkg);
+	//*****************test*******************
+	NGOS_UIOBJECT_HANDLE hApp1 = CreateAppIcon("call","call");
+	RECT posIcon = {20,20,20+256,20+256+44};
+	NGOS_SetUIObjectRect(hApp1,&posIcon);
+	NGOS_AddChild(hBkg,hApp1);
+	UIObject* pAppObj = HandleMapDecodeUIObject(hApp1);
+	if(pAppObj)
+	{
+		UIObjectGetInputTarget(pAppObj,1);
+		EventContainer* pEA = UIObjectGetEventContainer(pAppObj,NGOS_ACTION_TOUCH_DOWN,TRUE);
+		AttachEvent(pEA,(void*)OnTouchDownApp,NULL);
+	}
 
-	NGOS_UIOBJECT_HANDLE hStatusBar = CreateStatusBar(0,0,800,24);
-	NGOS_AddChild(hRoot,hStatusBar);
 
-	NGOS_UIOBJECT_HANDLE hAppHeader = CreateAppHeader(800,24);
-	NGOS_AddChild(hRoot,hAppHeader);
+	//****************************************
+	//NGOS_UIOBJECT_HANDLE hStatusBar = CreateStatusBar(0,0,800,24);
+	//NGOS_AddChild(hRoot,hStatusBar);
 
-	NGOS_UIOBJECT_HANDLE hAppList = CreateAppList(800,400);
-	NGOS_AddChild(hRoot,hAppList);
+	//NGOS_UIOBJECT_HANDLE hAppHeader = CreateAppHeader(800,24);
+	//NGOS_AddChild(hRoot,hAppHeader);
 
-	NGOS_UIOBJECT_HANDLE hAppBottom = CreateAppBottom(800,60);
-	NGOS_AddChild(hRoot,hAppBottom);
+	//NGOS_UIOBJECT_HANDLE hAppList = CreateAppList(800,400);
+	//NGOS_AddChild(hRoot,hAppList);
+
+	//NGOS_UIOBJECT_HANDLE hAppBottom = CreateAppBottom(800,60);
+	//NGOS_AddChild(hRoot,hAppBottom);
 	//start timer thread
 	StartTimerThread();
 	//start userinput thread
