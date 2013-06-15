@@ -354,7 +354,7 @@ NGOS_API(int) NGOS_UpdateRootObjTree(NGOS_ROOT_OBJTREE_HANDLE hRootTree, NGRE_SC
 	RootUIObjTree* pTree = HandleMapDecodeRootTree(hRootTree,NULL);
 	if(pTree)
 	{
-		//printf("--update root obj tree\n");
+		printf("--update root obj tree\n");
 		//update animation
 		int i;
 		if(pTree->DirtyRectManager)
@@ -450,5 +450,17 @@ NGOS_API(int) NGOS_PutInputActionToRootObjTree(NGOS_ROOT_OBJTREE_HANDLE hRootTre
 		return 0;
 	}	
 
+	return -1;
+}
+
+NGOS_API(int) NGOS_SetUIObjectRotate(NGOS_UIOBJECT_HANDLE hUIObject, float* fRotateInfo)
+{
+	UIObject* pObj = HandleMapDecodeUIObject(hUIObject,NULL);
+	if(pObj)
+	{
+		UIObjectSetRotate(pObj, fRotateInfo);
+		return 0;
+
+	}
 	return -1;
 }

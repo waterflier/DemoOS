@@ -119,6 +119,65 @@ void NGRECopy2FrameBuffer(void* pSrc, void* frameBuffer, CLPNGREOpIRect pRect, u
 		pCurLine += ulRowBytes;
 		pFBCurLine += ulRowBytes;
 	}
+
+	/*pCurLine = (unsigned char*)pSrc + ulRowBytes * pRect->top + uBPP * pRect->left;
+	pFBCurLine = frameBuffer + ulRowBytes * pRect->top + uBPP * pRect->left;
+	for(iy = pRect->top; iy < pRect->bottom; ++iy)
+	{
+		pCur = pCurLine;
+		pFBCur = pFBCurLine;
+		
+		pFBCur[0] = 255;
+		pFBCur[1] = 0;
+		pFBCur[2] = 0;
+		pFBCur[3] = 255;
+			
+		
+		pCurLine += ulRowBytes;
+		pFBCurLine += ulRowBytes;
+	}
+
+	pCurLine = (unsigned char*)pSrc + ulRowBytes * pRect->top + uBPP * (pRect->right - 1);
+	pFBCurLine = frameBuffer + ulRowBytes * pRect->top + uBPP * (pRect->right - 1);
+	for(iy = pRect->top; iy < pRect->bottom; ++iy)
+	{
+		pCur = pCurLine;
+		pFBCur = pFBCurLine;
+		
+		pFBCur[0] = 255;
+		pFBCur[1] = 0;
+		pFBCur[2] = 0;
+		pFBCur[3] = 255;
+			
+		
+		pCurLine += ulRowBytes;
+		pFBCurLine += ulRowBytes;
+	}
+
+
+	pCur = (unsigned char*)pSrc + ulRowBytes * pRect->top + uBPP * (pRect->left);
+	pFBCur = frameBuffer + ulRowBytes * pRect->top + uBPP * (pRect->left);
+	for(ix = pRect->left; ix < pRect->right; ++ix)
+	{
+		pFBCur[0] = 255;
+		pFBCur[1] = 0;
+		pFBCur[2] = 0;
+		pFBCur[3] = 255;
+		pCur += uBPP;
+		pFBCur += uBPP;
+	}
+
+	pCur = (unsigned char*)pSrc + ulRowBytes * (pRect->bottom - 1) + uBPP * (pRect->left);
+	pFBCur = frameBuffer + ulRowBytes * (pRect->bottom - 1) + uBPP * (pRect->left);
+	for(ix = pRect->left; ix < pRect->right; ++ix)
+	{
+		pFBCur[0] = 255;
+		pFBCur[1] = 0;
+		pFBCur[2] = 0;
+		pFBCur[3] = 255;
+		pCur += uBPP;
+		pFBCur += uBPP;
+	}*/
 #else
 	unsigned long nCopyWidth = uBPP * NGREOpIRectWidth(*pRect);
 	for(iy = pRect->top; iy < pRect->bottom; ++iy)

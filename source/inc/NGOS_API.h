@@ -92,10 +92,11 @@ NGOS_API(int) NGOS_SetUIObjectRect(NGOS_UIOBJECT_HANDLE hUIObject,RECT* pRect);
 NGOS_API(int) NGOS_ResizeUIObject(NGOS_UIOBJECT_HANDLE hUIObject);
 NGOS_API(int) NGOS_GetUIObjectSize(NGOS_UIOBJECT_HANDLE hUIObject);
 //NGOS_API(int) NGOS_GetUIObjectRectExpString(NGOS_UIOBJECT_HANDLE hUIObject,RECT* pRect);
-NGOS_API(int) NGOS_GetUIObjectPosTransMartix(NGOS_UIOBJECT_HANDLE hUIObject);
-NGOS_API(int) NGOS_SetUIObjectPosTransMartix(NGOS_UIOBJECT_HANDLE hUIObject);
-NGOS_API(int) NGOS_GetUIObjectTransMesh(NGOS_UIOBJECT_HANDLE hUIObject);
-NGOS_API(int) NGOS_SetUIObjectTransMesh(NGOS_UIOBJECT_HANDLE hUIObject);
+//NGOS_API(int) NGOS_GetUIObjectPosTransMartix(NGOS_UIOBJECT_HANDLE hUIObject);
+//NGOS_API(int) NGOS_SetUIObjectPosTransMartix(NGOS_UIOBJECT_HANDLE hUIObject);
+//NGOS_API(int) NGOS_GetUIObjectTransMesh(NGOS_UIOBJECT_HANDLE hUIObject);
+//NGOS_API(int) NGOS_SetUIObjectTransMesh(NGOS_UIOBJECT_HANDLE hUIObject);
+NGOS_API(int) NGOS_SetUIObjectRotate(NGOS_UIOBJECT_HANDLE hUIObject, float* fRotateInfo);
 //关于zorder,在设计上也有优化的余地，现在的使用总是会去设 相对很大的zorder和相对很小的zorder
 NGOS_API(int32_t) NGOS_GetUIObjectAbsZorder(NGOS_UIOBJECT_HANDLE hUIObjec);
 NGOS_API(int32_t) NGOS_GetUIObjectZorder(NGOS_UIOBJECT_HANDLE hUIObjec);

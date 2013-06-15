@@ -88,15 +88,17 @@ int main(int argc,char** argv)
 	AnimationBindUIObject(pPosAni,hIcon);
 	PosChangeAnimationSetPos(pPosAni,10,10,500,500);
 	AnimationManagerAddAnimation(GetAnimationManager(),hPosAni);
-	AnimationStart(pPosAni);
+	//AnimationStart(pPosAni);
 
 	
 	
 	int i = 0;
 	char imgID[64];
 	
+	float fRoate[3] = {0,31,31};
+
 	NGRE_SCRIPT_HANDLE hRenderScript = NGRECreateScript();
-	for(i=0;i<100000;i++)
+	for(i=0;i<10000;i++)
 	{
 		NGREClearScript(hRenderScript);
 		//sprintf(imgID,"image.icon%d",i%3);
@@ -106,11 +108,14 @@ int main(int argc,char** argv)
 		//++pos2.right; 
 		//++pos2.bottom; 
 		//NGOS_SetUIObjectRect(hIcon,&pos2);
+		NGOS_SetUIObjectRotate(hIcon2, fRoate);
 		NGOS_UpdateRootObjTree(hTree, hRenderScript);
 		printf("%s\r\n",NGREGetScriptCode(hRenderScript));
 		NGRERunScript(hRenderScript, pDevice);
 		NGREFlushDevice(pDevice);
-		usleep(25000);
+		fRoate[0] += 10;
+		//usleep(1000);
+		sleep(1);
 	}
 	
 	

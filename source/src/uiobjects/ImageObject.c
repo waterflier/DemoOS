@@ -114,55 +114,46 @@ static NGRE_SCRIPT_HANDLE ImageObjectGetRenderScript(void* pSelf,RECT* pViewRect
 	ImageObject* pImg= (ImageObject*) UIObjectGetUserDataStart(pSelf); //todo: fix it
 	//printf("%s:",pObj->strID);
 	NGRE_SCRIPT_HANDLE hRenderScript = NGRECreateSizedScript(500);
-	if(pObj->pTransInfo == NULL && pObj->pMeshInfo == NULL && pObj->pEffectList == NULL)
+	char szCodeRotate[100] = {0};
+	if(pObj->pTransInfo)
 	{
-		//没有变换的正常模式下
-		if(pImg->DrawModeIsStretch)
-		{
-			//AppendRenderScript(hResult,"StretchDrawBitmap(id,left,top,right,bottom,antiAlias)");
-			/*printf("StretchDrawBitmap(%s,%d,%d,%d,%d,%d)\n",pImg->strImageResID,pObj->ObjAbsRect.left,pObj->ObjAbsRect.top,pObj->ObjAbsRect.right,pObj->ObjAbsRect.bottom,
-				pImg->DrawModeAntiAlias);*/
-			
-			sprintf(NGREGetScriptBuffer(hRenderScript), "BlendBitmap(\"%s\",nil,nil,{%d,%d,%d,%d},{[\"clipRect\"]={%d,%d,%d,%d}})",
-				pImg->strImageResID,pObj->ObjAbsRect.left,pObj->ObjAbsRect.top,pObj->ObjAbsRect.right,pObj->ObjAbsRect.bottom,
-				pViewRect->left,pViewRect->top,pViewRect->right,pViewRect->bottom);
-		}
-		else
-		{
-			//获得对齐方式 计算坐标
-			
-			int left,top;
-			int VAlign = pImg->DrawModeValign;
-			int HAlign = pImg->DrawModeHalign;
+		((UIObjectEffectHeader*)(pObj->pTransInfo))->fnGetRenderScript(pObj->pTransInfo,  szCodeRotate, 100);
+	}
 
-			left = pObj->ObjAbsRect.left;
-			top = pObj->ObjAbsRect.top;
-			if(VAlign == 1)
-			{
-				//top = (width-content.width)/2
-			}
-			else if(VAlign == 2)
-			{
-				//top = width-cotent.width
-			}
-
-			//AppendRenderScript(hResult,"DrawBitmap(%s,%d,%d)");
-			//printf("DrawBitmap(%s,%d,%d)\n",pImg->strImageResID,left,top);
-			sprintf(NGREGetScriptBuffer(hRenderScript), "BlendBitmap(\"%s\",nil,nil,{%d,%d,nil,nil},{[\"clipRect\"]={%d,%d,%d,%d}})",
-				pImg->strImageResID,pObj->ObjAbsRect.left,pObj->ObjAbsRect.top,pViewRect->left,pViewRect->top,pViewRect->right,pViewRect->bottom );
-		}
+	///脚本实现为在参数中带带effect之类， 就不用分支判断了,现在只有trans
+	if(pImg->DrawModeIsStretch)
+	{
+		//AppendRenderScript(hResult,"StretchDrawBitmap(id,left,top,right,bottom,antiAlias)");
+		/*printf("StretchDrawBitmap(%s,%d,%d,%d,%d,%d)\n",pImg->strImageResID,pObj->ObjAbsRect.left,pObj->ObjAbsRect.top,pObj->ObjAbsRect.right,pObj->ObjAbsRect.bottom,
+			pImg->DrawModeAntiAlias);*/
 		
+		sprintf(NGREGetScriptBuffer(hRenderScript), "BlendBitmap(\"%s\",nil,nil,{%d,%d,%d,%d},{[\"clipRect\"]={%d,%d,%d,%d},%s})",
+			pImg->strImageResID,pObj->ObjAbsRect.left,pObj->ObjAbsRect.top,pObj->ObjAbsRect.right,pObj->ObjAbsRect.bottom,
+			pViewRect->left,pViewRect->top,pViewRect->right,pViewRect->bottom, szCodeRotate);
 	}
 	else
 	{
-		//effect list处理，得到真正的绘制内容： 如果effect依赖Image之上的所有绘制内容怎么办?
+		//获得对齐方式 计算坐标
+		
+		int left,top;
+		int VAlign = pImg->DrawModeValign;
+		int HAlign = pImg->DrawModeHalign;
 
-		//处理Mesh变换
+		left = pObj->ObjAbsRect.left;
+		top = pObj->ObjAbsRect.top;
+		if(VAlign == 1)
+		{
+			//top = (width-content.width)/2
+		}
+		else if(VAlign == 2)
+		{
+			//top = width-cotent.width
+		}
 
-		//用TransInfo绘制出来
-
-		//AppendRenderScript(hResult,"CreateBitmap(%s,%d,%d)");
-		//printf("DrawNotSuppot()\n");
+		//AppendRenderScript(hResult,"DrawBitmap(%s,%d,%d)");
+		//printf("DrawBitmap(%s,%d,%d)\n",pImg->strImageResID,left,top);
+		sprintf(NGREGetScriptBuffer(hRenderScript), "BlendBitmap(\"%s\",nil,nil,{%d,%d,nil,nil},{[\"clipRect\"]={%d,%d,%d,%d},%s})",
+			pImg->strImageResID,pObj->ObjAbsRect.left,pObj->ObjAbsRect.top,pViewRect->left,pViewRect->top,pViewRect->right,pViewRect->bottom,szCodeRotate );
 	}
 
 	return hRenderScript;

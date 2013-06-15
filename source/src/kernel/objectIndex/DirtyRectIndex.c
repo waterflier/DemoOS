@@ -46,6 +46,14 @@ int DirtyRectIndexPushRect(DirtyRectIndex* pIndex,RECT* pRect)
 	{
 		realRect.bottom = pIndex->Height;
 	}
+	if(realRect.left < 0)
+	{
+		realRect.left = 0;
+	}
+	if(realRect.top < 0)
+	{
+		realRect.top = 0;
+	}
 
 	int count = GetRectListCount(pIndex->pRectList);
 	int i=0;

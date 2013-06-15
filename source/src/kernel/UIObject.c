@@ -7,6 +7,7 @@
 #include "./UIObject.h"
 #include "./RootObjTree.h"
 #include "./UIObjTree.h"
+#include <math.h>
 
 static void UpdateObjectAbsPosInfo(UIObject* pObject,UIObject* pParent)
 {
@@ -29,13 +30,7 @@ static void UpdateObjectAbsPosInfo(UIObject* pObject,UIObject* pParent)
 
 		pObject->hOwnerTree = pParent->hOwnerTree;
 	}
-	
-	RootUIObjTree* pOwnerTree = HandleMapDecodeRootTree(pObject->hOwnerTree, NULL);
-	{	
-		UpdateUIObjectToUIObjectRectIndex(pOwnerTree->UIObjectRectManager,pObject->hSelf);
-		RootUIObjTreePushDirtyRect(pOwnerTree, &OldAbsRect);
-		RootUIObjTreePushDirtyRect(pOwnerTree, &(pObject->ObjAbsRect));
-	}
+	UIObjectUpdataVisibleRect(pObject, UIObjectUpdateVisibleRectMove, &OldAbsRect);
 	//update children
 	
 	if(pObject->pChildren == NULL)
@@ -218,7 +213,7 @@ int UIObjectAddChild(UIObject* pObject,NGOS_UIOBJECT_HANDLE hChild,BOOL isLogicC
 		}
 		UIObjectVectorAdd(pObject->pChildren,hChild);
 		pChild->hParent = pObject->hSelf;
-
+		
 
 		if(pObject->hOwnerTree)
 		{
@@ -227,19 +222,12 @@ int UIObjectAddChild(UIObject* pObject,NGOS_UIOBJECT_HANDLE hChild,BOOL isLogicC
 			{
 				return NGOS_RESULT_INVALID_PTR;
 			}
-			
-			//todo: 从父到子计算位置表达式，并更新abspos
-			//注意这个过程是无事件的
-			UpdateObjectAbsPosInfo(pChild,pObject);
-
 			//从父到子将刚刚绑定的对象加入到对象树的index里,这里也是不触发事件的
 			UpdateBindObjectToIndex(pChild,objTree);
 
-			
-			//重画
-			RECT absViewRect;
-			UIObjectGetVisibleRect(pChild,&absViewRect);
-			RootUIObjTreePushDirtyRect(objTree,&absViewRect);
+			//todo: 从父到子计算位置表达式，并更新abspos
+			//注意这个过程是无事件的
+			UpdateObjectAbsPosInfo(pChild,pObject);
 		}
 
 		return NGOS_RESULT_SUCCESS;
@@ -268,7 +256,96 @@ void InvalidUIObject(UIObject* pObject)
 }
 int UIObjectGetVisibleRect(UIObject* pObject,RECT* absRect)
 {
-	*absRect = pObject->ObjAbsRect;
+	*absRect = pObject->ObjVisibleRect;
+	return 0;
+}
+
+int UIObjectSetRotate(UIObject* pObject, float* fRotateInfo)
+{
+	if(fRotateInfo == NULL)
+	{
+		if(pObject->pTransInfo != NULL)
+		{
+			DestroyUIObjectTransInfo(pObject->pTransInfo);
+			pObject->pTransInfo = NULL;
+		}
+	}
+	else
+	{
+		if(pObject->pTransInfo == NULL)
+		{
+			pObject->pTransInfo = CreateUIObjectTransInfo();
+		}
+		SetUIObjectTransInfoRotate(pObject->pTransInfo, fRotateInfo[0],fRotateInfo[1],fRotateInfo[2]);
+	}
+	UIObjectUpdataVisibleRect(pObject, UIObjectUpdateVisibleRectEffect, NULL);
+	
+	return 0;
+}
+
+int UIObjectUpdataVisibleRect(UIObject* pObject , uint8_t bFlag, const RECT* pOldAbsRect)
+{
+	///变换之类的坐标系是对象本身的坐标系
+	if(bFlag & UIObjectUpdateVisibleRectMove)
+	{
+		if(((pOldAbsRect->right - pOldAbsRect->left) != (pObject->ObjAbsRect.right -  pObject->ObjAbsRect.left)) ||
+				((pOldAbsRect->bottom - pOldAbsRect->top) != (pObject->ObjAbsRect.bottom -  pObject->ObjAbsRect.top)))
+		{
+			bFlag |= UIObjectUpdateVisibleRectResize;
+		}
+	}
+	if((bFlag & UIObjectUpdateVisibleRectEffect || bFlag & UIObjectUpdateVisibleRectResize))
+	{
+		if(pObject->pTransInfo)
+		{
+			RealRECT visibleRect = {0, 0,(pObject->ObjRect.right - pObject->ObjRect.left), 
+				(pObject->ObjRect.bottom - pObject->ObjRect.top)};
+
+			uint8_t bInvalid = 0;
+			bInvalid |= ((UIObjectEffectHeader*)(pObject->pTransInfo))->fnUpdateVisibleRect(pObject->pTransInfo, &visibleRect);
+			//直接两边扩展一个像素的误差好了
+			///有可能前后一样但是要强制刷新， 丢给dirty rect mgr去合并， 这里不管了
+			if(bInvalid)
+			{
+				InvalidUIObject(pObject);
+			}
+			pObject->ObjVisibleRect.left = visibleRect.left + pObject->ObjAbsRect.left;
+			pObject->ObjVisibleRect.top = visibleRect.top + pObject->ObjAbsRect.top;
+			pObject->ObjVisibleRect.right = visibleRect.right + pObject->ObjAbsRect.left + 1;
+			pObject->ObjVisibleRect.bottom = visibleRect.bottom + pObject->ObjAbsRect.top + 1;
+			if(bInvalid)
+			{
+				InvalidUIObject(pObject);
+			}
+		}
+		else
+		{	
+			InvalidUIObject(pObject);
+			pObject->ObjVisibleRect.left = pObject->ObjAbsRect.left;
+			pObject->ObjVisibleRect.top = pObject->ObjAbsRect.top;
+			pObject->ObjVisibleRect.right = pObject->ObjAbsRect.right;
+			pObject->ObjVisibleRect.bottom = pObject->ObjAbsRect.bottom;
+			InvalidUIObject(pObject);
+		}
+	}
+	else
+	{
+		if(bFlag & UIObjectUpdateVisibleRectMove)
+		{
+			InvalidUIObject(pObject);
+		}
+		pObject->ObjVisibleRect.left = pObject->ObjVisibleRect.left + (pObject->ObjAbsRect.left - pOldAbsRect->left);
+		pObject->ObjVisibleRect.top = pObject->ObjVisibleRect.top + (pObject->ObjAbsRect.top - pOldAbsRect->top);
+		pObject->ObjVisibleRect.right = pObject->ObjVisibleRect.right + (pObject->ObjAbsRect.left - pOldAbsRect->left);
+		pObject->ObjVisibleRect.bottom = pObject->ObjVisibleRect.bottom + (pObject->ObjAbsRect.top - pOldAbsRect->top);
+		InvalidUIObject(pObject);
+	}
+	RootUIObjTree* pTree = NULL;
+	if(pObject->hOwnerTree && (pTree = HandleMapDecodeRootTree(pObject->hOwnerTree)))
+	{
+		UpdateUIObjectToUIObjectRectIndex(pTree->UIObjectRectManager,pObject->hSelf);
+	}
+	
 	return 0;
 }
 
@@ -315,17 +392,17 @@ int UIObjectMove(UIObject* pObject,RECT* pNewPos)
 	
 }
 
-int UIObjectMoveReal(UIObject* pObject,RealRECT* pNewPos)
-{
-	if(pObject == NULL || pNewPos == NULL)
-	{
-		return NGOS_RESULT_INVALID_PTR;
-	}
-
-	pObject->ObjRealRect = *pNewPos;
-	//转换坐标
-	//if(pObject->)
-}
+//int UIObjectMoveReal(UIObject* pObject,RealRECT* pNewPos)
+//{
+//	if(pObject == NULL || pNewPos == NULL)
+//	{
+//		return NGOS_RESULT_INVALID_PTR;
+//	}
+//
+//	pObject->ObjRealRect = *pNewPos;
+//	//转换坐标
+//	//if(pObject->)
+//}
 
 int UIObjectSetVisibleFlags(UIObject* pObject,uint32_t visibleFlags)
 {
@@ -382,4 +459,107 @@ InputTarget* UIObjectGetInputTarget(UIObject* pObject,BOOL isAutoCreate)
 	}
 
 	return pResult;
+}
+
+
+
+uint8_t UpdataVisibleRectWithUIObjectTransInfo(UIObjectEffectHeader* pEffect, RealRECT* pVisibleRect)
+{
+	UIObjectTransInfo* pTransInfo = (UIObjectTransInfo*)pEffect;
+	if(pTransInfo != NULL)
+	{
+		UIObjectTransInfoRotateRect(pTransInfo, pVisibleRect);
+		return 1;
+	}
+	return 0;
+}
+
+int GetRenderScriptWithUIObjectTransInfo(UIObjectEffectHeader* pEffect, char* szScriptCode, uint16_t uLength)
+{
+	UIObjectTransInfo* pTransInfo = (UIObjectTransInfo*)pEffect;
+	if(pTransInfo != NULL)
+	{
+		char szCodeBuf[100];
+		sprintf(szCodeBuf, "[\"matrix\"]={0,0,1,1,%f,%f,%f}",
+			pTransInfo->fRotateInfo[0],pTransInfo->fRotateInfo[1],pTransInfo->fRotateInfo[2]);
+		uint16_t uCodeLen = strlen(szCodeBuf);
+		if(uCodeLen > uLength)
+		{
+			return uCodeLen;
+		}
+		else
+		{
+			strcpy(szScriptCode, szCodeBuf);
+			return uCodeLen;
+		}
+	}
+	return -1;
+}
+
+UIObjectTransInfo* CreateUIObjectTransInfo()
+{
+	UIObjectTransInfo* pNewTransInfo = NULL;
+	pNewTransInfo = (UIObjectTransInfo*)malloc(sizeof(UIObjectTransInfo));
+	((UIObjectEffectHeader*)pNewTransInfo)->cbSize = sizeof(UIObjectTransInfo);
+	((UIObjectEffectHeader*)pNewTransInfo)->fnUpdateVisibleRect = UpdataVisibleRectWithUIObjectTransInfo;
+	((UIObjectEffectHeader*)pNewTransInfo)->fnGetRenderScript = GetRenderScriptWithUIObjectTransInfo;
+	return pNewTransInfo;
+}
+void DestroyUIObjectTransInfo(UIObjectTransInfo* pTransInfo)
+{
+	free(pTransInfo);
+}
+
+void UIObjectTransInfoRotatePoint(UIObjectTransInfo* pTransInfo, float* x, float* y)
+{
+	float rx, ry;
+	float cx = *x - pTransInfo->fRotateInfo[1];
+	float cy = *y - pTransInfo->fRotateInfo[2];
+	rx = cx * pTransInfo->fMatrix[0] + cy * pTransInfo->fMatrix[1] + pTransInfo->fRotateInfo[1];
+	ry = cy * pTransInfo->fMatrix[0] - cx * pTransInfo->fMatrix[1] + pTransInfo->fRotateInfo[2];
+	*x = rx;
+	*y = ry;
+}
+
+#ifndef min
+#define min(a,b) (((a) < (b)) ? (a) : (b))
+#endif
+
+#ifndef max
+#define max(a,b) (((a) > (b)) ? (a) : (b))
+#endif
+
+void UIObjectTransInfoRotateRect(UIObjectTransInfo* pTransInfo, RealRECT * rect)
+{
+	////先不管优化什么了
+	float ltx = rect->left,lty = rect->top;
+	UIObjectTransInfoRotatePoint(pTransInfo, &ltx, &lty);
+	float rtx = rect->right,rty = rect->top;
+	UIObjectTransInfoRotatePoint(pTransInfo, &rtx, &rty);
+	float lbx = rect->left,lby = rect->bottom;
+	UIObjectTransInfoRotatePoint(pTransInfo, &lbx, &lby);
+	float rbx = rect->right,rby = rect->bottom;
+	UIObjectTransInfoRotatePoint(pTransInfo, &rbx, &rby);
+	
+	rect->left = min(ltx, min(rtx, min(lbx, rbx)));
+	rect->right = max(ltx, max(rtx, max(lbx, rbx)));
+	rect->top = min(lty, min(rty, min(lby, rby)));
+	rect->bottom = max(lty, max(rty, max(lby, rby)));
+
+}
+
+void SetUIObjectTransInfoRotate(UIObjectTransInfo* pTransInfo, float fDegree, float fCenterX, float fCenterY)
+{
+	if(pTransInfo != NULL)
+	{
+		pTransInfo->fRotateInfo[0] = fDegree;
+		pTransInfo->fRotateInfo[1] = fCenterX;
+		pTransInfo->fRotateInfo[2] = fCenterY;
+
+		//fDegree = fDegree;
+		//fDegree = fDegree - 360 * (int)(fDegree / 360);
+
+		pTransInfo->fMatrix[0] = sin(fDegree * M_PI / 180);
+		pTransInfo->fMatrix[1] = cos(fDegree * M_PI / 180);
+	}
 }

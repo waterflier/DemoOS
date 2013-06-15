@@ -81,7 +81,7 @@ int AddObjectToUIObjectRectIndex(UIObjectRectIndex* pIndex,NGOS_UIOBJECT_HANDLE 
 		UIObjectRectIndexNode* pNode = pIndex->pList+i;
 		if(pNode->hObject == hObject)
 		{
-			pNode->AbsRect = pObj->ObjAbsRect;
+			pNode->AbsRect = pObj->ObjVisibleRect;
 			pNode->ZOrder = pObj->ObjAbsZorder;
 
 			return 0;
@@ -97,7 +97,7 @@ int AddObjectToUIObjectRectIndex(UIObjectRectIndex* pIndex,NGOS_UIOBJECT_HANDLE 
 		free(pTemp);
 	}
 
-	pIndex->pList[pIndex->Length].AbsRect = pObj->ObjAbsRect;
+	pIndex->pList[pIndex->Length].AbsRect = pObj->ObjVisibleRect;
 	pIndex->pList[pIndex->Length].ZOrder = pObj->ObjAbsZorder;
 	pIndex->pList[pIndex->Length].hObject = hObject;
 	pIndex->Length++;
@@ -133,7 +133,7 @@ int UpdateUIObjectToUIObjectRectIndex(UIObjectRectIndex* pIndex,NGOS_UIOBJECT_HA
 			UIObject* pObj = HandleMapDecodeUIObject(hObject,NULL);
 			if(pObj)
 			{
-				pNode->AbsRect = pObj->ObjAbsRect;
+				pNode->AbsRect = pObj->ObjVisibleRect;
 				pNode->ZOrder = pObj->ObjAbsZorder;
 			}
 
