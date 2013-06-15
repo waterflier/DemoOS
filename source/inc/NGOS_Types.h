@@ -60,7 +60,7 @@ typedef void* TYPE_NGOS_MSG_RECIVER;
 
 
 typedef void* TYPE_NGOS_MSGQUEUE_RUNLOOP;
-typedef void* TYPE_NGOS_MSG_PARAM;
+typedef uint32_t TYPE_NGOS_MSG_PARAM;
 typedef void* TYPE_NGOS_MSG_DATA;
 
 

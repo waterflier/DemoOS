@@ -20,6 +20,7 @@ void InputTargetProcessAction(InputTarget* pSelf,NGOS_UIOBJECT_HANDLE hObj,uint3
     UIObject* pObj = HandleMapDecodeUIObject(hObj);
     if(pObj == NULL)
     {
+        printf("hobj invalid\n");
         return;
     }
 

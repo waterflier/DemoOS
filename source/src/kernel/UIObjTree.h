@@ -43,7 +43,7 @@ int RootUIObjTreePushDirtyRect(RootUIObjTree* pObjTree,RECT* pDirtyRect);
 int RootUIObjTreeGetRenderScrpit(RootUIObjTree* pObjTree,RECT* pClipRect,NGRE_SCRIPT_HANDLE hRenderScript);
 //NGOS_RENDER_SCRIPT_BUFFER_HANDLE UIObjectGetRenderScrpit(UIObject* pObj,RECT* pClipRect);
 
-void SendInputAcitonToUIObjTree(RootUIObjTree* pObjTree,uint32_t Action,void* param1,void* param2,void* eventData);
+void SendInputAcitonToUIObjTree(RootUIObjTree* pObjTree,uint32_t Action,TYPE_NGOS_MSG_PARAM param1,TYPE_NGOS_MSG_PARAM param2,void* eventData);
 void UIObjTreeAddInpuatActionFilter();
 NGOS_UIOBJECT_HANDLE UIObjTreeGetObjectByPath(RootUIObjTree* pObjTree,const char* path);
 

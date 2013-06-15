@@ -72,21 +72,21 @@ static void UpdateBindObjectToIndex(UIObject* pObject,RootUIObjTree* pTree)
         pObject->Imp->fnOnBind(pObject);
     }
 
-	if(pObject->pChildren == NULL)
+	if(pObject->pChildren != NULL)
 	{
-		return;
-	}
-
-	int i;
-	int count = UIObjectVectorGetCount(pObject->pChildren);
-	for(i=0;i<count;++i)
-	{
-		UIObject* pChild = HandleMapDecodeUIObject(UIObjectVectorGet(pObject->pChildren,i),NULL);
-		if(pChild)
+		int i;
+		int count = UIObjectVectorGetCount(pObject->pChildren);
+		for(i=0;i<count;++i)
 		{
-			UpdateBindObjectToIndex(pChild,pTree);
+			UIObject* pChild = HandleMapDecodeUIObject(UIObjectVectorGet(pObject->pChildren,i),NULL);
+			if(pChild)
+			{
+				UpdateBindObjectToIndex(pChild,pTree);
+			}
 		}
 	}
+
+
 
     if(pObject->Imp->fnOnInitChild)
     {
@@ -149,7 +149,7 @@ UIObject* MallocUIObject(NGOS_RootTreeEnv* pEnv,size_t userDataLen)
 		pResult = malloc(sizeof(UIObject)+userDataLen);
 		memset(pResult,0,sizeof(UIObject)+userDataLen);
 		//pResult = (UIObject*)pEnv->fnAlloc(NGOS_ENTITY_TYPE_UIOBJ,pEnv->AllocUD,NULL,sizeof(UIObject)+userDataLen,0);
-        pResult->Imp = GetUIObjectDefaultProvier;
+        pResult->Imp = GetUIObjectDefaultProvier();
 		if(pResult)
 		{
 			//pResult->Header.Env = pEnv;
@@ -357,12 +357,13 @@ EventContainer* UIObjectGetEventContainer(UIObject* pObject,int EventName,BOOL i
     }
     
     int index = EventName-EVENT_BEGIN;
-    EventContainer* result = NULL;
-    if(pObject->pAllEventContainer[index] == NULL)
+    EventContainer* result = pObject->pAllEventContainer[index] ;
+    if(result == NULL)
     {
         if(isAutoCreate)
         {
-            result = pObject->pAllEventContainer[index] = CreateEventContainer(EventName & 0xffff);//TODO: Need free
+            pObject->pAllEventContainer[index] = CreateEventContainer(EventName & 0xffff);//TODO: Need free
+        	result = pObject->pAllEventContainer[index];
         }
 
     }

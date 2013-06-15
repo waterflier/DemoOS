@@ -54,7 +54,7 @@ static UIObject* CreateImageObject(UIObjectTypeInfo* self,const char* className,
 	UIObjectInit(pResult);
 	if(id)
 	{
-		pResult->strID = malloc(strlen(id));
+		pResult->strID = malloc(strlen(id)+1);
 		strcpy(pResult->strID,id);
 	}
 

@@ -173,4 +173,5 @@ int UIObjectGetVisibleRect(UIObject* pObject,RECT* absRect);
 void InvalidUIObject(UIObject* pObject);
 
 EventContainer* UIObjectGetEventContainer(UIObject* pObject,int EventName,BOOL isAutoCreate);
+InputTarget* UIObjectGetInputTarget(UIObject* pObject,BOOL isAutoCreate);
 #endif 

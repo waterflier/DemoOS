@@ -6,6 +6,17 @@
 #include "../perheader.h"
 #include "./UIObjectMap.h"
 
+uint32_t hashstring(unsigned char *str)
+{
+    unsigned long hash = 5381;
+    int c;
+
+    while (c = *str++)
+        hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+
+    return hash;
+}
+
 UIObjectMap* CreateUIObjectMap()
 {
     UIObjectMap* pResult =(UIObjectMap*) malloc(sizeof(UIObjectMap));
@@ -28,7 +39,7 @@ int UIObjectMapInsert(UIObjectMap* pSelf,NGOS_UIOBJECT_HANDLE hUIObject,const ch
     if(hUIObject && id && pSelf)
     {
         
-        ret = hashmap_put(pSelf->mapImp,id,(any_t)hUIObject);
+        ret = hashmap_put(pSelf->mapImp,hashstring(id),(any_t)hUIObject);
         if(ret == MAP_OK)
         {
             return 0;
@@ -44,7 +55,7 @@ NGOS_UIOBJECT_HANDLE UIObjectMapFind(UIObjectMap* pSelf,const char* id)
     if(pSelf && id)
     {
         any_t result;
-        ret = hashmap_get(pSelf->mapImp,id,&result);
+        ret = hashmap_get(pSelf->mapImp,hashstring(id),&result);
         if(ret == MAP_OK)
         {
             return result;
@@ -59,7 +70,7 @@ int UIObjectMapErase(UIObjectMap* pSelf,const char* id)
     int ret;
     if(pSelf && id)
     {
-        ret = hashmap_remove(pSelf->mapImp,id);
+        ret = hashmap_remove(pSelf->mapImp,hashstring(id));
         if(ret == MAP_OK)
         {
             return 0;

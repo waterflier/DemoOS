@@ -31,7 +31,7 @@ NGOS_UIOBJECT_HANDLE CreateAppIcon(const char* appID,const char* appText)
 
     sprintf(buffer,"%s.%s","app_icon",appID);
     NGOS_UIOBJECT_HANDLE hIcon = NGOS_CreateUIObject(NGOS_GetDefaultTypeLoader(),"ImageObject",buffer);
-    NGOS_ImageObjectSetImageID(hIcon,appID);
+    NGOS_ImageObjectSetImageID(hIcon,buffer);
     RECT pos2={0,0,ICON_WIDTH,ICON_WIDTH};
     NGOS_SetUIObjectRect(hIcon,&pos2);
     NGOS_AddChild(hApp,hIcon);

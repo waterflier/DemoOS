@@ -355,8 +355,8 @@ static const char* GetActionType(int typeCode)
 
 static  void* InputReaderThreadProc(void* ud)
 {
-	InputReader* pSelf = (InputReader*) ud;
-
+    printf("input reader start scan input devices\n");
+    InputReader* pSelf = (InputReader*) ud;
 	ScanInputDevice(pSelf);
 
 	if(pSelf->multiTouchFD)
@@ -381,13 +381,17 @@ static  void* InputReaderThreadProc(void* ud)
         	while(MultiTouchAccumulatorPopAction(pSelf->pMTAccumulator,&theAction))
         	{
         		//printf action;
-                //printf("action type=%s,x=%d,y=%d,solt count=%d\n",GetActionType(theAction.actionType),theAction.x,theAction.y,theAction.pData->FingerSoltCount);
+                printf("action type=%s,x=%d,y=%d,solt count=%d\n",GetActionType(theAction.actionType),theAction.x,theAction.y,theAction.pData->FingerSoltCount);
 
       
                 if(pSelf->hRecv)
                 {
+                    uint32_t param2 = theAction.x;
+                    param2 = param2 << 16;
+                    param2 = param2 | theAction.y;
+                    //printf()
                     OSI_PostMsg(pSelf->hRecv,MSG_INPUT_ACTION,
-                        (NGOS_INPUTDEVICE_MAIN_TOUCH_SCREEN<<16) | theAction.actionType,(theAction.x<<16) | theAction.y,theAction.pData);
+                        (NGOS_INPUTDEVICE_MAIN_TOUCH_SCREEN<<16) | theAction.actionType,param2,theAction.pData);
                 }
                 else
                 {
@@ -435,7 +439,8 @@ int InputReaderStart(InputReader* pSelf)
 	}
 
 	//TODO: start thread;
-    OSI_CreateThread(InputReaderThreadProc,pSelf);
+    printf("input reader start read thread..\n");
+    OSI_CreateThread(pSelf,InputReaderThreadProc);
     //InputReaderThreadProc(pSelf);
 	return  0;
 }

@@ -265,7 +265,8 @@ int MultiTouchAccumulatorPopAction(MultiTouchAccumulator* pSelf,MultiTouchAction
 	memcpy(pResult,pSelf->resultData+pSelf->resultHeaderPos,sizeof(MultiTouchAction));
 	if(pResult->pData)
 	{
-        AddRefMTEventData(pResult->pData);
+		//TODO: maybe bug
+        pResult->pData->RefCount = 1;
 	}
 	pSelf->resultHeaderPos ++ ;
 	if(pSelf->resultHeaderPos == MT_ACTION_MAX_CACHE)

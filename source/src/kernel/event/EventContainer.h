@@ -16,11 +16,11 @@
 
 #define EVENT_CONTAINER_MAX_SIZE (65535)
 
-#define EVENT_BEGIN (100)
-#define EVENT_MAX (64)
-#define EVENT_NAME_ONBIND (100)
-#define EVENT_NAME_ONINITCHILD (101)
-#define EVENT_NAME_ONPOSCHANGED (102)
+#define EVENT_BEGIN (0)
+#define EVENT_MAX (256)   //TODO TOO big ! for every uiobject
+#define EVENT_NAME_ONBIND (150)
+#define EVENT_NAME_ONINITCHILD (151)
+#define EVENT_NAME_ONPOSCHANGED (152)
 
 typedef struct tagEventCallbackNode
 {

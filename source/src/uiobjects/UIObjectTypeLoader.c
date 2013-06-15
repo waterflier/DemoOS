@@ -24,7 +24,7 @@ static UIObject* LayoutObjectCreateUIObject(UIObjectTypeInfo* self,const char* c
 	UIObjectInit(pResult);
 	if(id)
 	{
-		pResult->strID = malloc(strlen(id));
+		pResult->strID = malloc(strlen(id)+1);
 		strcpy(pResult->strID,id);
 	}
 	

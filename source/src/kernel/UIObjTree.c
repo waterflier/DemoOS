@@ -119,19 +119,16 @@ int RootUIObjTreeGetRenderScrpit(RootUIObjTree* pObjTree,RECT* pClipRect, NGRE_S
 	{
 		NGOS_UIOBJECT_HANDLE hObj = UIObjectVectorGet(&theVector,i);
 		UIObject* pObj = HandleMapDecodeUIObject(hObj,NULL);
-		if(pObj)
+		if(pObj && pObj->Imp && pObj->Imp->fnGetRenderScript)
 		{
 			//是否可以根据一些条件再判断obj是否需要生成render script
-
-			if(pObj->Imp)
+			NGRE_SCRIPT_HANDLE hObjRS = pObj->Imp->fnGetRenderScript(pObj,pClipRect);
+			if(hObjRS)
 			{
-				NGRE_SCRIPT_HANDLE hObjRS = pObj->Imp->fnGetRenderScript(pObj,pClipRect);
-				if(hObjRS)
-				{
-					NGREAppendScript(hRenderScript,NGREGetScriptCode(hObjRS));
-					NGRECloseScript(hObjRS);
-				}
+				NGREAppendScript(hRenderScript,NGREGetScriptCode(hObjRS));
+				NGRECloseScript(hObjRS);
 			}
+
 		}
 	}
 
@@ -140,11 +137,11 @@ int RootUIObjTreeGetRenderScrpit(RootUIObjTree* pObjTree,RECT* pClipRect, NGRE_S
 
 
 
-void SendInputAcitonToUIObjTree(RootUIObjTree* pObjTree,uint32_t Action,void* param1,void* param2,void* eventData)
+void SendInputAcitonToUIObjTree(RootUIObjTree* pObjTree,uint32_t Action,TYPE_NGOS_MSG_PARAM param1,TYPE_NGOS_MSG_PARAM param2,void* eventData)
 {
     //TODO:需要大幅强化默认行为
     uint32_t DeviceType = Action >> 16;
-   
+   	Action = Action & 0x0000ffff;
     if(DeviceType == NGOS_INPUTDEVICE_MOUSE)
     {
         uint32_t PointParam = (uint32_t) param1;
@@ -164,7 +161,7 @@ void SendInputAcitonToUIObjTree(RootUIObjTree* pObjTree,uint32_t Action,void* pa
                 if(pObj->pInputTarget)
                 {
                     //find first response
-                    InputTargetProcessAction(pObj->pInputTarget,pObj,Action,X,Y,eventData);
+                    InputTargetProcessAction(pObj->pInputTarget,pObj->hSelf,Action,X,Y,eventData);
                     return;
                 }
             }
@@ -193,7 +190,7 @@ void SendInputAcitonToUIObjTree(RootUIObjTree* pObjTree,uint32_t Action,void* pa
                     if(pObj->pInputTarget)
                     {
                         //find first response
-                        InputTargetProcessAction(pObj->pInputTarget,pObj,Action, X,Y,eventData);
+                        InputTargetProcessAction(pObj->pInputTarget,pObj->hSelf,Action, X,Y,eventData);
                         pObjTree->hTargetTouchObject = hObj;
                         break;
                     }
@@ -208,7 +205,7 @@ void SendInputAcitonToUIObjTree(RootUIObjTree* pObjTree,uint32_t Action,void* pa
                 if(pObj && pObj->pInputTarget)
                 {
                     //find first response
-                    InputTargetProcessAction(pObj->pInputTarget,pObj,Action,X,Y,eventData);
+                    InputTargetProcessAction(pObj->pInputTarget,pObj->hSelf,Action,X,Y,eventData);
                    
                 }
                 if(theActionCode == NGOS_ACTION_TOUCH_UP)
@@ -217,6 +214,7 @@ void SendInputAcitonToUIObjTree(RootUIObjTree* pObjTree,uint32_t Action,void* pa
                 }
             }
         }
+        
         if(pData)
         {
             ReleaseMTEventData(pData);
