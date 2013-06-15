@@ -234,8 +234,8 @@ int main(int argc,char** argv)
 	NGOS_UIOBJECT_HANDLE hStatusBar = CreateStatusBar(0,0,800,35);
 	NGOS_AddChild(hBkg,hStatusBar);
 
-	//NGOS_UIOBJECT_HANDLE hAppHeader = CreateAppHeader(0,36,800,51);
-	//NGOS_AddChild(hBkg,hAppHeader);
+	NGOS_UIOBJECT_HANDLE hAppHeader = CreateAppHeader(0,36,800,51);
+	NGOS_AddChild(hBkg,hAppHeader);
 
 	//NGOS_UIOBJECT_HANDLE hAppList = CreateAppList(0,480-285,800,285);
 	//NGOS_AddChild(hBkg,hAppList);
