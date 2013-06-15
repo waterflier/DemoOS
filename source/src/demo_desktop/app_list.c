@@ -6,11 +6,11 @@
 #include "./perheader.h"
 #include "./app_list.h"
 
-#define ICON_WIDTH (256)
+#define ICON_WIDTH (86)
 
 NGOS_UIOBJECT_HANDLE appArray[256] = {0};
 
-NGOS_UIOBJECT_HANDLE CreateAppList(int width,int height)
+NGOS_UIOBJECT_HANDLE CreateAppList(int left,int top,int width,int height)
 {
     NGOS_UIOBJECT_HANDLE hList = NGOS_CreateUIObject(NGOS_GetDefaultTypeLoader(),"LayoutObject","app_list");
     RECT pos = {0,160,width,160+height}; 
@@ -26,7 +26,7 @@ NGOS_UIOBJECT_HANDLE CreateAppIcon(const char* appID,const char* appText)
     char buffer[1024];
     sprintf(buffer,"%s.%s","app",appID);
     NGOS_UIOBJECT_HANDLE hApp = NGOS_CreateUIObject(NGOS_GetDefaultTypeLoader(),"LayoutObject",buffer);
-    RECT pos = {0,0,ICON_WIDTH,ICON_WIDTH+44};
+    RECT pos = {0,0,ICON_WIDTH,ICON_WIDTH+28};
     NGOS_SetUIObjectRect(hApp,&pos);
 
     sprintf(buffer,"%s.%s","app_icon",appID);

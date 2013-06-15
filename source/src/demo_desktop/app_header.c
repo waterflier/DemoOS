@@ -6,10 +6,10 @@
 #include "./perheader.h"
 #include "./app_header.h"
 
-NGOS_UIOBJECT_HANDLE CreateAppHeader(int width,int height)
+NGOS_UIOBJECT_HANDLE CreateAppHeader(int left,int top,int width,int height)
 {
     NGOS_UIOBJECT_HANDLE hHeader = NGOS_CreateUIObject(NGOS_GetDefaultTypeLoader(),"LayoutObject","app_header");
-    RECT pos = {0,56,width,56+height}; 
+    RECT pos = {left,top,left+width,top+height}; 
     NGOS_SetUIObjectRect(hHeader,&pos);
 
     NGOS_UIOBJECT_HANDLE hHeadLine = NGOS_CreateUIObject(NGOS_GetDefaultTypeLoader(),"ImageObject","header.line");
