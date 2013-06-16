@@ -95,7 +95,7 @@ int main(int argc,char** argv)
 	int i = 0;
 	char imgID[64];
 	
-	float fRoate[3] = {0,31,31};
+	float fRoate[3] = {0,31,64};
 
 	NGRE_SCRIPT_HANDLE hRenderScript = NGRECreateScript();
 	for(i=0;i<10000;i++)

@@ -556,7 +556,7 @@ void SetUIObjectTransInfoRotate(UIObjectTransInfo* pTransInfo, float fDegree, fl
 		pTransInfo->fRotateInfo[1] = fCenterX;
 		pTransInfo->fRotateInfo[2] = fCenterY;
 
-		//fDegree = fDegree;
+		fDegree = 90 + fDegree;
 		//fDegree = fDegree - 360 * (int)(fDegree / 360);
 
 		pTransInfo->fMatrix[0] = sin(fDegree * M_PI / 180);
