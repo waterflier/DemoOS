@@ -80,17 +80,17 @@ NGOS_UIOBJECT_HANDLE CreateStatusBar(int left,int top,int width,int height)
 
 
     NGOS_UIOBJECT_HANDLE hWifi = NGOS_CreateUIObject(NGOS_GetDefaultTypeLoader(),"ImageObject","sb.wifi");
-    pos.top = 8;
-    pos.left = width-34-39-3-28-3-21;
-    pos.right = pos.left+21;
-    pos.bottom = pos.top + 20;
+    pos.top = 6;
+    pos.left = width-34-39-3-28-3-26;
+    pos.right = pos.left+26;
+    pos.bottom = pos.top + 23;
     NGOS_ImageObjectSetImageID(hWifi,"sb_wifi");
     NGOS_SetUIObjectRect(hWifi,&pos);
     NGOS_AddChild(hStatusBarBkg,hWifi);
 
     NGOS_UIOBJECT_HANDLE hBlue = NGOS_CreateUIObject(NGOS_GetDefaultTypeLoader(),"ImageObject","sb.blue");
     pos.top = 8;
-    pos.left = width-34-39-3-28-3-21-3-12;
+    pos.left = width-34-39-3-28-3-26-3-12;
     pos.right = pos.left+12;
     pos.bottom = pos.top + 20;
     NGOS_ImageObjectSetImageID(hBlue,"sb_blue");

@@ -54,9 +54,15 @@ void GetScrennInfo()
 void* TimerThread(void* ud)
 {
 	printf("start timer thread\n");
+	int count=0;
 	while(1)
 	{
 		usleep(25000);
+		count++;
+		if(count % 40 == 0)
+		{
+			OSI_PostMsg(hMainMsgRecv,MSG_USER_TIMER,TIMER_ID_CLOCK_TICK,0,NULL);
+		}
 		OSI_PostMsg(hMainMsgRecv,MSG_USER_TIMER,TIMER_ID_UPDATE_TREE,0,NULL);
 	}
 }
