@@ -104,12 +104,14 @@ static void OnAppList_TouchUp(UserDataContext* pUserData,NGOS_UIOBJECT_HANDLE hO
             {
                 AniMoveToPageIndex(hObj,currentPage-1);
             }
-            else if(x - startX < -200)
+            else if(startX - x > 200)
             {
                 AniMoveToPageIndex(hObj,currentPage+1);
             }
-
-            AniMoveToPageIndex(hObj,currentPage);
+            else
+            {
+                AniMoveToPageIndex(hObj,currentPage);
+            }
         }
     }
 

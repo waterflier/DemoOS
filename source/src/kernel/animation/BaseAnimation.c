@@ -280,7 +280,16 @@ static float AnimationGetProgress(BaseAnimation* pBaseAnimation)
         }
         else
         {
-            return ((float)pBaseAnimation->Duration / (float)pBaseAnimation->TotalTime);
+            float x = ((float)pBaseAnimation->Duration / (float)pBaseAnimation->TotalTime);
+            if(x<0.5f)
+            {
+                return 2*x*x;
+            }
+            else
+            {
+                return 1-2*(x-1)*(x-1);
+            }
+            return ;
         }
     }
 }
