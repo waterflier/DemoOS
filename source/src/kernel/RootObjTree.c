@@ -394,6 +394,19 @@ NGOS_API(int) NGOS_AddChild(NGOS_UIOBJECT_HANDLE hParent,NGOS_UIOBJECT_HANDLE hC
 	return -1;
 }
 
+NGOS_API(int) NGOS_GetUIObjectRect(NGOS_UIOBJECT_HANDLE hUIObject,RECT* pRect)
+{
+    UIObject* pObj = HandleMapDecodeUIObject(hUIObject,NULL);
+    //UIObject* pChild = HandleMapDecodeUIObject(hParent);
+    if(pObj)
+    {
+        *pRect = pObj->ObjRect;
+        return 0;
+    }
+
+    return -1;
+
+}
 NGOS_API(int) NGOS_SetUIObjectRect(NGOS_UIOBJECT_HANDLE hUIObject,RECT* pRect)
 {
 	UIObject* pObj = HandleMapDecodeUIObject(hUIObject,NULL);

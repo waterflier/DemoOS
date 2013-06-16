@@ -24,6 +24,8 @@
 
 #include "../kernel/UIObject.h"
 #include "../kernel/UIObjTree.h"
+
+
 short screenWidth = 800;
 short screenHeight = 600;
 short screenDPI = 72;
@@ -93,15 +95,22 @@ void StartInputEventThread()
         {
         	//todo: 
             //NGOS_UpdateRootObjTree(hTree);
-            //printf("clean\n");
+            printf("clean\n");
 			NGREClearScript(hRenderScript);
-			//printf("update\n");
+			printf("update\n");
 			NGOS_UpdateRootObjTree(hTree, hRenderScript);
 			//printf("%s\r\n",NGREGetScriptCode(hRenderScript));
-			//printf("run\n");
+			if(!strlen(NGREGetScriptCode(hRenderScript)))
+			{
+				printf("empty script\n");
+			}
+			
+			printf("run\n");
 			NGRERunScript(hRenderScript, pDevice);
-			//printf("flush\n");
+			printf("flush\n");
 			NGREFlushDevice(pDevice);
+			
+			
         }
         else if(pMsg->Param1 == TIMER_ID_CLOCK_TICK)
         {
