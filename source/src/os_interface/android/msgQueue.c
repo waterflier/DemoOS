@@ -186,7 +186,7 @@ static int MsgQueuePopFront(unsigned char* pData,RecivedMsg* pResult)
 		pResult->Param1 = pRead->param1;
 		pResult->Param2 = pRead->param2;
 
-		if(pRead - pNodeStart > pHeaderRead[0] - 1)
+		if(pRead + 1 - pNodeStart > pHeaderRead[0] - 1)
 		{
 			pRead = pNodeStart;
 		}
@@ -213,6 +213,7 @@ static int MsgQueuePopFront(unsigned char* pData,RecivedMsg* pResult)
 	}
 
 	pHeaderRead[1] = pRead-pNodeStart;
+	//printf("read ok,read pos = %d\n",pHeaderRead[1]);
 }
 
 TYPE_NGOS_MSG_RECIVER OSI_CreateMsgReciver(pfnMsgProc fnMsgProc,UserDataContext* udc)

@@ -109,7 +109,7 @@ void StartInputEventThread()
         {
         	//todo: 
             //NGOS_UpdateRootObjTree(hTree);
-            printf("clean\n");
+            //printf("clean\n");
 			NGREClearScript(hRenderScript);
 			//printf("update\n");
 			NGOS_UpdateRootObjTree(hTree, hRenderScript);

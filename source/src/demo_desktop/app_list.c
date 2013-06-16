@@ -138,7 +138,7 @@ static void OnAppList_TouchMove(UserDataContext* pUserData,NGOS_UIOBJECT_HANDLE 
         int dx = x - startX;
         appListRect = startAppListRect;
         appListRect.left = startAppListRect.left + dx;
-        appListRect.right = appListRect.left + 800;
+        appListRect.right = appListRect.left + 800*APP_PAGE_MAX;
         NGOS_SetUIObjectRect(hObj,&appListRect);
     }
 }
@@ -146,7 +146,7 @@ static void OnAppList_TouchMove(UserDataContext* pUserData,NGOS_UIOBJECT_HANDLE 
 NGOS_UIOBJECT_HANDLE CreateAppList(int left,int top,int width,int height)
 {
     NGOS_UIOBJECT_HANDLE hList = NGOS_CreateUIObject(NGOS_GetDefaultTypeLoader(),"LayoutObject","app_list");
-    RECT pos = {left,top,left+width,top+height}; 
+    RECT pos = {left,top,left+width*APP_PAGE_MAX,top+height}; 
     NGOS_SetUIObjectRect(hList,&pos);
 
     UIObject* pAppList = HandleMapDecodeUIObject(hList);
