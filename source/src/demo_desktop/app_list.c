@@ -92,24 +92,29 @@ static void OnAppList_TouchUp(UserDataContext* pUserData,NGOS_UIOBJECT_HANDLE hO
         float speed = distance / timeUse;
         if (speed > FLIP_SEEP)
         {
+            printf("speed down\n");
             AniMoveToPageIndex(hObj,currentPage-1);
         }
         else if(speed < 0-FLIP_SEEP)
         {
+            printf("speed up\n");
             AniMoveToPageIndex(hObj,currentPage+1);
         }
         else
         {
             if(x - startX > 200)
             {
+                printf("pos down\n");
                 AniMoveToPageIndex(hObj,currentPage-1);
             }
             else if(startX - x > 200)
             {
+                printf("pos up\n");
                 AniMoveToPageIndex(hObj,currentPage+1);
             }
             else
             {
+                printf("go back\n");
                 AniMoveToPageIndex(hObj,currentPage);
             }
         }

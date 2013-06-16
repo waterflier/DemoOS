@@ -36,6 +36,8 @@ NGOS_ROOT_OBJTREE_HANDLE hTree;
 NGRE_SCRIPT_HANDLE hRenderScript;
 NGREDevice* pDevice;
 
+int isHaveTimer = 0;
+
 #define  MSG_USER_TIMER 1
 
 #define TIMER_ID_UPDATE_TREE 0
@@ -59,11 +61,16 @@ void* TimerThread(void* ud)
 	{
 		usleep(25000);
 		count++;
-		if(count % 40 == 0)
+
+		if(isHaveTimer == 0)
 		{
-			OSI_PostMsg(hMainMsgRecv,MSG_USER_TIMER,TIMER_ID_CLOCK_TICK,0,NULL);
+			if(count % 40 == 0)
+			{
+				OSI_PostMsg(hMainMsgRecv,MSG_USER_TIMER,TIMER_ID_CLOCK_TICK,0,NULL);
+			}
+			OSI_PostMsg(hMainMsgRecv,MSG_USER_TIMER,TIMER_ID_UPDATE_TREE,0,NULL);
+			isHaveTimer = 1;
 		}
-		OSI_PostMsg(hMainMsgRecv,MSG_USER_TIMER,TIMER_ID_UPDATE_TREE,0,NULL);
 	}
 }
 
@@ -97,11 +104,12 @@ void StartInputEventThread()
      	SendInputAcitonToUIObjTree(pObjTree,pMsg->Param1,x,y,pMsg->MsgData);
         break;
      case MSG_USER_TIMER:
+     	
         if(pMsg->Param1 == TIMER_ID_UPDATE_TREE)   
         {
         	//todo: 
             //NGOS_UpdateRootObjTree(hTree);
-            //printf("clean\n");
+            printf("clean\n");
 			NGREClearScript(hRenderScript);
 			//printf("update\n");
 			NGOS_UpdateRootObjTree(hTree, hRenderScript);
@@ -123,6 +131,7 @@ void StartInputEventThread()
             //一秒钟过去了...
 			UpdateClockTime(NULL);
         }
+        isHaveTimer = 0;
         break; 
      }
 

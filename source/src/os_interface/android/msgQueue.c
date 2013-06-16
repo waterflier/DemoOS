@@ -73,7 +73,7 @@ static int CreateMsgQueue(MsgQueueHeader* pResult,TYPE_NGOS_TID tid)
 
 	//TYPE_NGOS_PID pid = OSI_GetPID();
 	//printf("create\n");
-	unsigned char* pBuffer =  (unsigned char*)malloc(MSG_QUEUE_BUFFER_SIZE);
+	unsigned char* pBuffer =  (unsigned char*)malloc(MSG_QUEUE_BUFFER_SIZE+1024);
 
 	uint32_t* pIntWrite = (uint32_t*) pBuffer;
 	pIntWrite[0] = (MSG_QUEUE_BUFFER_SIZE -  sizeof(uint32_t) *4) / sizeof(MsgNode);
@@ -156,7 +156,7 @@ static int MsgQueuePushBack(unsigned char* pData,TYPE_NGOS_MSG_RECIVER hReciver,
 		pWrite->param1 = param1;
 		pWrite->param2 = param2;
 		
-		if(pWrite - pNodeStart > pHeaderRead[0] - 1)
+		if(pWrite + 1 - pNodeStart > pHeaderRead[0] - 1)
 		{
 			pWrite = pNodeStart;
 		}
