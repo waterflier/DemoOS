@@ -11,6 +11,7 @@
 #include "./clock.h"
 
 #define ICON_WIDTH (86)
+#define FLIP_SEEP (200.0f)
 
 NGOS_UIOBJECT_HANDLE appArray[ICON_W_NUM*ICON_H_NUM*APP_PAGE_MAX] = {0};
 
@@ -93,12 +94,12 @@ static void OnAppList_TouchUp(UserDataContext* pUserData,NGOS_UIOBJECT_HANDLE hO
         float speed = distance / timeUse;
         if (speed > FLIP_SEEP)
         {
-            printf("speed down\n");
+            printf("speed down %f\n",speed);
             AniMoveToPageIndex(hObj,currentPage-1);
         }
         else if(speed < 0-FLIP_SEEP)
         {
-            printf("speed up\n");
+            printf("speed up\n",speed);
             AniMoveToPageIndex(hObj,currentPage+1);
         }
         else
