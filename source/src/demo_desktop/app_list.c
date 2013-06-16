@@ -154,12 +154,12 @@ NGOS_UIOBJECT_HANDLE CreateAppList(int left,int top,int width,int height)
     
     AppListAddAppIcon(hList,CreateAppIcon("call","call"),0);
     AppListAddAppIcon(hList,CreateAppIcon("camer","camer"),1);
-    AppListAddAppIcon(hList,CreateAppIcon("contact","contact"),2);
-    AppListAddAppIcon(hList,CreateAppIcon("e-mail","e-mail"),3);
-    AppListAddAppIcon(hList,CreateAppIcon("map","map"),4);
-    AppListAddAppIcon(hList,CreateAppIcon("music","music"),5);
-    AppListAddAppIcon(hList,CreateAppIcon("note","note"),6);
-    AppListAddAppIcon(hList,CreateAppIcon("sm","sm"),7);
+    //AppListAddAppIcon(hList,CreateAppIcon("contact","contact"),2);
+    //AppListAddAppIcon(hList,CreateAppIcon("e-mail","e-mail"),3);
+    //AppListAddAppIcon(hList,CreateAppIcon("map","map"),4);
+    //AppListAddAppIcon(hList,CreateAppIcon("music","music"),5);
+    //AppListAddAppIcon(hList,CreateAppIcon("note","note"),6);
+    //AppListAddAppIcon(hList,CreateAppIcon("sm","sm"),7);
 
     UpdateAppList(hList);
 	return hList;

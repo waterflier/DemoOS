@@ -12,7 +12,7 @@ MultiTouchAccumulator* CreateMultiTouchAccumulator()
 {
 	MultiTouchAccumulator* pResult = NULL;
 	pResult = (MultiTouchAccumulator*) malloc(sizeof(MultiTouchAccumulator));
-	memset(pResult,sizeof(MultiTouchAccumulator),0);
+	memset(pResult,0,sizeof(MultiTouchAccumulator));
 	return pResult;
 }
 

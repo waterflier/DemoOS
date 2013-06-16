@@ -414,7 +414,7 @@ InputReader* CreateInputReader()
 {
     InputReader* pResult = NULL;
     pResult = (InputReader*) malloc(sizeof(InputReader));
-    memset(pResult,sizeof(InputReader),0);
+    memset(pResult,0,sizeof(InputReader));
     pResult->pMTAccumulator = CreateMultiTouchAccumulator();
 
 

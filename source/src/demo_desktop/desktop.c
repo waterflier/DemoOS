@@ -245,10 +245,10 @@ int main(int argc,char** argv)
 	//}
 
 	
-	NGOS_UIOBJECT_HANDLE hClockObj = CreateClockAppIcon();
-	RECT posIcon = {52,95,52+86,95+86+28};
-	NGOS_SetUIObjectRect(hClockObj,&posIcon);
-	NGOS_AddChild(hBkg,hClockObj);
+	//NGOS_UIOBJECT_HANDLE hClockObj = CreateClockAppIcon();
+	//RECT posIcon = {52,95,52+86,95+86+28};
+	//NGOS_SetUIObjectRect(hClockObj,&posIcon);
+	//NGOS_AddChild(hBkg,hClockObj);
 
 	//****************************************
 	NGOS_UIOBJECT_HANDLE hStatusBar = CreateStatusBar(0,0,800,35);
@@ -257,8 +257,8 @@ int main(int argc,char** argv)
 	NGOS_UIOBJECT_HANDLE hAppHeader = CreateAppHeader(0,36,800,51);
 	NGOS_AddChild(hBkg,hAppHeader);
 
-	//NGOS_UIOBJECT_HANDLE hAppList = CreateAppList(0,480-285,800,285);
-	//NGOS_AddChild(hBkg,hAppList);
+	NGOS_UIOBJECT_HANDLE hAppList = CreateAppList(0,480-285,800,285);
+	NGOS_AddChild(hBkg,hAppList);
 
 	//NGOS_UIOBJECT_HANDLE hAppBottom = CreateAppBottom(800,60);
 	//NGOS_AddChild(hRoot,hAppBottom);
