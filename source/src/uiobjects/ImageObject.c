@@ -75,11 +75,11 @@ NGOS_API(void) NGOS_ImageObjectSetImageID(NGOS_UIOBJECT_HANDLE hImageObject,cons
 		ImageObject* pImg = (ImageObject*)UIObjectGetUserDataStart(pObj);
 		if(pImg->strImageResID)
 		{
-			pImg->strImageResID = realloc(pImg->strImageResID,strlen(imageID));
+			pImg->strImageResID = realloc(pImg->strImageResID,strlen(imageID) + 1);
 		}
 		else
 		{
-			pImg->strImageResID = malloc(strlen(imageID));
+			pImg->strImageResID = malloc(strlen(imageID) + 1);
 		}
 
 		strcpy(pImg->strImageResID,imageID);
