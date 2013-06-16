@@ -117,7 +117,7 @@ static NGRE_SCRIPT_HANDLE ImageObjectGetRenderScript(void* pSelf,RECT* pViewRect
 	char szCodeRotate[100] = {0};
 	if(pObj->pTransInfo)
 	{
-		//((UIObjectEffectHeader*)(pObj->pTransInfo))->fnGetRenderScript(pObj->pTransInfo,  szCodeRotate, 100);
+		((UIObjectEffectHeader*)(pObj->pTransInfo))->fnGetRenderScript(pObj->pTransInfo,  szCodeRotate, 100);
 	}
 
 	///脚本实现为在参数中带带effect之类， 就不用分支判断了,现在只有trans

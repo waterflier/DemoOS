@@ -8,6 +8,7 @@
 #include "../kernel/UIObject.h"
 #include "../kernel/UIObjTree.h"
 #include "../kernel/animation/BaseKeyFrameAnimation.h"
+#include "./clock.h"
 
 #define ICON_WIDTH (86)
 
@@ -169,6 +170,8 @@ NGOS_UIOBJECT_HANDLE CreateAppList(int left,int top,int width,int height)
     AppListAddAppIcon(hList,CreateAppIcon("contact","contact"),2);
     AppListAddAppIcon(hList,CreateAppIcon("e-mail","e-mail"),3);
     AppListAddAppIcon(hList,CreateAppIcon("map","map"),4);
+	AppListAddAppIcon(hList, CreateClockAppIcon(), 5);
+	
     AppListAddAppIcon(hList,CreateAppIcon("music","music"),15);
     AppListAddAppIcon(hList,CreateAppIcon("note","note"),16);
     AppListAddAppIcon(hList,CreateAppIcon("sm","sm"),17);

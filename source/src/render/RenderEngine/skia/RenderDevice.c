@@ -14,6 +14,8 @@ typedef struct NGREFBDevice{
 	int fbDesc;
 }NGREFBDevice;
 
+
+
 NGREDevice* g_fbDevice = NULL;
 
 NGRE_RESULT NGREOpenDevice(NGREDevice** ppDevice)

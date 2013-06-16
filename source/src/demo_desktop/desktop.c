@@ -62,15 +62,15 @@ void* TimerThread(void* ud)
 		usleep(25000);
 		count++;
 
-		if(isHaveTimer == 0)
-		{
+		/*if(isHaveTimer == 0)
+		{*/
 			if(count % 40 == 0)
 			{
 				OSI_PostMsg(hMainMsgRecv,MSG_USER_TIMER,TIMER_ID_CLOCK_TICK,0,NULL);
 			}
 			OSI_PostMsg(hMainMsgRecv,MSG_USER_TIMER,TIMER_ID_UPDATE_TREE,0,NULL);
 			isHaveTimer = 1;
-		}
+		/*}*/
 	}
 }
 
@@ -252,12 +252,6 @@ int main(int argc,char** argv)
 
 	//	EventContainer* pEA2 = UIObjectGetEventContainer(pAppObj,NGOS_ACTION_TOUCH_DOWN,FALSE);
 	//}
-
-	
-	//NGOS_UIOBJECT_HANDLE hClockObj = CreateClockAppIcon();
-	//RECT posIcon = {52,95,52+86,95+86+28};
-	//NGOS_SetUIObjectRect(hClockObj,&posIcon);
-	//NGOS_AddChild(hBkg,hClockObj);
 
 	//****************************************
 	NGOS_UIOBJECT_HANDLE hStatusBar = CreateStatusBar(0,0,800,35);
