@@ -40,7 +40,7 @@ void* NGRM_GetColorFromPath(NGRM_ResPath resPath)
 		if(resPath[ix] == ' ')
 		{
 			*pColor = atoi(szValue);
-			memset(szValue, 10, 0);
+			memset(szValue, 0, 10);
 			nValueIndex = 0;
 			++ pColor;
 		}

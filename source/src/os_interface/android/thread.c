@@ -10,8 +10,11 @@
 
 TYPE_NGOS_TID OSI_GetThreadID()
 {
-	//return syscall(SYS_gettid);
+#ifndef ANDROID 
+	return syscall(SYS_gettid);
+#else
 	return gettid();
+#endif
 }
 
 int OSI_CreateThread(void* ud,fnOSIThreadProc proc)

@@ -11,12 +11,10 @@ ProjectCppFlag=
 
 ProjectLinkFlag=
 LinkLibss=
-SubDir = linux
-SubFileDirs = linux
-ifeq ($(ARCH),android)
+
 SubDir = android
 SubFileDirs = android
-endif
+
 
 
 ####################################################################

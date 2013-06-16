@@ -14,6 +14,8 @@
 #include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/types.h>
+#define INPUT_PROP_MAX 256
+#define EVIOCGPROP(x) EVIOCGBIT((x), 0)
 #endif
 #include <unistd.h>
 

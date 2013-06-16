@@ -97,7 +97,8 @@ void		NGREClearScript(NGRE_SCRIPT_HANDLE hScript)
 	LPNGREScript pScript = (LPNGREScript)hScript;
 	if(pScript->ulSize > 0)
 	{
-		pScript->szCode[0] = '\0';
+		memset(pScript->szCode, 0, pScript->ulSize);
+		//pScript->szCode[0] = '\0';
 	}
 }
 
