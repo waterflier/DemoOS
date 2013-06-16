@@ -33,19 +33,19 @@ NGOS_UIOBJECT_HANDLE CreateClockAppIcon()
 
 	NGOS_UIOBJECT_HANDLE hHourPtrObj = NGOS_CreateUIObject(NGOS_GetDefaultTypeLoader(),"ImageObject","clock.ptr.hour");
 	NGOS_ImageObjectSetImageID(hHourPtrObj,"app_icon.clock.ptr.hour");
-	pos.left = 43 - 3, pos.top = 43 - 40, pos.right =  43 - 3 + 6, pos.bottom = 43 - 40 + 41;
+	pos.left = 43 - 3, pos.top = 44 - 11 - 2, pos.right =  43 - 3 + 6, pos.bottom = 44 - 11 - 2 + 41;
 	NGOS_SetUIObjectRect(hHourPtrObj, &pos);
 	NGOS_AddChild(hClockObj, hHourPtrObj);
 	
 	NGOS_UIOBJECT_HANDLE hMinPtrObj = NGOS_CreateUIObject(NGOS_GetDefaultTypeLoader(),"ImageObject","clock.ptr.min");
 	NGOS_ImageObjectSetImageID(hMinPtrObj,"app_icon.clock.ptr.min");
-	pos.left = 43 - 3, pos.top = 43 - 39, pos.right =  43 - 3 + 6, pos.bottom = 43 - 39 + 41;
+	pos.left = 43 - 3, pos.top = 44 - 4 , pos.right =  43 - 3 + 6, pos.bottom = 44 - 4 + 41;
 	NGOS_SetUIObjectRect(hMinPtrObj, &pos);
 	NGOS_AddChild(hClockObj, hMinPtrObj);
 
 	NGOS_UIOBJECT_HANDLE hSecPtrObj = NGOS_CreateUIObject(NGOS_GetDefaultTypeLoader(),"ImageObject","clock.ptr.sec");
 	NGOS_ImageObjectSetImageID(hSecPtrObj,"app_icon.clock.ptr.sec");
-	pos.left = 43 - 2, pos.top = 43 - 39, pos.right =  43 - 2 + 4, pos.bottom = 43 - 39 + 41;
+	pos.left = 43 - 2, pos.top = 44 - 4, pos.right =  43 - 2 + 4, pos.bottom = 44 - 4 + 41;
 	NGOS_SetUIObjectRect(hSecPtrObj, &pos);
 	NGOS_AddChild(hClockObj, hSecPtrObj);
 
@@ -70,15 +70,15 @@ int UpdateClockTime(NGOS_UIOBJECT_HANDLE hClockObj)
 	int nSec = ltime->tm_sec;
 	//int nSec = 15;
 	
-	float fDgSec = nSec * 6;
-	float fDgMin = (float)(nMin *  60 + nSec) / 10;
-	float fDgHour = (float)(nHour * 3600 + nMin * 60 + nSec) / 120;
+	float fDgSec = nSec * 6 + 180;
+	float fDgMin = (float)(nMin *  60 + nSec) / 10 + 180;
+	float fDgHour = (float)(nHour * 3600 + nMin * 60 + nSec) / 120 + 180;
 
 	float fRotateInfo[3];
-	fRotateInfo[0] = fDgHour, fRotateInfo[1] = 3, fRotateInfo[2]= 41 - 2; 
+	fRotateInfo[0] = fDgHour, fRotateInfo[1] = 3, fRotateInfo[2]= 11 + 2; 
 	NGOS_SetUIObjectRotate(s_ClockObj.hHourPtrObj, fRotateInfo);
-	fRotateInfo[0] = fDgMin, fRotateInfo[1] = 3, fRotateInfo[2]= 41 - 3; 
+	fRotateInfo[0] = fDgMin, fRotateInfo[1] = 3, fRotateInfo[2]= 4; 
 	NGOS_SetUIObjectRotate(s_ClockObj.hMinPtrObj, fRotateInfo);
-	fRotateInfo[0] = fDgSec, fRotateInfo[1] = 2, fRotateInfo[2]= 41 - 3; 
+	fRotateInfo[0] = fDgSec, fRotateInfo[1] = 2, fRotateInfo[2]= 4; 
 	NGOS_SetUIObjectRotate(s_ClockObj.hSecPtrObj, fRotateInfo);
 }
