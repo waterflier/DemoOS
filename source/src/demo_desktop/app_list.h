@@ -9,7 +9,7 @@
 #define ICON_W_NUM (5)
 #define ICON_H_NUM (3)
 #define APP_PAGE_MAX (3)
-#define FLIP_SEEP (5.0f)
+#define FLIP_SEEP (50.0f)
 
 NGOS_UIOBJECT_HANDLE CreateAppList();
 

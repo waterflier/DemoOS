@@ -46,6 +46,8 @@ static RECT startAppListRect;
 
 static void AniMoveToPageIndex(NGOS_UIOBJECT_HANDLE hAppList,int newIndex)
 {
+    printf("want page,%d->%d\n",currentPage,newIndex);
+
     if(newIndex < 0)
     {
         newIndex = 0;
@@ -61,8 +63,9 @@ static void AniMoveToPageIndex(NGOS_UIOBJECT_HANDLE hAppList,int newIndex)
     BaseAnimation* pPosAni = HandleMapDecodeAnimation(hPosAni,NULL);
     AnimationSetTotalTime(pPosAni,300);
     AnimationBindUIObject(pPosAni,hAppList);
-    PosChangeAnimationSetPos(pPosAni,nowRect.left,nowRect.top,(-800)*newIndex,0);
+    PosChangeAnimationSetPos(pPosAni,nowRect.left,nowRect.top,(-800)*newIndex,49+35+2);
     AnimationManagerAddAnimation(GetAnimationManager(),hPosAni);
+    AnimationStart(pPosAni);
 
     currentPage = newIndex;
 }
@@ -84,28 +87,29 @@ static void OnAppList_TouchUp(UserDataContext* pUserData,NGOS_UIOBJECT_HANDLE hO
     if(startTickCount != 0)
     {
         uint32_t endTickCount = OSI_GetTickCount();
-        float speed = (float)((x-startX)*1000) / (float)(endTickCount-startTickCount);
+        float timeUse = (float)(endTickCount - startTickCount) / 1000.0f;
+        float distance = (int)x - startX;
+        float speed = distance / timeUse;
         if (speed > FLIP_SEEP)
         {
-            AniMoveToPageIndex(hObj,currentPage+1);
+            AniMoveToPageIndex(hObj,currentPage-1);
         }
         else if(speed < 0-FLIP_SEEP)
         {
-            AniMoveToPageIndex(hObj,currentPage-1);
+            AniMoveToPageIndex(hObj,currentPage+1);
         }
         else
         {
             if(x - startX > 200)
             {
-                AniMoveToPageIndex(hObj,currentPage+1);
+                AniMoveToPageIndex(hObj,currentPage-1);
             }
             else if(x - startX < -200)
             {
-                AniMoveToPageIndex(hObj,currentPage-1);
+                AniMoveToPageIndex(hObj,currentPage+1);
             }
 
-            AniMoveToPageIndex(hObj,
-                currentPage);
+            AniMoveToPageIndex(hObj,currentPage);
         }
     }
 
@@ -125,6 +129,7 @@ static void OnAppList_TouchMove(UserDataContext* pUserData,NGOS_UIOBJECT_HANDLE 
     if(abs(x-startX) > 4)
     {
         int dx = x - startX;
+        appListRect = startAppListRect;
         appListRect.left = startAppListRect.left + dx;
         appListRect.right = appListRect.left + 800;
         NGOS_SetUIObjectRect(hObj,&appListRect);
@@ -134,7 +139,7 @@ static void OnAppList_TouchMove(UserDataContext* pUserData,NGOS_UIOBJECT_HANDLE 
 NGOS_UIOBJECT_HANDLE CreateAppList(int left,int top,int width,int height)
 {
     NGOS_UIOBJECT_HANDLE hList = NGOS_CreateUIObject(NGOS_GetDefaultTypeLoader(),"LayoutObject","app_list");
-    RECT pos = {0,160,width,160+height}; 
+    RECT pos = {left,top,left+width,top+height}; 
     NGOS_SetUIObjectRect(hList,&pos);
 
     UIObject* pAppList = HandleMapDecodeUIObject(hList);
@@ -154,12 +159,12 @@ NGOS_UIOBJECT_HANDLE CreateAppList(int left,int top,int width,int height)
     
     AppListAddAppIcon(hList,CreateAppIcon("call","call"),0);
     AppListAddAppIcon(hList,CreateAppIcon("camer","camer"),1);
-    //AppListAddAppIcon(hList,CreateAppIcon("contact","contact"),2);
-    //AppListAddAppIcon(hList,CreateAppIcon("e-mail","e-mail"),3);
-    //AppListAddAppIcon(hList,CreateAppIcon("map","map"),4);
-    //AppListAddAppIcon(hList,CreateAppIcon("music","music"),5);
-    //AppListAddAppIcon(hList,CreateAppIcon("note","note"),6);
-    //AppListAddAppIcon(hList,CreateAppIcon("sm","sm"),7);
+    AppListAddAppIcon(hList,CreateAppIcon("contact","contact"),2);
+    AppListAddAppIcon(hList,CreateAppIcon("e-mail","e-mail"),3);
+    AppListAddAppIcon(hList,CreateAppIcon("map","map"),4);
+    AppListAddAppIcon(hList,CreateAppIcon("music","music"),15);
+    AppListAddAppIcon(hList,CreateAppIcon("note","note"),16);
+    AppListAddAppIcon(hList,CreateAppIcon("sm","sm"),17);
 
     UpdateAppList(hList);
 	return hList;

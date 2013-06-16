@@ -101,19 +101,19 @@ void StartInputEventThread()
         {
         	//todo: 
             //NGOS_UpdateRootObjTree(hTree);
-            printf("clean\n");
+            //printf("clean\n");
 			NGREClearScript(hRenderScript);
-			printf("update\n");
+			//printf("update\n");
 			NGOS_UpdateRootObjTree(hTree, hRenderScript);
 			//printf("%s\r\n",NGREGetScriptCode(hRenderScript));
 			if(!strlen(NGREGetScriptCode(hRenderScript)))
 			{
-				printf("empty script\n");
+				//printf("empty script\n");
 			}
 			
-			printf("run\n");
+			//printf("run\n");
 			NGRERunScript(hRenderScript, pDevice);
-			printf("flush\n");
+			//printf("flush\n");
 			NGREFlushDevice(pDevice);
 			
 			
@@ -257,7 +257,7 @@ int main(int argc,char** argv)
 	NGOS_UIOBJECT_HANDLE hAppHeader = CreateAppHeader(0,36,800,51);
 	NGOS_AddChild(hBkg,hAppHeader);
 
-	NGOS_UIOBJECT_HANDLE hAppList = CreateAppList(0,480-285,800,285);
+	NGOS_UIOBJECT_HANDLE hAppList = CreateAppList(0,49+35+2,800,480-(49+35+2));
 	NGOS_AddChild(hBkg,hAppList);
 
 	//NGOS_UIOBJECT_HANDLE hAppBottom = CreateAppBottom(800,60);

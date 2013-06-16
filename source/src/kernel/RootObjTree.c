@@ -354,7 +354,7 @@ NGOS_API(int) NGOS_UpdateRootObjTree(NGOS_ROOT_OBJTREE_HANDLE hRootTree, NGRE_SC
 	RootUIObjTree* pTree = HandleMapDecodeRootTree(hRootTree,NULL);
 	if(pTree)
 	{
-		printf("--update root obj tree\n");
+		//printf("--update root obj tree\n");
 		//update animation
 		int i;
 		if(pTree->DirtyRectManager)
