@@ -6,7 +6,7 @@ TargetType=Execute
 Target=demodesktop
 
 IncludeDirs = 
-ProjectCFlag= -I ../../inc -I ../../src/Render/RenderScript -I ../../src/Render/RenderEngine -I../../src/resource_manager 
+ProjectCFlag= -I ../../inc -I ../../src/render/RenderScript -I ../../src/render/RenderEngine -I../../src/resource_manager 
 ProjectCppFlag=
 
 ProjectLinkFlag=

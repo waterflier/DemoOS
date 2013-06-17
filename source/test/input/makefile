@@ -10,7 +10,7 @@ ProjectCFlag=
 ProjectCppFlag= $(ProjectCFlag)
 
 ProjectLinkFlag= 
-LinkLibs=
+LinkLibs+=stdc++ stlport c m
 ####################################################################
 cfiles_root := $(wildcard *.c)
 cobjs_root := $(patsubst %.c,$(TEMP_DIR)%.co,$(notdir $(cfiles_root)))

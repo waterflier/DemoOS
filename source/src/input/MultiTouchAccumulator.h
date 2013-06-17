@@ -7,7 +7,7 @@
 #define _NGOS_MULTI_TOUCH_ACCUMLATOR_H_
 
 #include <linux/input.h>
-#include "../kernel/input/inputAction.h"
+#include "../kernel/input/InputAction.h"
 
 #define MT_ACTION_MAX_CACHE (256)
 #define MT_SOLT_MAX_CACHE (16)

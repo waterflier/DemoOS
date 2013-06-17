@@ -20,7 +20,19 @@ else
 	SkiaFlag+='-DSK_GAMMA_SRGB' '-DSK_GAMMA_APPLY_TO_A8' '-DSK_ALLOW_STATIC_GLOBAL_INITIALIZERS=1' \
 		'-DSK_SCALAR_IS_FLOAT' '-DSK_CAN_USE_FLOAT' '-DSK_SUPPORT_GPU=1' '-DSK_SAMPLES_FOR_X' \
 		'-DSK_BUILD_FOR_UNIX' '-DSK_USE_POSIX_THREADS' '-DGR_LINUX_BUILD=1' '-DSK_DEBUG' '-DGR_DEBUG=1' \
-		'-DSK_DEVELOPER=1' -Wall -Wextra -Wno-unused -Wno-unused-parameter -Wno-c++11-extensions -m32 -MMD
+		'-DSK_DEVELOPER=1' -Wall -Wextra -Wno-unused -Wno-unused-parameter -Wno-c++11-extensions -MMD
+endif
+
+ifeq ($(ARCH), android41)
+	SkiaFlag+='-DSK_CPU_LENDIAN' -I$(ANDROID_PATH)/hardware/libhardware_legacy/include \
+			-I$(ANDROID_PATH)/hardware/ril/include \
+			-I$(ANDROID_PATH)/dalvik/libnativehelper/include \
+			-I$(ANDROID_PATH)/frameworks/base/include \
+			-I$(ANDROID_PATH)/frameworks/base/opengl/include \
+			-I$(ANDROID_PATH)/frameworks/native/include \
+			-I$(ANDROID_PATH)/out/target/product/grouper/obj/include \
+			-I$(ANDROID_PATH)/bionic/libthread_db/include \
+			-I$(ANDROID_PATH)/bionic/libstdc++/include 
 endif
 
 ProjectName=render

@@ -9,6 +9,6 @@ http://nosemaj.org/howto-build-android-nexus-4
 在$(ANDROID_SOURCE)目录下
 mm 目录  showcommands 编译该目录并显示命令
 mmm
-
+mm -B 目录 强制重编译
 
 make －snod生成新的system.img

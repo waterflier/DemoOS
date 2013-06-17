@@ -10,5 +10,10 @@
     <LengthMark direction="12" color="16711680" length="61" x="144" y="138"/>
     <LengthMark direction="3" color="16711680" length="36" x="77" y="180"/>
     <LengthMark direction="3" color="16711680" length="28" x="121" y="181"/>
+    <LengthMark direction="3" color="16711680" length="285" x="19" y="87"/>
+    <LengthMark direction="3" color="16711680" length="8" x="56" y="0"/>
+    <LengthMark direction="12" color="16711680" length="106" x="1" y="31"/>
+    <LengthMark direction="12" color="16711680" length="39" x="761" y="20"/>
+    <LengthMark direction="3" color="16711680" length="95" x="39" y="0"/>
   </Marks>
 </MKM>

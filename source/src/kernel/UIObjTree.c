@@ -7,7 +7,7 @@
 #include "./UIObjTree.h"
 #include "./RootObjTreeEnv.h"
 #include "./UIObject.h"
-#include "RenderScript.h"
+#include <RenderScript.h>
 #include "../uiobjects/UIObjectTypeLoader.h"
 #include "./input/InputAction.h"
 

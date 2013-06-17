@@ -8,9 +8,7 @@ Target=libngre_script.a
 
 IncludeDirs = 
 ProjectCFlag= -I. -I../RenderEngine -I../../resource_manager -I../../../inc
-ifeq ($(ARCH),android)
 ProjectCFlag+=-I../../lua
-endif
 ProjectCppFlag=
 
 ProjectLinkFlag:= -m32
