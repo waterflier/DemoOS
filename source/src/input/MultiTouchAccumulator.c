@@ -8,11 +8,14 @@
 #include <stdio.h>
 #include <stdint.h>
 
+#define DEFAULT_PROTOCOL (2)
+
 MultiTouchAccumulator* CreateMultiTouchAccumulator()
 {
 	MultiTouchAccumulator* pResult = NULL;
 	pResult = (MultiTouchAccumulator*) malloc(sizeof(MultiTouchAccumulator));
 	memset(pResult,0,sizeof(MultiTouchAccumulator));
+    pResult->protocolType = DEFAULT_PROTOCOL;
 	return pResult;
 }
 
@@ -209,49 +212,293 @@ static  void CovertSoltDataToAction(MultiTouchAccumulator* pSelf)
 	
 }
 
-void MultiTouchAccumulatorPushRawInputEvent(MultiTouchAccumulator* pSelf, const struct input_event* pEV)
+
+
+
+void MultiTouchAccumulatorPushRawInputEventProtocolA(MultiTouchAccumulator* pSelf, const struct input_event* pEV)
 {
-	//printf("MultiTouchAccumulatorPushRawInputEvent\n");
-	if(pEV->type == EV_SYN)
-	{
-		switch(pEV->code)
-		{
-		case SYN_MT_REPORT:
-				//OK a full finger slot
-				AppendSolt(pSelf);
-			break;
-		case SYN_REPORT:
-				//OK ,heare is a full action ,compare with last solt ,then create new action
-				CovertSoltDataToAction(pSelf);
-				pSelf->soltCount = 0;
-				pSelf->soltInUse = 0;
-			break;
-		}
-	}
-	else if(pEV->type == EV_ABS)
-	{
-		MTEventSolt* pSolt = GetCurrentSolt(pSelf);
-		switch(pEV->code)
-		{
-		case ABS_MT_POSITION_X:
-			pSolt->x = pEV->value;
-			break;
-		case ABS_MT_POSITION_Y:
-			pSolt->y = pEV->value;
-			break;
-		case ABS_MT_TOUCH_MAJOR:
-			pSolt->major = pEV->value;
-			break;
-		case ABS_MT_TRACKING_ID:
+    //printf("MultiTouchAccumulatorPushRawInputEvent\n");
+    if(pEV->type == EV_SYN)
+    {
+        switch(pEV->code)
+        {
+        case SYN_MT_REPORT:
+            //OK a full finger slot
+            AppendSolt(pSelf);
+            break;
+        case SYN_REPORT:
+            //OK ,heare is a full action ,compare with last solt ,then create new action
+            CovertSoltDataToAction(pSelf);
+            pSelf->soltCount = 0;
+            pSelf->soltInUse = 0;
+            break;
+        }
+    }
+    else if(pEV->type == EV_ABS)
+    {
+        MTEventSolt* pSolt = GetCurrentSolt(pSelf);
+        switch(pEV->code)
+        {
+        case ABS_MT_POSITION_X:
+            pSolt->x = pEV->value;
+            break;
+        case ABS_MT_POSITION_Y:
+            pSolt->y = pEV->value;
+            break;
+        case ABS_MT_TOUCH_MAJOR:
+            pSolt->major = pEV->value;
+            break;
+        case ABS_MT_TRACKING_ID:
+
             if(pEV->value & 0xf000)
             {
                 printf("**** error!\n");
             }
-			pSolt->trackerID = pEV->value & 0x0fff;//high bit is use for compare
-			break;
-		}
-	}
-	return;
+            pSolt->trackerID = pEV->value & 0x0fff;//high bit is use for compare
+
+            break;
+        }
+    }
+    return;
+}
+
+static  void CovertSoltDataToActionB(MultiTouchAccumulator* pSelf)
+{
+    //have enough action cache? 
+    if(pSelf->resultHeaderPos < pSelf->resultEndPos)
+    {
+        if(pSelf->resultEndPos == pSelf->resultHeaderPos)
+        {
+            if(pSelf->resultEndPos == 0)
+            {
+                printf("Action Cache full!\n");
+                return ;
+            }	
+        }
+    }
+
+    if(1)
+    {
+        if(pSelf->empty == 0)
+        {
+            pSelf->empty = 1;//**notice here
+
+            //fire down
+            //printf("FIRST DOWN\n");
+            pSelf->currentSolts[0].trackerID &= 0x0fff; 
+            MultiTouchAction* pWrite = GetCurrentAction(pSelf);
+            pWrite->actionType = NGOS_ACTION_TOUCH_DOWN;
+            pWrite->x = pSelf->currentSolts->x;
+            pWrite->y = pSelf->currentSolts->y;
+            pWrite->pData =CreateMTEventData(pSelf->soltCount);
+            memcpy(&(pWrite->pData->Solts),pSelf->currentSolts,sizeof(MTEventSolt)*(pSelf->soltCount));
+
+            AppendAction(pSelf);
+            pSelf->validSolt++;
+
+
+        }
+        else
+        {
+            int i;
+            int j=0;
+
+            MTEventData* pMovingData=CreateMTEventData(pSelf->soltCount);
+            //printf("cache solt count=%d\n",pSelf->soltCount);
+            for(i=0;i<pSelf->soltCount;++i)
+            {
+                MTEventSolt* pMovSolt = pSelf->currentSolts+i;
+                //printf("pMovSolt trackerID=%x\n",pMovSolt->trackerID);
+                if(pMovSolt->trackerID != 0xffff && pMovSolt->trackerID != 0x0fff)
+                {
+                    if(pMovSolt->trackerID & 0xf000)
+                    {
+                        //printf("ONE DOWN %x\n",pMovSolt->trackerID);
+                        pMovSolt->trackerID &= 0x0fff;
+                        MultiTouchAction* pOneDownAction = GetCurrentAction(pSelf);
+                        pOneDownAction->actionType = NGOS_ACTION_TOUCH_ONE_DOWN;
+                        pOneDownAction->x = pMovSolt->x;
+                        pOneDownAction->y = pMovSolt->y;
+                        pOneDownAction->pData =CreateMTEventData(1);
+                        pOneDownAction->pData->Solts = *pMovSolt;
+
+                        AppendAction(pSelf);
+                        pSelf->validSolt++;
+                    }
+                    else
+                    {
+                        *(&(pMovingData->Solts)+j) = *pMovSolt;
+                        j++;
+                    }
+                }
+                else
+                {
+                  
+                   if(pMovSolt->trackerID == 0xffff)
+                   {
+                       pSelf->validSolt--;
+                       //printf("UP %x\n",pMovSolt->trackerID);
+                       pMovSolt->trackerID = 0x0fff;
+                        
+                       MultiTouchAction* pOneUpAction = GetCurrentAction(pSelf);
+                       pOneUpAction->x = pMovSolt->x;
+                       pOneUpAction->y = pMovSolt->y;
+                       pOneUpAction->pData =CreateMTEventData(1);
+                       pOneUpAction->pData->Solts = *pMovSolt;
+                        if(pSelf->validSolt == 0)
+                       {
+                           //printf("FINAL UP \n");
+                           pOneUpAction->actionType = NGOS_ACTION_TOUCH_UP;
+                           pSelf->empty = 0;//**notice here
+                           //clean data
+                           pSelf->soltCount = 0;
+                           pSelf->soltInUse = 0;
+                           pSelf->soltCurrentIndex = 0;
+                           memset(pSelf->currentSolts,MT_SOLT_MAX_CACHE*sizeof(MTEventSolt),0);
+                       }
+                       else
+                       {
+                            //printf("ONE UP\n");
+                           pOneUpAction->actionType = NGOS_ACTION_TOUCH_ONE_UP;	
+                       }
+                       AppendAction(pSelf);
+
+                   }
+     
+                }
+            }   
+
+            if(j > 0)
+            {
+                //printf("MOVING\n");
+                MultiTouchAction* pMoveAction = GetCurrentAction(pSelf);
+                pMoveAction->actionType = NGOS_ACTION_TOUCH_MOVE;	
+                pMoveAction->x = pMovingData->Solts.x;
+                pMoveAction->y =  pMovingData->Solts.y;
+                pMoveAction->pData = pMovingData;
+                pMovingData->FingerSoltCount = j;
+
+                AppendAction(pSelf);
+            }
+            else
+            {
+                ReleaseMTEventData(pMovingData);
+            }
+        }
+    }
+
+}
+
+static void SetCurrentSlotIndex(MultiTouchAccumulator* pSelf,int newIndex)
+{
+    if(newIndex >= pSelf->soltCount-1)
+    {
+        pSelf->soltCount = newIndex+1;
+    }
+    pSelf->soltCurrentIndex = newIndex;
+    //return pSelf->currentSolts + (pSelf->soltCount - 1);
+}
+
+static MTEventSolt* GetCurrentSoltByIndex(MultiTouchAccumulator* pSelf)
+{
+    if(pSelf->soltCount == 0)
+    {
+        pSelf->soltCount = 1;
+    }
+    return pSelf->currentSolts + (pSelf->soltCurrentIndex);
+}
+
+void MultiTouchAccumulatorPushRawInputEventProtocolB(MultiTouchAccumulator* pSelf, const struct input_event* pEV)
+{
+    //printf("MultiTouchAccumulatorPushRawInputEvent\n");
+    if(pEV->type == EV_SYN)
+    {
+        switch(pEV->code)
+        {
+        case SYN_REPORT:
+            //OK ,heare is a full action ,compare with last solt ,then create new action
+            CovertSoltDataToActionB(pSelf);
+            pSelf->soltCurrentIndex = 0;
+            break;
+        }
+    }
+    else if(pEV->type == EV_ABS)
+    {
+        MTEventSolt* pSolt = GetCurrentSoltByIndex(pSelf);
+        switch(pEV->code)
+        {
+        case ABS_MT_SLOT:
+            SetCurrentSlotIndex(pSelf,pEV->value);
+            //AppendSolt(pSelf);
+            break;
+        case ABS_PRESSURE:
+            //do nothing?
+            break;
+        case ABS_MT_POSITION_X:
+            pSolt->x = pEV->value;
+            break;
+        case ABS_MT_POSITION_Y:
+            pSolt->y = pEV->value;
+            break;
+        case ABS_MT_TOUCH_MAJOR:
+            pSolt->major = pEV->value;
+            break;
+        case ABS_MT_TRACKING_ID:
+            pSolt->trackerID = pEV->value ;
+            pSolt->trackerID |= 0xf000; 
+    
+
+            break;
+        }
+    }
+    return;
+}
+void MultiTouchAccumulatorPushRawInputEvent(MultiTouchAccumulator* pSelf, const struct input_event* pEV)
+{
+	//printf("MultiTouchAccumulatorPushRawInputEvent\n");
+    if(pSelf->protocolType == 0)
+    {
+        if(pEV->type == EV_ABS)
+        {
+
+            if(pEV->code == ABS_MT_SLOT)
+            {
+                printf("Use protocol B\n");
+                pSelf->protocolType = 2;
+            }
+            if(pEV->code == ABS_MT_TRACKING_ID)
+            {
+                if(pEV->value == 0xffffffff)
+                {
+                    printf("Use protocol B\n");
+                    pSelf->protocolType = 2;
+                }
+            }
+        }
+        else if(pEV->type == EV_SYN)
+        {
+            if(pEV->code == SYN_MT_REPORT)
+            {
+                printf("Use protocol A\n");
+                pSelf->protocolType = 1;
+            }
+        }
+
+    }
+    else
+    {
+        if(pSelf->protocolType == 1)
+        {
+            //protocol A
+            MultiTouchAccumulatorPushRawInputEventProtocolA(pSelf,pEV);
+        }
+        else
+        {
+            //protocol B
+            MultiTouchAccumulatorPushRawInputEventProtocolB(pSelf,pEV);
+        }
+    }
+
 }
 
 int MultiTouchAccumulatorPopAction(MultiTouchAccumulator* pSelf,MultiTouchAction* pResult)

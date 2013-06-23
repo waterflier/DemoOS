@@ -1,0 +1,2 @@
+各种内核模块都在
+/system/lib/hw/*.so

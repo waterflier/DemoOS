@@ -22,8 +22,7 @@ typedef struct tagMultiTouchAction
 
 typedef struct tagMultiTouchAccumulator
 {
-	int multiTouchProtocolType;//0 no solt:1 use solt
-
+    int protocolType;//0 Unknown; 1 ProtocolA; 2 ProtocolB
 	MTEventSolt currentSolts[MT_SOLT_MAX_CACHE];
 	uint16_t soltCount;
 	int soltInUse;
@@ -32,7 +31,17 @@ typedef struct tagMultiTouchAccumulator
 	uint16_t resultHeaderPos;
 	uint16_t resultEndPos;
 	uint16_t nowWritePos;
+
+    //protocol A state data
 	MTEventData* pLastData;
+    //protocol B state data
+    int empty;
+    int lastUpX;
+    int lastUpY;
+    int soltCurrentIndex;
+    int validSolt;
+    
+
 }MultiTouchAccumulator;
 
 MultiTouchAccumulator* CreateMultiTouchAccumulator();

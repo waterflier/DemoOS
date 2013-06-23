@@ -314,6 +314,8 @@ int main()
     // initialize the main display
     //GraphicPlane& plane(graphicPlane(dpy));
     printf("start init graphic hardware\n");
+    //seteuid(0);
+    //setuid(0);
     initHardware(0);
     printf("init graphic hardware ok\n");
     //DisplayHardware* const hw = new DisplayHardware(this, dpy);
@@ -392,11 +394,11 @@ int main()
   
     float vertexes[] = {
 
-                -100.0, -100.0, 0.0, // (x1, y1, z1)
+                500.0, 200.0, 0.0, // (x1, y1, z1)
 
-                100.0, -100.0, 0.0, // (x2, y2, z2)
+                400.0, 300.0, 0.0, // (x2, y2, z2)
 
-                0.0, 100.0, 0.0 // (x3, y3, z3)
+                200.0, 100.0, 0.0 // (x3, y3, z3)
 
         };
     short indexes[]  = {0, 1, 2};
@@ -406,16 +408,17 @@ int main()
     //write(pf,pbuffer,256*256*3);  
 
     //int touchf = open("/dev/touchscreen-1wire",O_RDONLY);
-     
+     int a = 0;
     while(true)
     {
+        a++;
                      
                glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
 
         glClear(GL_COLOR_BUFFER_BIT);
 
-        
-
+            vertexes[3] = 400.0 + a%200;
+ 
             glColor4f(1.0f, 1.0f, 1.0f, 0.5f);
 
             glVertexPointer(3, GL_FLOAT, 0, vertexes);
@@ -423,7 +426,7 @@ int main()
             glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, indexes);
         glViewport(0, 0, mWidth, mHeight);
         eglSwapBuffers(mDisplay,mSurface);
-        sleep(1);
+        usleep(12500);
         printf("next frame\n");
     }
 
