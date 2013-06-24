@@ -1,9 +1,14 @@
 #ifndef _NGOS_RENDER_SKDEFINE_H_
 #define _NGOS_RENDER_SKDEFINE_H_
-#include "SkBitmap.h"
-#include "SkCanvas.h"
+
+#define SK_SUPPORT_GPU 0
+#include "SkPreConfig.h"
+//#include "SkUserConfig.h"
+//#include "SkPostConfig.h"
 #include "SkGpuDevice.h"
 
+#include "SkCanvas.h"
+#include "SkBitmap.h"
 
 typedef struct NGRESkBitmap{
 	SkBitmap* pSkBitmap;

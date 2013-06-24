@@ -16,7 +16,11 @@ LinkLibs=ngoskernel osi_interface uiobjects inputreader toolkit lua ngre_engine 
 ifeq ($(ARCH), android)
 	LinkLibs += skia stdc++ stlport c m
 else
+ifeq ($(ARCH), android41)
+	LinkLibs += skia stdc++ stlport c m
+else
 	LinkLibs += rt pthread jpeg pthread freetype fontconfig dl GL GLU png skia_effects skia_images skia_core skia_opts skia_opts_ssse3 skia_ports skia_sfnt skia_utils skia_gr skia_skgr 
+endif
 endif
 
 ####################################################################

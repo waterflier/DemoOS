@@ -19,7 +19,7 @@ ifeq ($(ARCH), android)
 endif
 
 ifeq ($(ARCH), android41)
-	SkiaFlag+=-DGL_GLEXT_PROTOTYPES -DEGL_EGLEXT_PROTOTYPES -I$(ANDROID_PATH)/hardware/libhardware_legacy/include \
+	SkiaFlag+=-DSK_BUILD_FOR_ANDROID -DANDROID -DGL_GLEXT_PROTOTYPES -DEGL_EGLEXT_PROTOTYPES -I$(ANDROID_PATH)/hardware/libhardware_legacy/include \
 			-I$(ANDROID_PATH)/hardware/ril/include \
 			-I$(ANDROID_PATH)/dalvik/libnativehelper/include \
 			-I$(ANDROID_PATH)/frameworks/base/include \

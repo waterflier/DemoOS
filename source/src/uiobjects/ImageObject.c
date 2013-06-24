@@ -8,7 +8,7 @@
 #include "../kernel/UIObject.h"
 #include "../kernel/UIObjTree.h"
 #include "./UIObjectTypeLoader.h"
-#include "RenderScript.h"
+#include <RenderScript.h>
 
 #include <stdio.h>
 #include <string.h>

@@ -62,7 +62,7 @@ typedef struct tagMTEventSolt
 	uint16_t trackerID;
 }MTEventSolt;
 
-typedef struct tagMTEventData
+typedef struct tagMTEventData 
 {
 	int16_t RefCount;
 	int16_t FingerSoltCount;
