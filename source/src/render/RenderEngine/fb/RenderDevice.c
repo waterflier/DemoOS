@@ -79,24 +79,6 @@ NGRE_RESULT NGREGetDeviceSize(NGREDevice* pDevice, int *pWidth, int*pHeight)
 	return NGRE_SUCCESS;
 }
 
-NGRE_RESULT NGREGetBitmapFromDevice(NGREDevice* pDevice, LPNGREBitmap* ppBitmap)
-{
-	//assert(pDevice != NULL);
-	if(pDevice->pCacheBitmap == NULL)
-	{
-		NGREFBDevice* pFBDevice = (NGREFBDevice*)(pDevice->pExtra);
-		NGRE_RESULT lResult = NGRECreateBitmap(pFBDevice->origVarInfo.xres,
-			pFBDevice->origVarInfo.yres, (pFBDevice->origVarInfo.bits_per_pixel>>3), &(pDevice->pCacheBitmap));
-		//assert(lResult == NGRE_SUCCESS);
-		lResult = NGREAllocBitmap(pDevice->pCacheBitmap, NGREAllocType_GpuTexture);
-		//assert(lResult == NGRE_SUCCESS);
-		*ppBitmap = pDevice->pCacheBitmap;
-		return lResult;
-	}
-	*ppBitmap = pDevice->pCacheBitmap;
-	return NGRE_SUCCESS;
-}
-
 void NGRECopy2FrameBuffer(void* pSrc, void* frameBuffer, CLPNGREOpIRect pRect, unsigned long ulRowBytes, unsigned char uBPP)
 {
 	unsigned char* pCurLine = (unsigned char*)pSrc + ulRowBytes * pRect->top + uBPP * pRect->left;
@@ -214,68 +196,4 @@ NGRE_RESULT NGREFlushDevice(NGREDevice* pDevice)
 }
 
 
-NGRE_RESULT NGREAddDeviceClipRect(NGREDevice* pDevice, CLPNGREOpIRect pRect)
-{
-	//assert(pDevice->nClipRectCount <= NGREMaxDeviceClipRectCount);
-	if(pDevice->nClipRectCount == NGREMaxDeviceClipRectCount + 1)
-	{
-		return NGRE_SUCCESS;
-	}
-	if(pDevice->nClipRectCount == NGREMaxDeviceClipRectCount)
-	{
-		LPNGREBitmap pCacheBitmap;
-		NGREGetBitmapFromDevice(pDevice, &pCacheBitmap);
-		pDevice->clipRects[0].left = 0;
-		pDevice->clipRects[0].top = 0;
-		pDevice->clipRects[0].right = NGREBitmapWidth(pCacheBitmap);
-		pDevice->clipRects[0].bottom = NGREBitmapHeight(pCacheBitmap);
-		++ (pDevice->nClipRectCount);
-		return NGRE_SUCCESS;
-	}
-	pDevice->clipRects[pDevice->nClipRectCount] = *pRect;
-	++(pDevice->nClipRectCount);
-	return NGRE_SUCCESS;
-}
 
-NGRE_RESULT NGREClearDeviceClipRect(NGREDevice* pDevice)
-{
-	pDevice->nClipRectCount = 0;
-	return NGRE_SUCCESS;
-}
-
-NGRE_RESULT NGREGetDeviceClipRectByIndex(NGREDevice* pDevice, unsigned int nIndex, LPNGREOpIRect pRect)
-{
-	if(pDevice->nClipRectCount == NGREMaxDeviceClipRectCount + 1)
-	{
-		*pRect = pDevice->clipRects[0];
-		return NGRE_SUCCESS;
-	}
-	else
-	{
-		if(nIndex >= pDevice->nClipRectCount)
-		{
-			return NGRE_DEVICE_INVALIDPARAM;
-		}
-		else
-		{
-			*pRect = pDevice->clipRects[nIndex];
-			return NGRE_SUCCESS;
-		}
-	}
-}
-
-unsigned int NGREGetDeviceClipRectCount(NGREDevice* pDevice)
-{
-	if(pDevice->nClipRectCount == NGREMaxDeviceClipRectCount + 1)
-	{
-		return 1;
-	}
-	return pDevice->nClipRectCount;
-}
-
-
-void NGRECloseDevice(NGREDevice* pDevice)
-{
-	/*munmap(FrameBuffer, FixedInfo.smem_len);
-    close(FrameBufferFD);*/
-}

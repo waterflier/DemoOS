@@ -45,21 +45,25 @@ Target=libngre_engine.a
 
 IncludeDirs = 
 ProjectCFlag= -I. -I../RenderScript -I ../../../inc
-ProjectCppFlag= -I. -I../RenderScript -I ../../../inc $(SkiaFlag)
+ProjectCppFlag= -I. -I../RenderScript -I ../../../inc $(SkiaFlag) -I$(ANDROID_PATH)/hardware/libhardware/include
 
 ProjectLinkFlag:= -m32
 LinkLibs:=
 LibDirs:=
 
-SubFileDirs:= skia
+SubFileDirs:= skia 
+SubFileDirs+= egl
+#SubFileDirs+= fb
 
 ####################################################################
 cfiles_src:= $(wildcard *.c)
 cfiles_skia:= $(wildcard skia/*.c)
-cfiles:=$(cfiles_src) $(cfiles_skia)
+#cfiles_fb:= $(wildcard fb/*.c)
+cfiles:=$(cfiles_src) $(cfiles_skia) $(cfiles_fb)
 
 cppfiles_skia:= $(wildcard skia/*.cpp)
-cppfiles:=$(cppfiles_skia)
+cppfiles_egl:= $(wildcard egl/*.cpp)
+cppfiles:=$(cppfiles_skia) $(cppfiles_egl)
 
 cobjs:= $(patsubst %.c,$(TEMP_DIR)%.co,$(cfiles))
 cppobjs:= $(patsubst %.cpp,$(TEMP_DIR)%.cppo,$(cppfiles))

@@ -11,8 +11,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="egl\RenderDevice.cpp" />
+    <ClCompile Include="fb\RenderDevice.c" />
+    <ClCompile Include="RenderDevice.c" />
     <ClCompile Include="RenderEngine.c" />
-    <ClCompile Include="skia\RenderDevice.c" />
     <ClCompile Include="skia\RenderOperation.cpp" />
     <ClCompile Include="skia\RenderResource.cpp" />
   </ItemGroup>
