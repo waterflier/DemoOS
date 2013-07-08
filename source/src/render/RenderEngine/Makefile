@@ -23,7 +23,7 @@ ifeq ($(ARCH), android41)
 			-I$(ANDROID_PATH)/hardware/ril/include \
 			-I$(ANDROID_PATH)/dalvik/libnativehelper/include \
 			-I$(ANDROID_PATH)/frameworks/base/include \
-			-I$(ANDROID_PATH)/frameworks/base/opengl/include \
+			-I$(ANDROID_PATH)/frameworks/native/opengl/include \
 			-I$(ANDROID_PATH)/frameworks/native/include \
 			-I$(ANDROID_PATH)/out/target/product/grouper/obj/include \
 			-I$(ANDROID_PATH)/bionic/libthread_db/include \

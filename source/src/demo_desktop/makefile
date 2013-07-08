@@ -17,7 +17,7 @@ ifeq ($(ARCH), android)
 	LinkLibs += skia stdc++ stlport c m EGL hardware GLESv1_CM ui
 else
 ifeq ($(ARCH), android41)
-	LinkLibs += skia stdc++ stlport c m
+	LinkLibs += skia stdc++ stlport c m EGL hardware GLESv1_CM ui
 else
 	LinkLibs += rt pthread jpeg pthread freetype fontconfig dl GL GLU png skia_effects skia_images skia_core skia_opts skia_opts_ssse3 skia_ports skia_sfnt skia_utils skia_gr skia_skgr 
 endif

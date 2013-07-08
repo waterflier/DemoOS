@@ -88,7 +88,7 @@ int NGREOpParamL(lua_State* pLuaState, int nIndex, LPNGREOpParam pParam)
 //忽略pRectDest的right和bottom时，使用原图的大小
 int NGREOpBlendBitmapL(lua_State* pLuaState)
 {
-	printf("NGRE op blend bitmap\n");
+	//printf("NGRE op blend bitmap\n");
 	NGREBitmapR pBmpSrc;
 	pBmpSrc.idResource = lua_tostring(pLuaState, 1);
 
@@ -145,7 +145,7 @@ int NGREOpFillRectL(lua_State* pLuaState)
 //同上
 int NGREOpEraseBitmapL(lua_State* pLuaState)
 {
-	printf("NGRE op erase bitmap\n");
+	//printf("NGRE op erase bitmap\n");
 	NGREBitmapR pBmpDest;
 	pBmpDest.idResource = lua_tostring(pLuaState, 1);
 
@@ -170,7 +170,7 @@ int NGREOpEraseBitmapL(lua_State* pLuaState)
 
 int NGREOpAddClipRectL(lua_State* pLuaState)
 {
-	printf("NGRE op add clip rect\n");
+	//printf("NGRE op add clip rect\n");
 	NGREOpIRect clipRect;
 	NGREOpIRectL(pLuaState, 1, &clipRect);
 	NGREDevice* pDevice = NGREGetScriptDeviceL(pLuaState);
@@ -229,7 +229,7 @@ NGRE_RESULT	NGRERunScriptCode(NGRE_SCRIPT_CODE_HANDLE hCode, NGREDevice* pDevice
 	{
 		return NGRE_SUCCESS;
 	}
-	printf("len:%d content: %s",strlen(szLuaCode), szLuaCode);
+	//printf("len:%d content: %s",strlen(szLuaCode), szLuaCode);
 	int nStackTop = lua_gettop(g_pLuaScriptEnv->pRunStack);
 	lua_pushlightuserdata(g_pLuaScriptEnv->pRunStack, pDevice);
 	lua_setglobal(g_pLuaScriptEnv->pRunStack, "ScriptDevice");

@@ -1,6 +1,5 @@
 #ifndef _NGOS_RESOURCE_MANAGER_MAP_H_
 #define _NGOS_RESOURCE_MANAGER_MAP_H_
-#include "ResourceManager.h"
 
 typedef void* NGRM_ResourceMap;
 typedef struct NGRM_ResourceMapNode{
