@@ -34,10 +34,10 @@ NGOS_UIOBJECT_HANDLE CreateStatusBar(int left,int top,int width,int height)
     NGOS_AddChild(hStatusBar,hStatusBarBkg);
 
     NGOS_UIOBJECT_HANDLE hWeather = NGOS_CreateUIObject(NGOS_GetDefaultTypeLoader(),"ImageObject","sb.weather");
-    pos.top = (height-28)/2;
-    pos.left = 12;
-    pos.right = pos.left+33;
-    pos.bottom = pos.top+28;
+    pos.top = (height-37)/2;
+    pos.left = 18;
+    pos.right = pos.left+44;
+    pos.bottom = pos.top+37;
     NGOS_ImageObjectSetImageID(hWeather,"sb_weather");
     NGOS_SetUIObjectRect(hWeather,&pos);
     NGOS_AddChild(hStatusBarBkg,hWeather);
@@ -52,47 +52,47 @@ NGOS_UIOBJECT_HANDLE CreateStatusBar(int left,int top,int width,int height)
     //NGOS_AddChild(hStatusBarBkg,hTime);
 
     NGOS_UIOBJECT_HANDLE hDate = NGOS_CreateUIObject(NGOS_GetDefaultTypeLoader(),"ImageObject","sb.date");
-    pos.top = 8;
-    pos.left = 106;
-    pos.right = pos.left + 20;
-    pos.bottom = pos.top + 20;
+    pos.top = 13;
+    pos.left = 158;
+    pos.right = pos.left + 28;
+    pos.bottom = pos.top + 28;
     NGOS_ImageObjectSetImageID(hDate,GetDateImageID(1));
     NGOS_SetUIObjectRect(hDate,&pos);
     NGOS_AddChild(hStatusBarBkg,hDate);
 
     NGOS_UIOBJECT_HANDLE hBattery = NGOS_CreateUIObject(NGOS_GetDefaultTypeLoader(),"ImageObject","sb.battery");
-    pos.top = 8;
-    pos.left = width-34-39;
-    pos.right = pos.left + 34;
-    pos.bottom = pos.top + 20;
+    pos.top = 12;
+    pos.left = width-114;
+    pos.right = pos.left + 47;
+    pos.bottom = pos.top + 27;
     NGOS_ImageObjectSetImageID(hBattery,GetBatteryImageID(GetBatteryStatus()));
     NGOS_SetUIObjectRect(hBattery,&pos);
     NGOS_AddChild(hStatusBarBkg,hBattery);
 
     NGOS_UIOBJECT_HANDLE hRadio = NGOS_CreateUIObject(NGOS_GetDefaultTypeLoader(),"ImageObject","sb.radio");
-    pos.top = 8;
-    pos.left = width-34-39-3-28;
-    pos.right = pos.left+28;
-    pos.bottom = pos.top + 20;
+    pos.top = 12;
+    pos.left = width-114-8-47;
+    pos.right = pos.left+47;
+    pos.bottom = pos.top + 27;
     NGOS_ImageObjectSetImageID(hRadio,"sb_radio");
     NGOS_SetUIObjectRect(hRadio,&pos);
     NGOS_AddChild(hStatusBarBkg,hRadio);
 
 
     NGOS_UIOBJECT_HANDLE hWifi = NGOS_CreateUIObject(NGOS_GetDefaultTypeLoader(),"ImageObject","sb.wifi");
-    pos.top = 6;
-    pos.left = width-34-39-3-28-3-26;
-    pos.right = pos.left+26;
-    pos.bottom = pos.top + 23;
+    pos.top = 8;
+    pos.left = width-114-8-47-8-36;
+    pos.right = pos.left+36;
+    pos.bottom = pos.top + 33;
     NGOS_ImageObjectSetImageID(hWifi,"sb_wifi");
     NGOS_SetUIObjectRect(hWifi,&pos);
     NGOS_AddChild(hStatusBarBkg,hWifi);
 
     NGOS_UIOBJECT_HANDLE hBlue = NGOS_CreateUIObject(NGOS_GetDefaultTypeLoader(),"ImageObject","sb.blue");
-    pos.top = 8;
-    pos.left = width-34-39-3-28-3-26-3-12;
-    pos.right = pos.left+12;
-    pos.bottom = pos.top + 20;
+    pos.top = 7;
+    pos.left = width-114-8-47-8-36-8-18;
+    pos.right = pos.left+18;
+    pos.bottom = pos.top + 31;
     NGOS_ImageObjectSetImageID(hBlue,"sb_blue");
     NGOS_SetUIObjectRect(hBlue,&pos);
     NGOS_AddChild(hStatusBarBkg,hBlue);

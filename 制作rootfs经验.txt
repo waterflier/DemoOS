@@ -2,3 +2,42 @@
 2.配置init进程，busybox有一个默认的System V的init,为了支持从ramdisk启动，需要的linuxrc启动程序，busybox也有提供。据说这两者在本质上没有区别
 
 3.建立好/etc/目录下的各个目录和配置文件
+
+
+android编译后生成的ramdisk是一个gzip格式的文件
+# file ramdisk.img
+ramdisk.img: gzip compressed data, from Unix
+
+那么先解压，因为后缀不是.gz，所以用-s 选项
+gunzip -S .img ramdisk.img
+
+这样生成了一个新文件ramdisk
+查看是什么格式
+# file ramdisk
+ramdisk: ASCII cpio archive (SVR4 with no CRC)
+
+ok，是一个cpio格式的文件
+再次解压
+先创建一个目录，假设叫rfs，并进入
+# cpio -i -F ../ramdisk
+512 blocks
+ok，那么得到结果是
+# ll
+total 160
+drwxrwx--x 2 root root   4096 2010-08-21 19:10 data
+-rw-r--r-- 1 root root    118 2010-08-21 19:10 default.prop
+drwxr-xr-x 2 root root   4096 2010-08-21 19:10 dev
+-rwxr-x--- 1 root root 107412 2010-08-21 19:10 init
+-rwxr-x--- 1 root root   1677 2010-08-21 19:10 init.goldfish.rc
+-rwxr-x--- 1 root root  12995 2010-08-21 19:10 init.rc
+drwxr-xr-x 2 root root   4096 2010-08-21 19:10 proc
+drwxr-x--- 2 root root   4096 2010-08-21 19:10 sbin
+drwxr-xr-x 2 root root   4096 2010-08-21 19:10 sys
+drwxr-xr-x 2 root root   4096 2010-08-21 19:10 system
+
+这就是全部内容了。
+
+生成就是一个逆向的操作而已。
+
+注：
+其实ramdisk.img的内容就是/opt/froyo/out/target/product/generic/root的压缩而已。

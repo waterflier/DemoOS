@@ -6,8 +6,8 @@
 #ifndef _DEMO_APP_LIST_H_
 #define _DEMO_APP_LIST_H_
 
-#define ICON_W_NUM (5)
-#define ICON_H_NUM (3)
+#define ICON_W_NUM (3)
+#define ICON_H_NUM (4)
 #define APP_PAGE_MAX (3)
 
 

@@ -3,7 +3,7 @@ include ../../mk.config
 ProjectName=DemoOS
 ModuleName=demo_desktop
 TargetType=Execute
-Target=demodesktop
+Target=demo
 
 IncludeDirs = 
 ProjectCFlag= -I ../../inc -I ../../src/render/RenderScript -I ../../src/render/RenderEngine -I../../src/resource_manager 

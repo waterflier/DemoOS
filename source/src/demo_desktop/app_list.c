@@ -10,7 +10,7 @@
 #include "../kernel/animation/BaseKeyFrameAnimation.h"
 #include "./clock.h"
 
-#define ICON_WIDTH (86)
+#define ICON_WIDTH (141)
 #define FLIP_SEEP (200.0f)
 
 NGOS_UIOBJECT_HANDLE appArray[ICON_W_NUM*ICON_H_NUM*APP_PAGE_MAX] = {0};
@@ -33,8 +33,8 @@ static POINT GetAppIconPos(int index)
     POINT result;
     int pageindex = index / (ICON_W_NUM*ICON_H_NUM);
     int realIndex = index % (ICON_W_NUM*ICON_H_NUM);
-    result.X =(pageindex*800) + 52 + (realIndex % ICON_W_NUM)*(86+61);
-    result.Y = 8 + (realIndex / ICON_W_NUM)*(86+36);
+    result.X = pageindex*720 + 52 + (realIndex % ICON_W_NUM)*(141+100);
+    result.Y = 8 + (realIndex / ICON_W_NUM)*(141+59);
 
     return result;
 }
@@ -65,7 +65,7 @@ static void AniMoveToPageIndex(NGOS_UIOBJECT_HANDLE hAppList,int newIndex)
     BaseAnimation* pPosAni = HandleMapDecodeAnimation(hPosAni,NULL);
     AnimationSetTotalTime(pPosAni,300);
     AnimationBindUIObject(pPosAni,hAppList);
-    PosChangeAnimationSetPos(pPosAni,nowRect.left,nowRect.top,(-800)*newIndex,49+35+2);
+    PosChangeAnimationSetPos(pPosAni,nowRect.left,nowRect.top,(-720)*newIndex,nowRect.top);
     AnimationManagerAddAnimation(GetAnimationManager(),hPosAni);
     AnimationStart(pPosAni);
 
@@ -140,7 +140,7 @@ static void OnAppList_TouchMove(UserDataContext* pUserData,NGOS_UIOBJECT_HANDLE 
         int dx = x - startX;
         appListRect = startAppListRect;
         appListRect.left = startAppListRect.left + dx;
-        appListRect.right = appListRect.left + 800*APP_PAGE_MAX;
+        appListRect.right = appListRect.left + 720*APP_PAGE_MAX;
         NGOS_SetUIObjectRect(hObj,&appListRect);
     }
 }
@@ -188,7 +188,7 @@ NGOS_UIOBJECT_HANDLE CreateAppIcon(const char* appID,const char* appText)
     char buffer[1024];
     sprintf(buffer,"%s.%s","app",appID);
     NGOS_UIOBJECT_HANDLE hApp = NGOS_CreateUIObject(NGOS_GetDefaultTypeLoader(),"LayoutObject",buffer);
-    RECT pos = {0,0,ICON_WIDTH,ICON_WIDTH+28};
+    RECT pos = {0,0,ICON_WIDTH,ICON_WIDTH+46};
     NGOS_SetUIObjectRect(hApp,&pos);
 
     sprintf(buffer,"%s.%s","app_icon",appID);
@@ -224,8 +224,8 @@ void UpdateAppList(NGOS_UIOBJECT_HANDLE hList)
             point = GetAppIconPos(i);
             pos.left = point.X;
             pos.top = point.Y;
-            pos.right = pos.left + 86;
-            pos.bottom = pos.top + 86 + 28;
+            pos.right = pos.left + ICON_WIDTH;
+            pos.bottom = pos.top + ICON_WIDTH + 46;
             NGOS_SetUIObjectRect(appArray[i],&pos);
             //NGOS_AddChild(hPage,pageArray[i]);
         }

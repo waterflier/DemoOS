@@ -145,7 +145,7 @@ NGOS_UIOBJECT_HANDLE CreateDesktopBKG()
 	
 	hResult = NGOS_CreateUIObject(NGOS_GetDefaultTypeLoader(),"ImageObject","bkg");
 	NGOS_ImageObjectSetImageID(hResult,"bkg");
-	RECT pos = {.left=0,.top=0,.right=800,.bottom=480};
+	RECT pos = {.left=0,.top=0,.right=720,.bottom=1280};
 	NGOS_SetUIObjectRect(hResult,&pos);
 
 	return hResult;
@@ -185,6 +185,47 @@ void InitRes()
 	NGRM_AddResource("app_add","/system/res/app_add.png", NGRM_ResType_Bitmap);
 	NGRM_AddResource("app_del","/system/res/app_del.png", NGRM_ResType_Bitmap);
 	NGRM_AddResource("app_pao","/system/res/app_pao.png", NGRM_ResType_Bitmap);
+}
+
+
+void InitResH()
+{
+    NGRE_RESULT lResult = NGREInit();
+    NGRM_AddResource("bkg", "/system/resh/bkg.png", NGRM_ResType_Bitmap);
+
+    NGRM_AddResource("sb_bkg","/system/resh/sb_bkg.png", NGRM_ResType_Bitmap);
+    NGRM_AddResource("sb_weather","/system/resh/sb_weather.png", NGRM_ResType_Bitmap);
+    //need time
+    NGRM_AddResource("sb_date","/system/resh/sb_date.png", NGRM_ResType_Bitmap);
+    NGRM_AddResource("sb_blue","/system/resh/sb_blue.png", NGRM_ResType_Bitmap);
+    NGRM_AddResource("sb_wifi","/system/resh/sb_wifi.png", NGRM_ResType_Bitmap);
+    NGRM_AddResource("sb_radio","/system/resh/sb_radio.png", NGRM_ResType_Bitmap);
+    NGRM_AddResource("sb_battle","/system/resh/sb_battle.png", NGRM_ResType_Bitmap);
+
+    //need apptext
+    NGRM_AddResource("head_line","/system/resh/head_line.png", NGRM_ResType_Bitmap);
+    NGRM_AddResource("head_dot","/system/resh/head_dot.png", NGRM_ResType_Bitmap);
+
+
+
+    NGRM_AddResource("app_icon.call","/system/resh/apps/call.png", NGRM_ResType_Bitmap);
+    NGRM_AddResource("app_icon.camer","/system/resh/apps/camer.png", NGRM_ResType_Bitmap);
+    NGRM_AddResource("app_icon.contact","/system/resh/apps/contact.png", NGRM_ResType_Bitmap);
+    NGRM_AddResource("app_icon.e-mail","/system/resh/apps/e-mail.png", NGRM_ResType_Bitmap);
+    NGRM_AddResource("app_icon.folder","/system/resh/apps/folder.png", NGRM_ResType_Bitmap);
+    NGRM_AddResource("app_icon.map","/system/resh/apps/map.png", NGRM_ResType_Bitmap);
+    NGRM_AddResource("app_icon.music","/system/resh/apps/music.png", NGRM_ResType_Bitmap);
+    NGRM_AddResource("app_icon.note","/system/resh/apps/note.png", NGRM_ResType_Bitmap);
+    NGRM_AddResource("app_icon.sm","/system/resh/apps/sm.png", NGRM_ResType_Bitmap);
+
+    NGRM_AddResource("app_add","/system/resh/app_add.png", NGRM_ResType_Bitmap);
+    NGRM_AddResource("app_del","/system/resh/app_del.png", NGRM_ResType_Bitmap);
+    NGRM_AddResource("app_pao","/system/resh/app_pao.png", NGRM_ResType_Bitmap);
+
+    NGRM_AddResource("app_icon.clock","/system/resh/apps/clock.png", NGRM_ResType_Bitmap);
+    NGRM_AddResource("app_icon.clock.ptr.hour","/system/resh/apps/clock.ptr.h.png", NGRM_ResType_Bitmap);
+    NGRM_AddResource("app_icon.clock.ptr.min","/system/resh/apps/clock.ptr.m.png", NGRM_ResType_Bitmap);
+    NGRM_AddResource("app_icon.clock.ptr.sec","/system/resh/apps/clock.ptr.s.png", NGRM_ResType_Bitmap);
 }
 
 NGOS_UIOBJECT_HANDLE hApp1;
@@ -228,8 +269,8 @@ int main(int argc,char** argv)
 	NGREOpenDevice(&pDevice);
 	int nDeviceWidth, nDeviceHeight;
 	NGREGetDeviceSize(pDevice, &nDeviceWidth, &nDeviceHeight);
-	
-	InitRes();
+	printf("nDeviceWidth=%d,nDeviceHeight=%d\n",nDeviceWidth,nDeviceHeight);
+	InitResH();
 
 	//create uiobjtree
 	hTree = NGOS_CreateRootObjTree(NULL);
@@ -254,17 +295,17 @@ int main(int argc,char** argv)
 	//}
 
 	//****************************************
-	NGOS_UIOBJECT_HANDLE hStatusBar = CreateStatusBar(0,0,800,35);
+	NGOS_UIOBJECT_HANDLE hStatusBar = CreateStatusBar(0,0,720,54);
 	NGOS_AddChild(hBkg,hStatusBar);
 
-	NGOS_UIOBJECT_HANDLE hAppHeader = CreateAppHeader(0,36,800,51);
+	NGOS_UIOBJECT_HANDLE hAppHeader = CreateAppHeader(0,35,720,105);
 	NGOS_AddChild(hBkg,hAppHeader);
 
-	NGOS_UIOBJECT_HANDLE hAppList = CreateAppList(0,49+35+2,800,480-(49+35+2));
+	NGOS_UIOBJECT_HANDLE hAppList = CreateAppList(0,159,720,1280-(54+105+244));
 	NGOS_AddChild(hBkg,hAppList);
 
-	//NGOS_UIOBJECT_HANDLE hAppBottom = CreateAppBottom(800,60);
-	//NGOS_AddChild(hRoot,hAppBottom);
+	NGOS_UIOBJECT_HANDLE hAppBottom = CreateAppBottom(720,1280-1042);
+	NGOS_AddChild(hRoot,hAppBottom);
 	//start timer thread
 	//NGOS_UpdateRootObjTree(hTree, hRenderScript);
 	StartTimerThread();
